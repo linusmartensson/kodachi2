@@ -1,0 +1,15 @@
+
+.InfoPopup {
+ position:fixed;
+ bottom:30px;
+ left:0;
+ right:0;
+}
+.InfoPopup-inner{
+ border-radius:400px;
+ margin: 0 0;
+ display:inline-block;
+ height:100px;
+ white-space:nowrap;
+    position:relative;
+}

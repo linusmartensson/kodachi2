@@ -1,0 +1,62 @@
+The website is layouted as such:
+Our workspace contains information about who is using the workspace, a toolbox for manipulating the workspace, a drawer, and a set of items on the workspace:
+
+* Workspace
+ - Profile
+ - Toolbox
+ - Drawer
+ - Item
+ - Item
+ - Item
+
+
+The toolboxes contain a set of statements, indicating things we can do:
+ - Write an article
+ - Create an event
+ - Join a crew group
+ - Buy a ticket
+ - Edit our profile
+
+The drawer contains one or more items that can be placed on the workspace:
+ - News archive
+ - User list
+ - List of Crew groups
+
+Items may be: 
+ - Frequently asked questions
+ - Gallery of events
+ - List of outstanding tasks
+ - Schedules
+ - Recent news
+
+Additionally, a single item may contain more items:
+ - FAQ questions
+ - Crew group members
+ - List of crew groups
+
+Additionally, each item may have tools:
+ - Delete user from crew
+ - Edit user
+ - Edit article
+ - Add FAQ item
+ - Edit FAQ item
+
+Drawer items with important information or tasks are opened when the page is loaded.
+
+When a drawer item is opened, the item is placed at the top of the workspace.
+Any item on the workspace may be put back into the drawer.
+
+The profile is also a drawer item, which contains a set of statements, describing the responsibilities,
+capabilities and achievements of the current user:
+ - Current roles
+ - Previous assignments
+ - Achieved tasks
+ - Personal user information
+ - A main role and a level in that role.
+
+Visiting a path is equivalent to viewing an item in the workspace:
+/news/article-on-pizza/editor
+/users/timmeh
+
+All state mutation is done through socket.io and does not have fixed paths.
+

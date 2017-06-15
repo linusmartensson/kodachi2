@@ -1,0 +1,23 @@
+.Tool {
+ white-space:nowrap;
+ position:relative;
+ padding:5px;
+}
+.Tool p{
+ display:inline-block;
+ margin:0;padding:0;
+}
+.Tool img{
+ height:32px;
+ display:inline-block;
+ vertical-align:middle;
+}
+
+.Tool span {
+ display:inline-block;
+ margin-left:10px;
+}
+
+.Tool:hover p{
+ color:pink;
+ }

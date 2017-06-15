@@ -1,0 +1,44 @@
+{
+  "name": "kodachi2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "production": "node babel/index.js",
+    "start": "babel-node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "6.24.1",
+    "babel-polyfill": "6.23.0",
+    "babel-preset-env": "1.5.1",
+    "babel-preset-react": "6.24.1"
+  },
+  "dependencies": {
+    "cookie": "0.3.1",
+    "ioredis": "3.1.1",
+    "koa": "2.2.0",
+    "koa-bodyparser": "4.2.0",
+    "koa-helmet": "3.2.0",
+    "koa-onerror": "3.1.0",
+    "koa-passport": "3.0.0",
+    "koa-redis": "3.0.0",
+    "koa-router": "7.2.0",
+    "koa-session": "5.0.0",
+    "koa-session2": "2.2.4",
+    "koa-socket-2": "1.0.4",
+    "koa-socket-passport": "0.0.2",
+    "koa-socket-session": "1.2.0",
+    "koa-sslify": "2.1.2",
+    "koa-static-cache": "5.0.1",
+    "nodemailer": "4.0.1",
+    "passport-local": "1.0.0",
+    "react": "15.5.4",
+    "react-dom": "15.5.4",
+    "socket.io": "2.0.2",
+    "socket.io-client": "2.0.2",
+    "winston": "2.3.1",
+    "ws": "3.0.0"
+  }
+}

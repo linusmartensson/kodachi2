@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<script src="https://unpkg.com/react@15/dist/react.js"></script>
+		<script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+		<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="/public/css/style.css" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  </head>
+  <script type="text/babel">
+    var lol = ( event ) => {
+      socket.emit( 'ack', {
+        foo: 'foo'
+      }, res => {
+        console.log( 'acknowledgement:', res )
+      })
+    };
+
+    ReactDOM.render(
+      <div>
+        <iframe src="/public/login.html" />
+        <button className="js-btn" onClick={lol}>Send</button>
+      </div>,
+      document.getElementById('root')
+    );
+    
+    var socket = io.connect()
+    socket.emit('hello', {}, res => {console.log('connected!')});
+
+    var btn = document.querySelector( '.js-btn' )
+    btn.addEventListener( 'click', function( event ) {
+      socket.emit( 'data', {
+        foo: 'foo'
+      })
+    })
+    var ack = document.querySelector( '.js-ack' )
+    socket.on( 'response', function( event ) {
+      console.log( 'response:', event.message )
+    })
+  </script>
+  <body>
+  <div id="root"></div>
+  
+
+
+	</body>
+</html>

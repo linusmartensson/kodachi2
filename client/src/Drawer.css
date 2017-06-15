@@ -1,0 +1,12 @@
+.Drawer{
+    position:fixed;
+    left:0;
+    top:0;bottom:0;
+    padding:3px;
+    background:rgba(25,205,240,0.6);
+    border-right:4px solid rgba(200,150,100,1.0);
+    box-shadow: 10px 0 40px 0 rgba(0,0,0,0.5);
+    font-family:"Schoolbell";
+    font-size:1.2em;
+}
+

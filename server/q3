@@ -1,0 +1,26 @@
+* Front-end: Surge
+- create-react-app
+- react-router
+- react-helmet
+- react-snapshot
+- styled-components
+
+
+* Back-end: Digital Ocean
+- passport users
+- socket.io push updates
+- mongodb backend
+- koa
+
+
+
+api structure:
+
+
+
+/read_items/blabla
+
+/api/run_action/{name}
+
+/api/get_my_tasks -> {task_list}
+/api/respond_to_task/task_id/{results} -> status
