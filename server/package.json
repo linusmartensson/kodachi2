@@ -32,12 +32,14 @@
     "koa-socket-session": "1.2.0",
     "koa-sslify": "2.1.2",
     "koa-static-cache": "5.0.1",
+    "neo4j": "2.0.0-RC2",
     "nodemailer": "4.0.1",
     "passport-local": "1.0.0",
     "react": "15.5.4",
     "react-dom": "15.5.4",
     "socket.io": "2.0.2",
     "socket.io-client": "2.0.2",
+    "socketio-jwt": "4.5.0",
     "winston": "2.3.1",
     "ws": "3.0.0"
   }

@@ -1,0 +1,107 @@
+Users
+
+Roles
+
+Tasks
+
+Events
+
+Tickets
+
+Purchases
+
+Locations
+
+Timeslots
+
+Activities
+
+
+
+
+Each user has roles (Jimmeh -[IS_A]-> KodachikaiMember)
+
+A user may conduct purchases, resulting in owning tickets (Carl -[OWNS]-> Ticket)
+A ticket is specific to an event (Ticket -[TO_EVENT]-> Kodachicon2018)
+A ticket, once utilized, gives a user a role (Ticket -[PROVIDES_ROLE]-> Visitor)
+
+A role or user may be assigned tasks (Kalle -[IS_A]-> SmashTournamentManager)
+
+A role may be extended (SmashTournamentManager -[IS_A]-> CompetitionManager)
+
+A role may be a manager for another role (SmashTournamentManager -[MANAGES]-> SmashTournamentWorker)
+An activity is likewise connected to a role (SmashTournament <-[MANAGES]- SmashTournamentManager)
+
+A role may be limited to a number of users, or users with another role 
+A role may be limited to a user not already in another role (Monday2300GhostHouseVisitor -[CANNOT_ALREADY_BE]-> GhostHouseVisitor)
+A role may be specific to a single event (SmashTournamentManager -[AT_EVENT]-> Kodachicon2018)
+
+A role may be responsible for a location (GameRoomManager -[RESPONSIBLE_FOR]-> GameRoom)
+
+Each location has a set of timeslots (GameRoom -[HAS_TIMESLOT]-> 11PM)
+
+Each timeslot may contain an activity (GameRoom --> 11PM -[HAS_ACTIVITY]-> SmashTournament)
+
+Each role may have set perks (CompetitionManager -[HAS_PERK]-> FreeEntrance)
+
+
+/status -> 
+*my account details (account info, etc)
+*my roles (my responsibilities)
+  -> tasks (the things i can do)
+*my todo (the things I'm supposed to do)
+*my tickets (the tickets I own)
+*my purchases (the purchases I've made)
+
+/content ->
+*drawers (viewable text content)
+  -> pages -> tiers -> panels -> content
+
+/task&task_id=[...] (get single task data)
+
+^ That is all.
+Locations, timeslots and activities are returned in drawers.
+
+actions:
+
+/login
+/register
+/start_task?task_name=[...]&[action_input] (starting a task returns a task id)
+/respond_task?task_id=[...]&[response_data]
+
+
+
+Server task api:
+
+/create_task
+create a new task that may be started by a set of roles
+requires: 
+task_name: a unique identifier for the task.
+
+group: any action groups that this task is related to. An action group will prefill some task data.
+
+starter_roles: roles that may start this task
+
+handler_roles: roles that may handle this task, or none, if originating user.
+
+description: a user-level description of the task that needs to be fulfilled, layouted as a single tier.
+
+inputs: input data that must be filled in to complete the task. [{type, description},...]
+
+result_handler: a function which handles the inputs and the task chain, mutates the database state, and provides an end-of-task state, aborts the task, or repeats it.
+
+next_tasks: tasks that will be started based on the result_handler end-of-task state. Previous tasks, their inputs, their results, and the handling user, are passed along with the task state.
+
+post_task: a function to be executed when all next_tasks elements have been executed, mutates the database state, and decides whether to finish the task, abort it, or repeat it.
+
+/start_task
+starts a new task instance for the task with a unique id, and adds it as a responsibility for all relevant handler roles.
+requires:
+task_name: a task name.
+
+/respond_task
+responds to a task instance.
+requires:
+task_id: the ID of the task.
+
+data: required input data for the task.

@@ -2,9 +2,9 @@ The website is layouted as such:
 Our workspace contains information about who is using the workspace, a toolbox for manipulating the workspace, a drawer, and a set of items on the workspace:
 
 * Workspace
- - Profile
- - Toolbox
  - Drawer
+  - Profile
+  - Toolbox
  - Item
  - Item
  - Item
@@ -17,7 +17,7 @@ The toolboxes contain a set of statements, indicating things we can do:
  - Buy a ticket
  - Edit our profile
 
-The drawer contains one or more items that can be placed on the workspace:
+The drawer contains the toolbox, the profile, and a set of items that can be placed on the workspace:
  - News archive
  - User list
  - List of Crew groups
@@ -44,7 +44,7 @@ Additionally, each item may have tools:
 Drawer items with important information or tasks are opened when the page is loaded.
 
 When a drawer item is opened, the item is placed at the top of the workspace.
-Any item on the workspace may be put back into the drawer.
+Any other item on the workspace is returned to the drawer.
 
 The profile is also a drawer item, which contains a set of statements, describing the responsibilities,
 capabilities and achievements of the current user:
