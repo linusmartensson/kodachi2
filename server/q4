@@ -78,11 +78,9 @@ create a new task that may be started by a set of roles
 requires: 
 task_name: a unique identifier for the task.
 
-group: any action groups that this task is related to. An action group will prefill some task data.
-
 starter_roles: roles that may start this task
 
-handler_roles: roles that may handle this task, or none, if originating user.
+handler_roles: roles that may handle this task, or none, if origin handles.
 
 description: a user-level description of the task that needs to be fulfilled, layouted as a single tier.
 
@@ -90,18 +88,17 @@ inputs: input data that must be filled in to complete the task. [{type, descript
 
 result_handler: a function which handles the inputs and the task chain, mutates the database state, and provides an end-of-task state, aborts the task, or repeats it.
 
-next_tasks: tasks that will be started based on the result_handler end-of-task state. Previous tasks, their inputs, their results, and the handling user, are passed along with the task state.
-
-post_task: a function to be executed when all next_tasks elements have been executed, mutates the database state, and decides whether to finish the task, abort it, or repeat it.
+post_handler: a function to be executed when all next_tasks elements have been executed, mutates the database state, and decides whether to finish the task, abort it, or repeat it.
 
 /start_task
 starts a new task instance for the task with a unique id, and adds it as a responsibility for all relevant handler roles.
 requires:
 task_name: a task name.
+start_data: any data that is instrumental to starting the task, e.g. a target id for editors.
 
 /respond_task
 responds to a task instance.
 requires:
 task_id: the ID of the task.
 
-data: required input data for the task.
+dat: required input data for the task.

@@ -28,6 +28,15 @@ module.exports = (app) => {
 
 	});
 
+    //Handle tasks
+    router.use('/task', require('../router/task')(app).routes());
+
+    //Retrieve ui data
+    router.use('/content', require('../router/content')(app).routes());
+
+    //Retrieve account details
+    router.use('/account', require('../router/account')(app).routes());
+
 	app.koa.use(r.routes());
 	app.koa.use(r.allowedMethods());
 }
