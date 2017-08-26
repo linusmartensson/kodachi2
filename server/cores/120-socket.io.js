@@ -8,7 +8,7 @@ module.exports = async (app) => {
 	app.io = new IO();
 	app.io.attach(app.koa, true, app.ssl);
 
-	tools.loader("socketio", app);
+	tools.loader("socketio-middleware", app);
 
 	winston.info("SocketIO loaded!");
 }
