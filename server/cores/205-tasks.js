@@ -2,17 +2,24 @@
 module.exports = (app) => {
     var api = {};
 
+    //Task creation api
     api.yesno = () => {
         return [{field:'yes', desc:'yes', type:'button'},{field:'no', desc:'no', type:'button'}],
     }
     api.okcancel = () => {
         return [{field:'ok', desc:'ok', type:'button'},{field:'cancel', desc:'cancel', type:'button'}],
     }
-    
-    api.create_task = (task_name, starter_roles, handler_roles, inputs, result_handler, post_handler = ()=>{return 'OK'}) => {
+    api.step = (task_name, inputs, result_handler, post_handler) => {
+        api.create_task("", task_name, [], [], inputs, reuslt_handler, post_handler);
+        return api.step;
+    }
+    api.create_task = (task_group, task_name, starter_roles, handler_roles, inputs, result_handler, post_handler) => {
         if(!app.tasks) app.tasks = {};
 
+        if(!post_handler) post_handler = ()=>{return 'OK'};
+
         app.tasks[task_name] = {
+            task_group:task_group,
             task_name:task_name,
             starter_roles:starter_roles,
             handler_roles:handler_roles,
@@ -22,60 +29,80 @@ module.exports = (app) => {
         }
         return api.create_task;
     }
+    //-----------------------------------
 
-    
+    //DB update API
+    async function updateAccessibleTaskInstance(ctx, task_id, data) {
+        if(data){
+            return await app.cypher("MATCH (t:Task) WHERE t.id={target} RETURN t", {target:task_id});
+        } else {
+            var t = await app.cypher("MATCH (t:Task) WHERE t.id={target} SET t.data={data} RETURN t", {target:task_id, data:data});
 
+            //Find sessions
+            var s = await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:task_id});
 
-
-    function addTaskToUser(ctx, task){
-        //Note: Target origin user, not current user.
-        return false;
+            //Notify task update
+            app.sessionApi.notifySessions(s);
+            return t;
+        }
     }
-    function addTaskToSession(ctx, task){
-        //Note: Target origin session, not current session.
-        return false;
-    }
-    function addTaskToRoles(ctx, task){
-        return false;
-    }
+    async function finishTask(task_id){
+        var s = await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id});
 
-    function setupTask(ctx, inst, task) {
+        //Find sessions
+        await app.cypher("MATCH (t:Task) WHERE t.id={target} DELETE t", {target:task_id});
 
+        //Notify task finish
+        app.sessionApi.notifySessions(s);
+    }
+    async function addTaskToUser(task){
+        await app.cypher("MATCH (u:User) WHERE u.id={target} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->u", {target:task.origin, id:task.id, data:JSON.stringify(task)});
+    }
+    async function addTaskToSession(task){
+        await app.cypher("MATCH (s:Session) WHERE s.id={target} CREATE (t:Task {id:{id}, data:{data}})->[:HANDLED_BY]->s", {target:task.origin, id:task.id, data:JSON.stringify(task)});
+    }
+    async function addTaskToRoles(task, roles){
+        await app.cypher("MATCH (r:Role) WHERE r.name IN {targets} CREATE (t:Task {id:{id}, data:{data}})->[:HANDLED_BY]->r", {targets:roles, id:task.id, data:JSON.stringify(task)});
+    }
+    async function setupTask(ctx, inst, task) {
         if(!task.handler_roles){
-            if(app.userApi.loggedIn(ctx)){
-                addTaskToUser(ctx, inst);
+            var user = await app.userApi.getUser(inst.origin);
+            if(user){
+                await addTaskToUser(inst);
             } else {
-                addTaskToSession(ctx, inst);
+                await addTaskToSession(inst);
             }
         } else {
-            addTaskToRoles(ctx, inst, task.handler_roles);
+            await addTaskToRoles(inst, task.handler_roles);
         }
 
-    }
+        //Find sessions
+        var s = await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id});
 
-    api.start_task = (ctx, task_name, start_data) => {
+        //Notify task start
+        app.sessionApi.notifySessions(s);
+    }
+    //-----------------------------------
+
+    api.start_task = (ctx, task_name, start_data, origin) => {
         if(!app.tasks || !app.tasks[task_name]) return false; 
 
         var task = app.tasks[task_name];
 
-        //Check if user may start app.
-        if(!task.starter_roles) return false; //Can't be started manually.
-        if(!app.userApi.hasAnyRole(ctx, task.starter_roles)) return false;
+        if(!origin){
+        
+            //Check if user may start app.
+            if(!task.starter_roles) return false; //Can't be started manually.
+            if(!app.userApi.hasAnyRole(ctx, task.starter_roles)) return false;
+        }
 
         if(!start_data) start_data = {};
-        var inst = {task_name:task.taskName, id:app.uuid(), data:start_data, next_tasks:[], origin:app.userApi.userId(ctx), result:'WAIT_RESPONSE', response:{}}
+        var inst = {task_name:task.taskName, id:app.uuid(), data:start_data, next_tasks:[], origin:origin||app.userApi.userId(ctx)||app.userApi.session(ctx), result:'WAIT_RESPONSE', response:{}}
         
         setupTask(ctx, inst, task);
         return true;
     }
 
-    function updateAccessibleTaskInstance(ctx, task_id) {
-        return false;
-    }
-
-    function finishTask(inst, task, result){
-        
-    }
     function trickleTask(ctx, inst, child_inst){
         if(!inst.children) inst.children = {};
         

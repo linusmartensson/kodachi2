@@ -12,7 +12,7 @@ module.exports = async (app) => {
 	});
 	require('koa-onerror')(app.koa);
 	winston.info("Configured koa...");
-	tools.loader("middleware", app);
+	tools.loader("koa-middleware", app);
 
 
 	return true;

@@ -33,6 +33,7 @@
     "koa-sslify": "2.1.2",
     "koa-static-cache": "5.0.1",
     "neo4j": "2.0.0-RC2",
+    "neo4j-driver": "1.4.0",
     "nodemailer": "4.0.1",
     "passport-local": "1.0.0",
     "react": "15.5.4",

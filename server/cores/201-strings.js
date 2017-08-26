@@ -3,11 +3,11 @@
 module.exports = (app) => {
     var api = {};
 
-    app.create_string = (name, string) => {
+    api.create_string = (name, string) => {
         app.strings[name] = string;
     }
 
-    app.get_string = (name, lang) => {
+    api.get_string = (name, lang) => {
         return app.strings[name][lang];
     }
 

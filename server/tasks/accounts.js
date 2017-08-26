@@ -1,6 +1,13 @@
 
 module.exports = async (app) => {
 
+    //Login
+    //Logout
+    //Create account
+    //Edit account
+    //Forgot account details
+
+
     function isCorrectSsn(){
 
     }
@@ -12,14 +19,14 @@ module.exports = async (app) => {
     async function createAccount(inst){
     }
 
-    app.taskApi.create_task('logout'
+    app.taskApi.create_task('account', 'logout'
             ['user'],[],
             app.taskApi.okcancel(),
             async (inst) => {
                 if(inst.response.ok) app.userApi.logout(ctx);
                 return 'OK';
             });
-    app.taskApi.create_task('login'
+    app.taskApi.create_task('account','login'
             ['anonymous'],[],
             app.taskApi.okcancel().concat({field:'email_or_ssn', desc:'login', type:'text'}, {field:'password', desc:'password', type:'password'}),
             async (inst) => {
@@ -35,10 +42,12 @@ module.exports = async (app) => {
                     }
                 }
             });
-    app.taskApi.create_task('register_account', 
+    app.taskApi.create_task('account', 'register_account', 
             ['anonymous'],[], 
-            [{field:'ssn', desc:'ssn_field', type:'ssn'}, {field:'has_ssn', desc:'has_ssn_field', default:'checked', type:'checkbox', enables:'ssn'}], 
+            app.taskApi.okcancel().concat([{field:'ssn', desc:'ssn_field', type:'ssn'}, {field:'has_ssn', desc:'has_ssn_field', default:'checked', type:'checkbox', enables:'ssn'}]), 
             async (inst) => {
+
+                if(inst.response.cancel) return 'OK';
 
                 if(!inst.response.has_ssn){
                     inst.next_tasks.push('manual_ssn_details');
@@ -63,40 +72,41 @@ module.exports = async (app) => {
                     inst.next_tasks.push('manual_ssn_details');
                 return 'OK';
             }, (inst) => {
+                if(inst.response.cancel) return 'OK';
                 if(!createAccount(ctx, inst)) return 'RETRY';
                 return 'OK'; 
             }
     );
-    app.taskApi.create_task('check_ssn_details',
+    app.taskApi.create_task('account', 'check_ssn_details',
             [],[],
             app.taskApi.yesno(),
             async (inst) => {
-                if(ok) 
+                if(inst.response.yes) 
                     inst.next_tasks.push('fill_user_details');
                 else
                     inst.next_tasks.push('manual_ssn_details');
 
                 return 'OK';
             });
-    app.taskApi.create_task('manual_ssn_details'    //e.g. for people whose preferred gender, name, etc, don't match their ssn details, or for people with bad ssn.
+    app.taskApi.create_task('account','manual_ssn_details'    //e.g. for people whose preferred gender, name, etc, don't match their ssn details, or for people with bad ssn.
             [],[],
             [],
             async (inst) => {
                 return 'OK'; 
             });
-    app.taskApi.create_task('ssn_exists_forgot_details' //info page before forgot_account
+    app.taskApi.create_task('account','ssn_exists_forgot_details' //info page before forgot_account
             [],[],
             [],
             async (inst) => {
                 return 'OK'; 
             });
-    app.taskApi.create_task('fill_user_details'     //for email, avatar, nickname & password
+    app.taskApi.create_task('account','fill_user_details'     //for email, avatar, nickname & password
             [],[],
             [],
             async (inst) => {
                 return 'OK'; 
             });
-    app.taskApi.create_task('forgot_account_details'
+    app.taskApi.create_task('account','forgot_account_details'
             [],[],
             [],
             async (inst) => {
