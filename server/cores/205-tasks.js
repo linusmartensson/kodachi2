@@ -2,6 +2,9 @@
 module.exports = (app) => {
     var api = {};
 
+    //Delete all orphaned tasks (e.g. aborted registration)
+    app.cypher('MATCH (t:Task) WHERE NOT t-[:HANDLED_BY]->() DELETE t');
+
     //Task creation api
     api.yesno = () => {
         return [{field:'yes', desc:'yes', type:'button'},{field:'no', desc:'no', type:'button'}];
@@ -50,7 +53,7 @@ module.exports = (app) => {
         var s = await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id});
 
         //Find sessions
-        await app.cypher("MATCH (t:Task) WHERE t.id={target} DELETE t", {target:task_id});
+        await app.cypher("MATCH (t:Task) WHERE t.id={target} DETACH DELETE t", {target:task_id});
 
         //Notify task finish
         app.sessionApi.notifySessions(s);

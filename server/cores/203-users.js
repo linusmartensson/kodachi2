@@ -1,6 +1,4 @@
 
-import passport from 'koa-passport'
-
 import bcrypt from 'bcrypt'
 
 module.exports = (app) => {
@@ -39,13 +37,14 @@ module.exports = (app) => {
     api.session = async (ctx) => {
         //Return current session
         var s = ctx.session.localSession;
+        if(await app.cypher('MATCH (s:Session) WHERE s.id={id} RETURN s.inseceure))', {id:s})) s = ctx.session.localSession = false;
         if(s) return s;
 
         //Find a session associated with current user
         var u = api.userId(ctx);
         if(u) {
             var cs = await app.cypher(
-                    'MATCH (u:User)-[:HAS_SESSION]->(s:Session) WHERE u.id={id} RETURN s.id', 
+                    'MATCH (u:User)-[:HAS_SESSION]->(s:Session) WHERE u.id={id} AND NOT EXISTS(s.insecure) RETURN s.id',
                     {id:id});
             if(Array.isArray(cs)) cs = cs[0];
             ctx.session.localSession = cs;
@@ -54,7 +53,7 @@ module.exports = (app) => {
 
         //Create a new session
         var id = app.uuid() + app.uuid() + app.uuid();
-        await app.cypher("MATCH (u:User) WHERE u.id={id} CREATE (:Session {id:{id}})", {id:id});
+        await app.cypher("CREATE (:Session {id:{id}})", {id:id});
 
         //If necessary, associate new session with user
         if(u){
