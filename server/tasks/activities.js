@@ -81,7 +81,7 @@ module.exports = async (app) => {
     function updateBudget(inst){
     }
 
-    app.taskApi.create_task('', 'accept_area', [], ['event_admin'], app.taskApi.yesno().concat(f('comments', 'comments_field', 'textbox')), async(inst) => {
+    app.taskApi.create_task('', 'accept_area', [], ['event_admin'], app.taskApi.yesno().concat(f('comments', 'comments_field', 'textbox')), async(inst, ctx) => {
                 if(inst.response.yes){
                     updateSchedule(inst);
                     updateBudget(inst);

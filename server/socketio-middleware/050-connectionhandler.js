@@ -5,7 +5,12 @@ module.exports = (app) => {
 
 	app.clients = {};
 
-	app.io.on('connection', (ctx,data) => {
+	app.io.on('connection', (ctx) => {
+
+        winston.info(ctx.handshake);
+
+
+
 		winston.info("Connected", ctx.socket.id);
 		app.clients[ctx.socket.id] = {};
 		app.clients[ctx.socket.id].ctx = ctx;

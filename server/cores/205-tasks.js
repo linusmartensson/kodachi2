@@ -4,13 +4,13 @@ module.exports = (app) => {
 
     //Task creation api
     api.yesno = () => {
-        return [{field:'yes', desc:'yes', type:'button'},{field:'no', desc:'no', type:'button'}],
+        return [{field:'yes', desc:'yes', type:'button'},{field:'no', desc:'no', type:'button'}];
     }
     api.okcancel = () => {
-        return [{field:'ok', desc:'ok', type:'button'},{field:'cancel', desc:'cancel', type:'button'}],
+        return [{field:'ok', desc:'ok', type:'button'},{field:'cancel', desc:'cancel', type:'button'}];
     }
     api.step = (task_name, inputs, result_handler, post_handler) => {
-        api.create_task("", task_name, [], [], inputs, reuslt_handler, post_handler);
+        api.create_task("", task_name, [], [], inputs, result_handler, post_handler);
         return api.step;
     }
     api.create_task = (task_group, task_name, starter_roles, handler_roles, inputs, result_handler, post_handler) => {
@@ -59,10 +59,10 @@ module.exports = (app) => {
         await app.cypher("MATCH (u:User) WHERE u.id={target} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->u", {target:task.origin, id:task.id, data:JSON.stringify(task)});
     }
     async function addTaskToSession(task){
-        await app.cypher("MATCH (s:Session) WHERE s.id={target} CREATE (t:Task {id:{id}, data:{data}})->[:HANDLED_BY]->s", {target:task.origin, id:task.id, data:JSON.stringify(task)});
+        await app.cypher("MATCH (s:Session) WHERE s.id={target} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->s", {target:task.origin, id:task.id, data:JSON.stringify(task)});
     }
     async function addTaskToRoles(task, roles){
-        await app.cypher("MATCH (r:Role) WHERE r.name IN {targets} CREATE (t:Task {id:{id}, data:{data}})->[:HANDLED_BY]->r", {targets:roles, id:task.id, data:JSON.stringify(task)});
+        await app.cypher("MATCH (r:Role) WHERE r.name IN {targets} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->r", {targets:roles, id:task.id, data:JSON.stringify(task)});
     }
     async function setupTask(ctx, inst, task) {
         if(!task.handler_roles){
@@ -84,7 +84,7 @@ module.exports = (app) => {
     }
     //-----------------------------------
 
-    api.start_task = (ctx, task_name, start_data, origin) => {
+    api.start_task = async (ctx, task_name, start_data, origin) => {
         if(!app.tasks || !app.tasks[task_name]) return false; 
 
         var task = app.tasks[task_name];
@@ -93,7 +93,7 @@ module.exports = (app) => {
         
             //Check if user may start app.
             if(!task.starter_roles) return false; //Can't be started manually.
-            if(!app.userApi.hasAnyRole(ctx, task.starter_roles)) return false;
+            if(!app.userApi.hasAnyRole(app.userApi.userId(ctx), task.starter_roles)) return false;
         }
 
         if(!start_data) start_data = {};
@@ -103,7 +103,7 @@ module.exports = (app) => {
         return true;
     }
 
-    function trickleTask(ctx, inst, child_inst){
+    async function trickleTask(ctx, inst, child_inst){
         if(!inst.children) inst.children = {};
         
         if(child_inst)
@@ -153,7 +153,7 @@ module.exports = (app) => {
             return result;
         }
     }
-    function async nextTask(ctx, inst, task){
+    async function nextTask(ctx, inst, task){
     
         if(inst.next_tasks) {
             //Handle all child tasks.
@@ -182,7 +182,7 @@ module.exports = (app) => {
 
         //Process the response
         inst.response = response;
-        var result = await task.result_handler(inst);
+        var result = await task.result_handler(inst, ctx);
 
         //Store the result
         inst.result = result;

@@ -1,19 +1,12 @@
 import winston from 'winston'
-var neo4j = require('neo4j');
+var neo4j = require('neo4j-driver').v1;
 
 module.exports = async (app) => {
-	app.db = new neo4j.GraphDatabase('http://localhost:7474')
-	
+	app.db = neo4j.driver('bolt://localhost', neo4j.auth.basic("neo4j", "neo4j"))
+    app.dbSession = app.db.session();	
+   
     app.cypher = function(q, p){
-        return new Promise((resolve, reject) => {
-            app.db.cypher({query:q, params:p}, (err, result)=>{
-                if(err){
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
+       return app.dbSession.run(q,p); 
     };
     winston.info("Neo4j driver loaded!");
 }

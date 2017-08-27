@@ -1,5 +1,5 @@
 
-module.exports = async (app) => {
+module.exports = (app) => {
 
     //Login
     //Logout
@@ -12,7 +12,7 @@ module.exports = async (app) => {
 
     }
 
-    async function validateSsn(var ssn){
+    function validateSsn(ssn){
         return false;
     }
 
@@ -22,15 +22,14 @@ module.exports = async (app) => {
     app.taskApi.create_task('account', 'logout'
             ['user'],[],
             app.taskApi.okcancel(),
-            async (inst) => {
+            async (inst, ctx) => {
                 if(inst.response.ok) app.userApi.logout(ctx);
                 return 'OK';
             });
     app.taskApi.create_task('account','login'
             ['anonymous'],[],
             app.taskApi.okcancel().concat({field:'email_or_ssn', desc:'login', type:'text'}, {field:'password', desc:'password', type:'password'}),
-            async (inst) => {
-
+            async (inst, ctx) => {
                 if(inst.response.ok){
                     var user = app.userApi.findAccount({ssn:inst.response.email_or_ssn}) || app.userApi.findAccount({email:inst.response.email_or_ssn});
                     if(user) {
@@ -45,7 +44,7 @@ module.exports = async (app) => {
     app.taskApi.create_task('account', 'register_account', 
             ['anonymous'],[], 
             app.taskApi.okcancel().concat([{field:'ssn', desc:'ssn_field', type:'ssn'}, {field:'has_ssn', desc:'has_ssn_field', default:'checked', type:'checkbox', enables:'ssn'}]), 
-            async (inst) => {
+            async (inst, ctx) => {
 
                 if(inst.response.cancel) return 'OK';
 
@@ -88,25 +87,25 @@ module.exports = async (app) => {
 
                 return 'OK';
             });
-    app.taskApi.create_task('account','manual_ssn_details'    //e.g. for people whose preferred gender, name, etc, don't match their ssn details, or for people with bad ssn.
+    app.taskApi.create_task('account','manual_ssn_details',    //e.g. for people whose preferred gender, name, etc, don't match their ssn details, or for people with bad ssn.
             [],[],
             [],
             async (inst) => {
                 return 'OK'; 
             });
-    app.taskApi.create_task('account','ssn_exists_forgot_details' //info page before forgot_account
+    app.taskApi.create_task('account','ssn_exists_forgot_details', //info page before forgot_account
             [],[],
             [],
             async (inst) => {
                 return 'OK'; 
             });
-    app.taskApi.create_task('account','fill_user_details'     //for email, avatar, nickname & password
+    app.taskApi.create_task('account','fill_user_details',     //for email, avatar, nickname & password
             [],[],
             [],
             async (inst) => {
                 return 'OK'; 
             });
-    app.taskApi.create_task('account','forgot_account_details'
+    app.taskApi.create_task('account','forgot_account_details',
             [],[],
             [],
             async (inst) => {
