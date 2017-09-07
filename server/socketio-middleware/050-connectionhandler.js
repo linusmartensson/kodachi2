@@ -5,13 +5,18 @@ module.exports = (app) => {
 
 	app.clients = {};
 
+    app.clientSessions = {};
 
 	app.io.on('connection', async (ctx) => {
 
-        winston.info(ctx.handshake);
-        var token = ctx.handshake.query.token;
+        winston.info(ctx.socket.handshake);
+        var cid = (ctx.socket.client.id);
+        var token = ctx.socket.handshake.query.token;
 
         var u = await app.cypher("MATCH (s:Session)<-[:HAS_SESSION]-(u:User) WHERE s.id={id} AND NOT EXISTS(s.insecure) RETURN u", {id:token});
+
+        app.clientSessions[cid] = {};
+        ctx.session = app.clientSessions[cid];
 
         if(u){
             ctx.session.userId = u.id;
@@ -21,14 +26,15 @@ module.exports = (app) => {
             if(s){
                 ctx.session.localSession = token;
             } else {
-                ctx.close();
+                delete app.clientSession[cid];
+                ctx.socket.disconnect();
                 return;
             }
         }
 
-        if(ctx.handshake.secure == false){
+        if(ctx.socket.handshake.secure == false){
             //If we created an insecure session, make it insecure.
-            app.cypher("MATCH (s:Session) WHERE s.id={id} SET s.insecure=true", {id:token});
+            await app.cypher("MATCH (s:Session) WHERE s.id={id} SET s.insecure=true", {id:token});
         }
 
 
@@ -38,17 +44,28 @@ module.exports = (app) => {
 		if(!app.clients[token]) app.clients[token] = {};
 		app.clients[token][ctx.session.uuid] = ctx;
 
-        ctx.session.state = api.sessionApi.buildSession();
+        ctx.session.state = app.sessionApi.buildSession();
 
+        app.clientSessions[cid] = ctx.session;
         ctx.socket.emit('state', ctx.session.state);
 	});
 
-	app.io.on('disconnect', ctx => {
+	app.io.on('disconnect', async ctx => {
+        console.dir(ctx);
+        ctx.session = app.clientSessions[ctx.socket.socket.id];
 		winston.info("Disconnected", ctx.session.uuid);
 		delete app.clients[ctx.session.localSession][ctx.session.uuid];
 
         if(!app.clients[ctx.session.localSession]){
-            app.cypher('MATCH (s:Session) WHERE EXISTS(s.insecure) AND s.id={id} DETACH DELETE s', {id:ctx.session.localSession});
+            await app.cypher('MATCH (s:Session) WHERE EXISTS(s.insecure) AND s.id={id} DETACH DELETE s', {id:ctx.session.localSession});
         }
+        delete app.clientSessions[ctx.socket.socket.id];
 	});
+
+    return async (ctx, next) => {
+        ctx.session = app.clientSessions[ctx.socket.client.id];
+        await next();
+        app.clientSessions[ctx.socket.client.id] = ctx.session;
+    }
+
 }
