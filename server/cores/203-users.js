@@ -37,7 +37,7 @@ module.exports = (app) => {
     api.session = async (ctx) => {
         //Return current session
         var s = ctx.session.localSession;
-        if(await app.cypher('MATCH (s:Session) WHERE s.id={id} RETURN s.inseceure))', {id:s})) s = ctx.session.localSession = false;
+        if(await app.cypher('MATCH (s:Session) WHERE s.id={id} RETURN s.insecure', {id:s})) s = ctx.session.localSession = false;
         if(s) return s;
 
         //Find a session associated with current user
