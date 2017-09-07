@@ -11,17 +11,30 @@ import {
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 
+import io from 'socket.io-client';
+
 import {createStore, applyMiddleware} from 'redux';
 import rootReducer from './reducers/root.js'
 
 import './Workspace.css'
+import actions from './actions.js'
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
+var sio = io("https://localhost:3001/?token=123")
+
+sio.on('state', (data) => {
+    console.dir(data);
+    store.dispatch(actions.serverState(data));
+});
+sio.on('update', (data) => {
+    store.dispatch(actions.serverUpdate(data));
+});
+
 const drawer = {
     tools:[
-        {task:'LOGIN', title:'Log in'},
-        {task:'CREATE_EVENT', title:'Create an event'}
+        {id:0, task:'LOGIN', title:'Log in'},
+        {id:1, task:'CREATE_EVENT', title:'Create an event'}
     ],
     
     books:[
@@ -34,7 +47,7 @@ const drawer = {
 
 const profile = {nickname:'Lolpants'};
 
-const test_book = {path:'my-test-book', title:'My test book', content:[
+const test_book = {id:0, path:'my-test-book', title:'My test book', content:[
     {id:0, tiers:[
         {
             id:0, 
@@ -106,11 +119,15 @@ class Workspace extends Component {
 
 
         return (
-                <Provider store={store}><Router><div className="Workspace" style={backgroundConfig}>
-                    <Drawer profile={profile} books={drawer.books} tools={drawer.tools} />
-                    <div className="Workspace-head"><img src={headerImage} alt=""/></div>
-                    <Route path="/:path" component={SurfaceRoute}/>
-                </div></Router></Provider>
+                <Provider store={store}>
+                    <Router>
+                        <div className="Workspace" style={backgroundConfig}>
+                            <Drawer profile={profile} books={drawer.books} tools={drawer.tools} />
+                            <div className="Workspace-head"><img src={headerImage} alt=""/></div>
+                            <Route path="/:path" component={SurfaceRoute}/>
+                        </div>
+                    </Router>
+                </Provider>
                )
     }
 }
