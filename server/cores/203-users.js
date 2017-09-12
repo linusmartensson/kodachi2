@@ -26,9 +26,17 @@ module.exports = (app) => {
         var user = await app.cypher('MATCH (u:User) WHERE u.id={id} RETURN u', {id:id});
         return user;
     }
-    api.hasAnyRole = async (id, roles) => {
+    api.getRoles = async (id) => {
+        if(!id) return ['anonymous'];
         var userRoles = await app.cypher(
                 'MATCH (u:User)-[:HAS_ROLE]->(r:Role) WHERE u.id={id} RETURN r', {id:id});
+        return userRoles;
+    }
+    api.getUserRoles = async (ctx) => {
+        return api.getRoles(api.userId(ctx));
+    }
+    api.hasAnyRole = async (id, roles) => {
+        var userRoles = await api.getRoles(id);
         for(let v of roles){
             if(userRoles.includes(v)) return true;
         }
@@ -37,7 +45,7 @@ module.exports = (app) => {
     api.session = async (ctx) => {
         //Return current session
         var s = ctx.session.localSession;
-        if(await app.cypher('MATCH (s:Session) WHERE s.id={id} RETURN s.insecure', {id:s})) s = ctx.session.localSession = false;
+        if(s && await app.cypher('MATCH (s:Session) WHERE s.id={id} RETURN s.insecure', {id:s})) s = ctx.session.localSession = false;
         if(s) return s;
 
         //Find a session associated with current user

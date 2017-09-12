@@ -19,14 +19,14 @@ module.exports = (app) => {
     async function createAccount(inst){
     }
 
-    app.taskApi.create_task('account', 'logout'
+    app.taskApi.create_task('account', 'logout',
             ['user'],[],
             app.taskApi.okcancel(),
             async (inst, ctx) => {
                 if(inst.response.ok) app.userApi.logout(ctx);
                 return 'OK';
             });
-    app.taskApi.create_task('account','login'
+    app.taskApi.create_task('account','login',
             ['anonymous'],[],
             app.taskApi.okcancel().concat({field:'email_or_ssn', desc:'login', type:'text'}, {field:'password', desc:'password', type:'password'}),
             async (inst, ctx) => {

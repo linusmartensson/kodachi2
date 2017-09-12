@@ -44,7 +44,7 @@ module.exports = (app) => {
 		if(!app.clients[token]) app.clients[token] = {};
 		app.clients[token][ctx.session.uuid] = ctx;
 
-        ctx.session.state = app.sessionApi.buildSession();
+        ctx.session.state = await app.sessionApi.buildSession(ctx);
 
         app.clientSessions[cid] = ctx.session;
         ctx.socket.emit('state', ctx.session.state);

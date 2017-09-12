@@ -12,11 +12,11 @@ module.exports = (app) => {
     var api = {};
 
     //Core function for updating live clients.
-    api.notifySessions = (ss) => {
+    api.notifySessions = async (ss) => {
         for(var s of ss){
             if(clients[s.id]){
                 for(var ctx of clients[s.id]){
-                    var current = api.buildSession(ctx);
+                    var current = await api.buildSession(ctx);
                     var patch = patcher.diff(ctx.session.state, current);
                     ctx.socket.emit('update', patch);
                     ctx.session.state = current;
@@ -26,17 +26,29 @@ module.exports = (app) => {
     }
         
     //Build a complete session state -> The data we send to the client.
-    api.buildSession = (ctx) => {//TODO
+    api.buildSession = async (ctx) => {//TODO
         //Pages
         //Tasks
         //Tools
         //State
+    
+        //Pick out accessible tasks.
+        var tools = [];
+        var roles = await app.userApi.getUserRoles(ctx);
+        for(var t in app.tasks){
+            var rs = app.tasks[t].starter_roles;
+           
+            for(let v of rs){
+                if(roles.includes(v)){
+                    tools.push({id:t, task:t, title:app.tasks[t].task_name});
+                    break;
+                }
+            }
+        }
+        //----------------------
 
         var state = {
-            drawer:{
-                tools:[],
-                books:[]
-            },
+            tools:tools,
             profile:{
 
             },

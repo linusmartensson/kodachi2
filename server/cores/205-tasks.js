@@ -45,7 +45,7 @@ module.exports = (app) => {
             var s = await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:task_id});
 
             //Notify task update
-            app.sessionApi.notifySessions(s);
+            await app.sessionApi.notifySessions(s);
             return t;
         }
     }
@@ -56,7 +56,7 @@ module.exports = (app) => {
         await app.cypher("MATCH (t:Task) WHERE t.id={target} DETACH DELETE t", {target:task_id});
 
         //Notify task finish
-        app.sessionApi.notifySessions(s);
+        await app.sessionApi.notifySessions(s);
     }
     async function addTaskToUser(task){
         await app.cypher("MATCH (u:User) WHERE u.id={target} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->u", {target:task.origin, id:task.id, data:JSON.stringify(task)});
@@ -83,7 +83,7 @@ module.exports = (app) => {
         var s = await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id});
 
         //Notify task start
-        app.sessionApi.notifySessions(s);
+        await app.sessionApi.notifySessions(s);
     }
     //-----------------------------------
 
