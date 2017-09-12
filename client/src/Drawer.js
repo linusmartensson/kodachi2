@@ -11,9 +11,9 @@ class Drawer extends Component {
   }
   render() {
     return (<div className="Drawer">
-                <ShortProfile profile={this.props.profile} />
-                <Toolbox tools={this.props.tools}/>
-                <Pages books={this.props.books}/>
+                <ShortProfile />
+                <Toolbox />
+                <Pages />
             </div>);
   }
 }

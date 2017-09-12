@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import './Pages.css'
 import StoredPage from './StoredPage'
+import {connect} from 'react-redux'
 
 class Pages extends Component {
   render() {
@@ -10,4 +11,12 @@ class Pages extends Component {
     return (<div className="Pages">{books}</div>);
   }
 }
-export default Pages;
+
+const PagesContainer = connect(
+        state => {
+            return {books: state.session.books?state.session.books:[]};
+        },
+        dispatch => {
+
+        })(Pages);
+export default PagesContainer;

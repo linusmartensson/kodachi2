@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import './Toolbox.css'
 import Tool from './Tool'
+import {connect} from 'react-redux'
 
 class Toolbox extends Component {
   render() {
@@ -14,4 +15,13 @@ class Toolbox extends Component {
     return (<div className="Toolbox">{tools}</div>);
   }
 }
-export default Toolbox;
+
+const ToolboxContainer = connect(
+        state => {
+            return {tools: state.session.tools?state.session.tools:[]}
+        },
+        dispatch => {
+
+        }
+        )(Toolbox);
+export default ToolboxContainer;
