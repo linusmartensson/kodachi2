@@ -161,8 +161,14 @@ module.exports = (app) => {
         if(inst.next_tasks) {
             //Handle all child tasks.
             for(n in inst.next_tasks){
-                var child_task = app.tasks[inst.next_tasks[n]];
-                var child_inst = {task_name:child_task.task_name, id:app.uuid(), next_tasks:[], data:inst.data, parent:inst, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
+                var uuid = app.uuid();
+                var tasktype = inst.next_tasks[n];
+                if(typeof inst.next_tasks[n] == 'object'){
+                    uuid = tasktype.uuid;
+                    tasktype = tasktype.task;
+                }
+                var child_task = app.tasks[tasktype];
+                var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
                 setupTask(ctx, child_inst, child_task);
             }
         
