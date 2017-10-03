@@ -7,15 +7,12 @@ class RedisStore {
 
     async get(sid) {
     	if(sid.startsWith("koa:sess:")) sid = sid.slice(9);
-    	console.dir("reading from "+sid)
         let data = await this.redis.get(`koa:sess:${sid}`);
-        console.dir(data);
         return JSON.parse(data);
     }
 
     async set(sid, v, maxAge = 1000000) {
     	if(sid.startsWith("koa:sess:")) sid = sid.slice(9);
-    	console.log("writing "+v+" to sid "+sid);
         try {
             // Use redis set EX to automatically drop expired sessions
             await this.redis.set(`koa:sess:${sid}`, JSON.stringify(v), 'EX', maxAge / 1000);

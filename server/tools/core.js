@@ -22,7 +22,7 @@ var timeout = null;
 function watch(file, reload) {
 	winston.info("watcher on "+file);
 	fs.readdirSync(file).forEach(function (f) {
-		if(f.match("^\\.")) return;
+		if(f.match(/^\./)) return;
 		if(f.match("node_modules")) return;
 		if(fs.statSync(file + "/" + f).isDirectory()){
 			watch(file + '/' + f, reload);
@@ -32,6 +32,7 @@ function watch(file, reload) {
 		persistent: cluster.isMaster,
 		recursive: true
 	}, (eventType, fileName) => {
+        if(fileName.match(/^\./)) return;
 		if(timeout != null) clearTimeout(timeout);
 		timeout = setTimeout(()=>{reload();}, 250);
 	});

@@ -24,13 +24,13 @@ module.exports = (app) => {
 
     api.getUser = async (id) => {
         var user = await app.cypher('MATCH (u:User) WHERE u.id={id} RETURN u', {id:id});
-        return user;
+        return user.records.length>0?user.records[0]:undefined;
     }
     api.getRoles = async (id) => {
         if(!id) return ['anonymous'];
         var userRoles = await app.cypher(
                 'MATCH (u:User)-[:HAS_ROLE]->(r:Role) WHERE u.id={id} RETURN r', {id:id});
-        return userRoles;
+        return userRoles.records.length>0?user.records:undefined;
     }
     api.getUserRoles = async (ctx) => {
         return api.getRoles(api.userId(ctx));
@@ -45,8 +45,14 @@ module.exports = (app) => {
     api.session = async (ctx) => {
         //Return current session
         var s = ctx.session.localSession;
-        if(s && await app.cypher('MATCH (s:Session) WHERE s.id={id} RETURN s.insecure', {id:s})) s = ctx.session.localSession = false;
-        if(s) return s;
+
+        var q = s?(await app.cypher('MATCH (s:Session) WHERE s.id={id} RETURN s', {id:s})).records:null;
+        if(!q || q.length == 0 || q[0].get('s').properties.insecure){
+            s = ctx.session.localSession = false;
+        }
+        if(s){
+            return s;
+        }
 
         //Find a session associated with current user
         var u = api.userId(ctx);
@@ -54,11 +60,10 @@ module.exports = (app) => {
             var cs = await app.cypher(
                     'MATCH (u:User)-[:HAS_SESSION]->(s:Session) WHERE u.id={id} AND NOT EXISTS(s.insecure) RETURN s.id',
                     {id:id});
-            if(Array.isArray(cs)) cs = cs[0];
+            cs = cs.records.length>0?cs.records[0].get('s.id'):undefined;
             ctx.session.localSession = cs;
             if(cs) return cs;
         }
-
         //Create a new session
         var id = app.uuid() + app.uuid() + app.uuid();
         await app.cypher("CREATE (:Session {id:{id}})", {id:id});

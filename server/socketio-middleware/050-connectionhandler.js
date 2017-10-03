@@ -8,25 +8,24 @@ module.exports = (app) => {
     app.clientSessions = {};
 
 	app.io.on('connection', async (ctx) => {
-
-        winston.info(ctx.socket.handshake);
+        try{
         var cid = (ctx.socket.client.id);
         var token = ctx.socket.handshake.query.token;
 
-        var u = await app.cypher("MATCH (s:Session)<-[:HAS_SESSION]-(u:User) WHERE s.id={id} AND NOT EXISTS(s.insecure) RETURN u", {id:token});
+        var u = (await app.cypher("MATCH (s:Session)<-[:HAS_SESSION]-(u:User) WHERE s.id={id} AND NOT EXISTS(s.insecure) RETURN u", {id:token})).records;
 
         app.clientSessions[cid] = {};
         ctx.session = app.clientSessions[cid];
 
-        if(u){
-            ctx.session.userId = u.id;
+        if(u.length > 0){
+            ctx.session.userId = u[0].id;
             ctx.session.localSession = token;
         } else {
-            var s = await app.cypher("MATCH (s:Session) WHERE s.id={id} RETURN s", {id:token});
-            if(s){
+            var s = (await app.cypher("MATCH (s:Session) WHERE s.id={id} RETURN s", {id:token})).records;
+            if(s.length > 0){
                 ctx.session.localSession = token;
             } else {
-                delete app.clientSession[cid];
+                delete app.clientSessions[cid];
                 ctx.socket.disconnect();
                 return;
             }
@@ -48,10 +47,10 @@ module.exports = (app) => {
 
         app.clientSessions[cid] = ctx.session;
         ctx.socket.emit('state', ctx.session.state);
+        } catch(e) {console.dir(e);}
 	});
 
 	app.io.on('disconnect', async ctx => {
-        console.dir(ctx);
         ctx.session = app.clientSessions[ctx.socket.socket.id];
 		winston.info("Disconnected", ctx.session.uuid);
 		delete app.clients[ctx.session.localSession][ctx.session.uuid];

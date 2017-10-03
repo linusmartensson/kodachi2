@@ -17,6 +17,6 @@ const PagesContainer = connect(
             return {books: state.session.books?state.session.books:[]};
         },
         dispatch => {
-
+            return {}
         })(Pages);
 export default PagesContainer;

@@ -13,15 +13,20 @@ module.exports = (app) => {
 
     //Core function for updating live clients.
     api.notifySessions = async (ss) => {
+        try{
         for(var s of ss){
-            if(clients[s.id]){
-                for(var ctx of clients[s.id]){
+            if(app.clients[s]){
+                for(var id in app.clients[s]){
+                    var ctx = app.clients[s][id];
                     var current = await api.buildSession(ctx);
                     var patch = patcher.diff(ctx.session.state, current);
                     ctx.socket.emit('update', patch);
                     ctx.session.state = current;
                 }
             }
+        }
+        }catch(e){
+            console.dir(e);
         }
     }
         
@@ -37,7 +42,6 @@ module.exports = (app) => {
         var roles = await app.userApi.getUserRoles(ctx);
         for(var t in app.tasks){
             var rs = app.tasks[t].starter_roles;
-           
             for(let v of rs){
                 if(roles.includes(v)){
                     tools.push({id:t, task:t, title:app.tasks[t].task_name});
@@ -46,9 +50,20 @@ module.exports = (app) => {
             }
         }
         //----------------------
+    
+        var tasks = [];
+        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE s.id={id} RETURN t", {id:ctx.session.localSession})).records;
+        
+        for(let q of s){
+            var task = JSON.parse(q.get('t').properties.data);
+            task.type = app.tasks[task.task_name];
+            tasks.push(task);
+        }
+
 
         var state = {
-            tools:tools,
+            tools,
+            tasks,
             profile:{
 
             },

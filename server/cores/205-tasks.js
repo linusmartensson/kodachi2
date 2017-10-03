@@ -2,8 +2,46 @@
 module.exports = (app) => {
     var api = {};
 
+    if(!app.taskFilters) app.taskFilters = {};
+    if(!app.tasks) app.tasks = {};
+
     //Delete all orphaned tasks (e.g. aborted registration)
-    app.cypher('MATCH (t:Task) WHERE NOT t-[:HANDLED_BY]->() DELETE t');
+    app.cypher('MATCH (t:Task) WHERE NOT (t)-[:HANDLED_BY]->() DELETE t');
+
+    api.add_filter = (type, filterFunc) => {
+        app.taskFilters[type] = filterFunc;
+    }
+
+    api.add_filter("button", (d)=>{return !!d;});
+    api.add_filter("text", (d)=>{return ''+d;});
+    api.add_filter("textbox", (d)=>{return ''+d;});
+    api.add_filter("password", (d)=>{return ''+d;});
+    api.add_filter("ssn", (d)=>{
+        d = d.replace(/\D/g, '');
+        if(d.length != 10){
+            throw 'Invalid SSN';
+        }
+        return d;
+    });
+    api.add_filter("checkbox", (d)=>{return d;}); //TODO How2handle checkboxes??
+    api.add_filter("hours", (d)=>{return d;}); //TODO How2handle hours??
+    api.add_filter("dropdown", (d,q)=>{ //Index of values-list.
+        if(~~d >= q.values.length) throw 'Invalid dropdown selection';
+        return ~~d;
+    });
+    api.add_filter("number", (d)=>{return d.replace(/\D/g, '');});
+    api.add_filter("amount", (d)=>{return d.replace(/\D/g, '');});
+
+
+    api.filterResponse = (response, matches) => {
+        var out = {};
+
+        for(var v in matches) {
+            if(!inputs[v].field) continue;
+            out[inputs[v].field] = app.taskFilters[inputs[v].type](response[inputs[v].field], inputs[v]);
+        }
+        return out;
+    }
 
     //Task creation api
     api.yesno = () => {
@@ -17,9 +55,16 @@ module.exports = (app) => {
         return api.step;
     }
     api.create_task = (task_group, task_name, starter_roles, handler_roles, inputs, result_handler, post_handler) => {
-        if(!app.tasks) app.tasks = {};
 
         if(!post_handler) post_handler = ()=>{return 'OK'};
+
+        for(var v in inputs){
+            if(!inputs[v].field) continue;
+            if(!app.taskFilters[inputs[v].type]){
+                console.log("Missing filter:"+inputs[v].type);
+                process.exit(1);
+            }
+        }
 
         app.tasks[task_name] = {
             task_group:task_group,
@@ -37,12 +82,12 @@ module.exports = (app) => {
     //DB update API
     async function updateAccessibleTaskInstance(ctx, task_id, data) {
         if(data){
-            return await app.cypher("MATCH (t:Task) WHERE t.id={target} RETURN t", {target:task_id});
+            return (await app.cypher("MATCH (t:Task) WHERE t.id={target} RETURN t", {target:task_id})).records;
         } else {
-            var t = await app.cypher("MATCH (t:Task) WHERE t.id={target} SET t.data={data} RETURN t", {target:task_id, data:data});
+            var t = (await app.cypher("MATCH (t:Task) WHERE t.id={target} SET t.data={data} RETURN t", {target:task_id, data:data})).records;
 
             //Find sessions
-            var s = await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:task_id});
+            var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:task_id})).records;
 
             //Notify task update
             await app.sessionApi.notifySessions(s);
@@ -50,7 +95,7 @@ module.exports = (app) => {
         }
     }
     async function finishTask(task_id){
-        var s = await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id});
+        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id})).records;
 
         //Find sessions
         await app.cypher("MATCH (t:Task) WHERE t.id={target} DETACH DELETE t", {target:task_id});
@@ -59,16 +104,16 @@ module.exports = (app) => {
         await app.sessionApi.notifySessions(s);
     }
     async function addTaskToUser(task){
-        await app.cypher("MATCH (u:User) WHERE u.id={target} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->u", {target:task.origin, id:task.id, data:JSON.stringify(task)});
+        await app.cypher("MATCH (u:User) WHERE u.id={target} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->(u)", {target:task.origin, id:task.id, data:JSON.stringify(task)});
     }
     async function addTaskToSession(task){
-        await app.cypher("MATCH (s:Session) WHERE s.id={target} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->s", {target:task.origin, id:task.id, data:JSON.stringify(task)});
+        await app.cypher("MATCH (s:Session) WHERE s.id={target} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->(s)", {target:task.origin, id:task.id, data:JSON.stringify(task)});
     }
     async function addTaskToRoles(task, roles){
-        await app.cypher("MATCH (r:Role) WHERE r.name IN {targets} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->r", {targets:roles, id:task.id, data:JSON.stringify(task)});
+        await app.cypher("MATCH (r:Role) WHRE r.name IN {targets} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->(r)", {targets:roles, id:task.id, data:JSON.stringify(task)});
     }
     async function setupTask(ctx, inst, task) {
-        if(!task.handler_roles){
+        if(task.handler_roles.length == 0){
             var user = await app.userApi.getUser(inst.origin);
             if(user){
                 await addTaskToUser(inst);
@@ -80,27 +125,35 @@ module.exports = (app) => {
         }
 
         //Find sessions
-        var s = await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id});
+        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id})).records;
+
+        var q = [];
+        for(let m of s){
+            q.push(m.get('s').properties.id);
+        }
 
         //Notify task start
-        await app.sessionApi.notifySessions(s);
+        await app.sessionApi.notifySessions(q);
     }
     //-----------------------------------
 
+    //NOTE: Setting origin bypasses security. Do NOT set origin in user calls.
     api.start_task = async (ctx, task_name, start_data, origin) => {
         if(!app.tasks || !app.tasks[task_name]) return false; 
+        console.dir("starting task!");
 
         var task = app.tasks[task_name];
+
 
         if(!origin){
         
             //Check if user may start app.
             if(!task.starter_roles) return false; //Can't be started manually.
-            if(!app.userApi.hasAnyRole(app.userApi.userId(ctx), task.starter_roles)) return false;
+            if(!await app.userApi.hasAnyRole(app.userApi.userId(ctx), task.starter_roles)) return false;
         }
 
         if(!start_data) start_data = {};
-        var inst = {task_name:task.taskName, id:app.uuid(), data:start_data, next_tasks:[], origin:origin||app.userApi.userId(ctx)||app.userApi.session(ctx), result:'WAIT_RESPONSE', response:{}}
+        var inst = {task_name:task.task_name, id:app.uuid(), data:{start_data:start_data}, next_tasks:[], origin:origin||await app.userApi.userId(ctx)||await app.userApi.session(ctx), result:'WAIT_RESPONSE', response:{}}
         
         setupTask(ctx, inst, task);
         return true;
@@ -188,6 +241,12 @@ module.exports = (app) => {
 
         //Find the task
         var task = app.tasks[inst.task_name];
+
+        try{
+            response = api.filterResponse(response, task.inputs);
+        } catch (e) {
+            return 'RETRY';
+        }
 
         //Process the response
         inst.response = response;

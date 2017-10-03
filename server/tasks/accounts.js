@@ -7,13 +7,43 @@ module.exports = (app) => {
     //Edit account
     //Forgot account details
 
+    function query(target){
+        return new Promise((resolve, reject) => {
+            const options = {
+                hostname: app.ratsitkey.endpoint,
+                port: 443,
+                path: '/api/v1/personinformation?SSN='+target,
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': app.ratsitkey.auth,
+                    'Package': 'personadress'
+                }
+            }
+            const req = https.request(options, (res) => {
+                console.log('statusCode:', res.statusCode);
+                console.log('headers:', res.headers);
 
-    function isCorrectSsn(){
-
+                var body = [];
+                res.on('data', (d) => {
+                    body.push(d);
+                });
+                res.on('end', () => {
+                    resolve(Buffer.concat(body).toString());
+                });
+                res.on('error', (e) => {
+                    reject(e);
+                });
+            });
+            req.on('error', (e) => {
+                reject(e);
+            });
+            req.end();
+        });
     }
 
-    function validateSsn(ssn){
-        return false;
+    async function validateSsn(ssn){
+        return await query(ssn);
     }
 
     async function createAccount(inst){
@@ -54,15 +84,10 @@ module.exports = (app) => {
                     return 'OK';
                 }
 
-                if(!isCorrectSsn(inst.response.ssn)){
-                    inst.errmsg = 'invalid_ssn';
-                    return 'RETRY';
-                }
-
-
                 inst.data.ssnResult = await validateSsn(inst.response.ssn);
+                console.dir(inst.data.ssnResult);
 
-                if(inst.data.ssnResult) {
+                if(inst.data.ssnResult && inst.data.ssnResult.responseCode && inst.data.ssnResult.responseCode == 'Ok') {
                     if(app.userApi.findAccount({ssn:inst.data.ssnResult.ssn}))
                         inst.next_tasks.push('ssn_exists_forgot_details');
                     else

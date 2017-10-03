@@ -13,9 +13,14 @@
  vertical-align:middle;
 }
 
-.Tool span {
+.Tool input {
  display:inline-block;
  margin-left:10px;
+ background:none;
+ border:0px;
+}
+.Tool input:hover {
+ color:red;
 }
 
 .Tool:hover p{

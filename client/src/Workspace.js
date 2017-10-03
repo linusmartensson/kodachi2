@@ -1,37 +1,35 @@
 
+import 'babel-polyfill'
+
 import React, { Component } from 'react';
 import Surface from './Surface'
 import Drawer from './Drawer'
 
-import { 
-    BrowserRouter as Router,
-    Route
-} from 'react-router-dom';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 import {Provider} from 'react-redux';
-import thunk from 'redux-thunk';
+import thunkMiddleware from 'redux-thunk';
+import promiseMiddleware from 'redux-promise';
 
-import io from 'socket.io-client';
 
 import {createStore, applyMiddleware} from 'redux';
-import rootReducer from './reducers/root.js'
+import {actions, reducer} from './reducers/root.js'
+
+import TaskPopup from './TaskPopup';
 
 import './Workspace.css'
-import actions from './actions.js'
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(reducer, applyMiddleware(store => next => action => {
+    var isfun = (obj) => {
+        return typeof obj === 'function';
+    };
+    return next(isfun(action.payload)?action.payload:action);
+},thunkMiddleware, promiseMiddleware));
+require('es6-promise').polyfill()
 
-var sio = io("https://localhost:3001/?token=123")
+store.dispatch(actions.app.server.start());
 
-sio.on('state', (data) => {
-    console.dir(data);
-    store.dispatch(actions.serverState(data));
-});
-sio.on('update', (data) => {
-    store.dispatch(actions.serverUpdate(data));
-});
 
-const profile = {nickname:'Lolpants'};
 class Workspace extends Component {
     render() {
 
@@ -46,6 +44,7 @@ class Workspace extends Component {
                             <Drawer/>
                             <div className="Workspace-head"><img src={headerImage} alt=""/></div>
                             <Route path="/:path" component={SurfaceRoute}/>
+                            <TaskPopup />
                         </div>
                     </Router>
                 </Provider>
