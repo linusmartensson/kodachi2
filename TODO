@@ -1,0 +1,3 @@
+* finish task popups
+* convert task fields to more generic config
+* add "limit 1" tasks, where only one instance of a task can exist for a user

@@ -3,6 +3,7 @@
 import {createActions, handleActions} from 'redux-actions'
 import fetch from 'isomorphic-fetch'
 import io from 'socket.io-client';
+var _ = require('lodash');
 
 var patcher = require('jsondiffpatch').create({
     objectHash: (obj) => {
@@ -29,8 +30,12 @@ export const actions = createActions({
                                 dispatch(actions.app.server.state(data));
                             });
                             sio.on('update', (data) => {
-                                console.dir("HEEEY, I'm getting state over here!");
                                 dispatch(actions.app.server.update(data));
+                                if(data.tasks){
+                                    if(data.tasks[0][0]){
+                                        dispatch(actions.app.task.show(data.tasks[0][0]));
+                                    }   
+                                }
                             });
                         });
                 }
@@ -44,12 +49,9 @@ export const actions = createActions({
                 SUCCESS: () => ({}),
                 FAILURE: () => ({}),
                 DO: (task) => {
-                    console.trace();
                     return dispatch => {
-                        console.dir("hello?");
                         dispatch(actions.app.task.start.request());
-                        fetch(host+'task/start_task/'+task,{credentials:'include'}).then(console.dir).then(()=>{
-                            console.dir("ya!");
+                        fetch(host+'task/start_task/'+task,{credentials:'include'}).then(()=>{
                             dispatch(actions.app.task.start.success())   
                         });
                     }
@@ -71,10 +73,12 @@ export const reducer = handleActions({
     APP: {
         SERVER: {
             UPDATE: (state, action) => {
-                return Object.assign({}, state, {session:patcher.patch(state.session, action.payload.diff)});  
+                var v = _.cloneDeep(state);  
+                patcher.patch(v.session, action.payload.diff)
+                return v;
             },
             STATE: (state, action) => {
-                return Object.assign({}, state, {session:action.payload.state});
+                return {...state, session:action.payload.state};
             }
         },
         TASK: {
@@ -83,7 +87,6 @@ export const reducer = handleActions({
                 SUCCESS: (state, action) => ({...state, isFetching:false}),
                 FAILURE: (state, action) => ({...state, isFetching:false}),
                 DO: (state, action) => {
-                    console.dir(action);
                     return {...state}
                 }
             },
