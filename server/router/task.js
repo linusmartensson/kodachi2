@@ -11,7 +11,7 @@ module.exports = (app) => {
 
     r.post('/respond_task/:task_id', async (ctx, next) => {
         var form = await app.utils.form(ctx);
-        ctx.body = await api.taskApi.respond_task(ctx, ctx.params.task_id, form);
+        ctx.body = await app.taskApi.respond_task(ctx, ctx.params.task_id, form);
     });
     return r;
 

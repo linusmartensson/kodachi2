@@ -55,6 +55,7 @@ module.exports = (app) => {
         var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE s.id={id} RETURN t", {id:ctx.session.localSession})).records;
         
         for(let q of s){
+            console.dir(q.get('t').properties.data);
             var task = JSON.parse(q.get('t').properties.data);
             task.type = app.tasks[task.task_name];
             tasks.push(task);

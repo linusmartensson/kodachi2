@@ -31,7 +31,7 @@ export const actions = createActions({
                             });
                             sio.on('update', (data) => {
                                 dispatch(actions.app.server.update(data));
-                                if(data.tasks){
+                                if(data.tasks && data.tasks[0]){
                                     if(data.tasks[0][0]){
                                         dispatch(actions.app.task.show(data.tasks[0][0]));
                                     }   
@@ -63,11 +63,25 @@ export const actions = createActions({
                 FAILURE: () => ({}),
                 DO: () => ({})
             },
-            SHOW: (task) => ({task}),
-            CLOSE: () => ({})
+            SHOW: (id) => ({id}),
+            CLOSE: () => ({}),
+            SUBMIT: (task, form) => {
+                return dispatch => {
+                    dispatch(actions.app.task.close());
+                    fetch(host+'task/respond_task/'+task.id,
+                        {credentials:'include', method:'POST', body:form});
+                }
+            }
         }
     }
 });
+
+function getTask(state, id){
+    for(let i of state.session.tasks){
+        if(i.id === id) return i;
+    }
+    return undefined;
+}
 
 export const reducer = handleActions({
     APP: {
@@ -96,9 +110,10 @@ export const reducer = handleActions({
                 FAILURE: (state, action) => ({...state, isFetching:false}),
                 DO: (state, action) => ({...state})
             },
-            SHOW: (state, action) => ({
-                ...state, currentTask: {id:state.session.tasks[action.payload.id], tiers:state.session.books[0].content[0].tiers},
-            }),
+            SHOW: (state, action) => {
+                var v = _.cloneDeep({task:getTask(state, action.payload.id), tiers:state.session.books[0].content[0].tiers});
+                return {...state, currentTask: v}
+            },
             CLOSE: (state, action) => ({
                 ...state, currentTask:undefined
             })

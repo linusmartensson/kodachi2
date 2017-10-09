@@ -51,14 +51,14 @@ module.exports = (app) => {
 
     app.taskApi.create_task('account', 'logout',
             ['user'],[],
-            app.taskApi.okcancel(),
+            app.taskApi.okcancel().concat({unique:true,autocancel:true}),
             async (inst, ctx) => {
                 if(inst.response.ok) app.userApi.logout(ctx);
                 return 'OK';
             });
     app.taskApi.create_task('account','login',
             ['anonymous'],[],
-            app.taskApi.okcancel().concat({field:'email_or_ssn', desc:'login', type:'text'}, {field:'password', desc:'password', type:'password'}),
+            app.taskApi.okcancel().concat({field:'email_or_ssn', desc:'login', type:'text'}, {field:'password', desc:'password', type:'password'}).concat({unique:true,autocancel:true}),
             async (inst, ctx) => {
                 if(inst.response.ok){
                     var user = app.userApi.findAccount({ssn:inst.response.email_or_ssn}) || app.userApi.findAccount({email:inst.response.email_or_ssn});
@@ -73,7 +73,7 @@ module.exports = (app) => {
             });
     app.taskApi.create_task('account', 'register_account', 
             ['anonymous'],[], 
-            app.taskApi.okcancel().concat([{field:'ssn', desc:'ssn_field', type:'ssn'}, {field:'has_ssn', desc:'has_ssn_field', default:'checked', type:'checkbox', enables:'ssn'}]), 
+            app.taskApi.okcancel().concat([{field:'ssn', desc:'ssn_field', type:'ssn'}, {field:'has_ssn', desc:'has_ssn_field', default:'checked', type:'checkbox', enables:'ssn'}]).concat({unique:true}), 
             async (inst, ctx) => {
 
                 if(inst.response.cancel) return 'OK';

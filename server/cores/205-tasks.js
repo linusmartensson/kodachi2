@@ -79,6 +79,13 @@ module.exports = (app) => {
     }
     //-----------------------------------
 
+    function uniqueTask(task){
+        for(let i of task.inputs){
+            if(i.unique) return true;
+        }
+        return false;
+    }
+
     //DB update API
     async function updateAccessibleTaskInstance(ctx, task_id, data) {
         if(data){
@@ -94,6 +101,11 @@ module.exports = (app) => {
             return t;
         }
     }
+    async function findTaskByType(ctx, type){
+        var t = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.type={type} AND s.id={sessionId} RETURN t", {type:type, sessionId:ctx.session.localSession})).records;
+        if(!t || t.length==0) return null;
+        return t;
+    }
     async function finishTask(task_id){
         var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id})).records;
 
@@ -104,13 +116,13 @@ module.exports = (app) => {
         await app.sessionApi.notifySessions(s);
     }
     async function addTaskToUser(task){
-        await app.cypher("MATCH (u:User) WHERE u.id={target} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->(u)", {target:task.origin, id:task.id, data:JSON.stringify(task)});
+        await app.cypher("MATCH (u:User) WHERE u.id={target} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(u)", {target:task.origin, id:task.id, data:JSON.stringify(task), type:task.task_name});
     }
     async function addTaskToSession(task){
-        await app.cypher("MATCH (s:Session) WHERE s.id={target} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->(s)", {target:task.origin, id:task.id, data:JSON.stringify(task)});
+        await app.cypher("MATCH (s:Session) WHERE s.id={target} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(s)", {target:task.origin, id:task.id, data:JSON.stringify(task), type:task.task_name});
     }
     async function addTaskToRoles(task, roles){
-        await app.cypher("MATCH (r:Role) WHRE r.name IN {targets} CREATE (t:Task {id:{id}, data:{data}})-[:HANDLED_BY]->(r)", {targets:roles, id:task.id, data:JSON.stringify(task)});
+        await app.cypher("MATCH (r:Role) WHRE r.name IN {targets} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(r)", {targets:roles, id:task.id, data:JSON.stringify(task), type:task.task_name});
     }
     async function setupTask(ctx, inst, task) {
         if(task.handler_roles.length == 0){
@@ -144,6 +156,10 @@ module.exports = (app) => {
 
         var task = app.tasks[task_name];
 
+        //This user/session/whatever already has a unique task for this type.
+        if(uniqueTask(task)){
+            if((await findTaskByType(ctx, task_name)) != null) return false;
+        }
 
         if(!origin){
         
@@ -211,7 +227,7 @@ module.exports = (app) => {
     }
     async function nextTask(ctx, inst, task){
     
-        if(inst.next_tasks) {
+        if(inst.next_tasks && inst.next_tasks.length > 0) {
             //Handle all child tasks.
             for(n in inst.next_tasks){
                 var uuid = app.uuid();
