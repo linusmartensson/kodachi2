@@ -58,22 +58,24 @@ module.exports = (app) => {
             });
     app.taskApi.create_task('account','login',
             ['anonymous'],[],
-            app.taskApi.okcancel().concat({field:'email_or_ssn', desc:'login', type:'text'}, {field:'password', desc:'password', type:'password'}).concat({unique:true,autocancel:true}),
+            app.taskApi.okcancel().concat({field:'email_or_ssn', type:'text'}, {field:'password', type:'password'}).concat({unique:true,autocancel:true}),
             async (inst, ctx) => {
                 if(inst.response.ok){
-                    var user = app.userApi.findAccount({ssn:inst.response.email_or_ssn}) || app.userApi.findAccount({email:inst.response.email_or_ssn});
+                    var user = await app.userApi.findAccount({ssn:inst.response.email_or_ssn}) || app.userApi.findAccount({email:inst.response.email_or_ssn});
                     if(user) {
-                        if(app.userApi.tryLogin(ctx, user, inst.response.password)){
+                        if(await app.userApi.tryLogin(ctx, user, inst.response.password)){
                             return 'OK';
                         } else return 'RETRY';
                     } else {
                         return 'OK';
                     }
-                }
+                } else if(inst.response.cancel) {
+                    return 'OK';
+                } else return 'RETRY';
             });
     app.taskApi.create_task('account', 'register_account', 
             ['anonymous'],[], 
-            app.taskApi.okcancel().concat([{field:'ssn', desc:'ssn_field', type:'ssn'}, {field:'has_ssn', desc:'has_ssn_field', default:'checked', type:'checkbox', enables:'ssn'}]).concat({unique:true}), 
+            app.taskApi.okcancel().concat([{field:'ssn', type:'ssn'}, {field:'has_ssn', default:'checked', type:'checkbox', enables:'ssn'}]).concat({unique:true}), 
             async (inst, ctx) => {
 
                 if(inst.response.cancel) return 'OK';

@@ -3,7 +3,7 @@ import './SpeechBubble.css'
 class SpeechBubble extends Component {
   render() {
 
-    const speaker = this.props.speaker?<img src={this.props.speaker} alt="" />:"";
+    const speaker = this.props.speaker?<img src={this.props.speaker} alt="" />:<img src='/img/kodachi_lores2.png' alt="" />;
 
 
     var content = "";

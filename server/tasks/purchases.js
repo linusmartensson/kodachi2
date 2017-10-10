@@ -75,7 +75,7 @@ module.exports = async (app) => {
     //Payment entrypoints
     app.taskApi.create_task('purchases', 'buy_tickets',
             ['user'],[],
-            app.taskApi.okcancel().concat({field:'tickets', desc:'ticket_count', type:'amount'}, {field:'sleep', desc:'sleep_count', type:'amount'}),
+            app.taskApi.okcancel().concat({field:'tickets', type:'amount'}, {field:'sleep', type:'amount'}),
             async (inst, ctx) => {
                 inst.data.numTickets = inst.response.tickets;
                 inst.data.numSleep = inst.response.sleep;
@@ -89,12 +89,12 @@ module.exports = async (app) => {
             });
     app.taskApi.create_task('purchases', 'buy_points',
             ['user'],[],
-            app.taskApi.okcancel().concat({field:'points', desc:'point_count', type:'dropdown', values:[100, 500, 1500, 3000]}),
+            app.taskApi.okcancel().concat({field:'points', type:'dropdown', values:[100, 500, 1500, 3000]}),
             async (inst, ctx) => {
                 inst.data.points = inst.response.points;
                 var uuid = app.uuid();
                 var result = queryToken(ctx, uuid, inst.data.points/10, app.stringApi.get_string("buy_points_payson"));
-                inst.data.token = result.get('TOKEN');
+                inst.private.token = result.get('TOKEN');
                 inst.next_tasks.push({task:'goto_payson', uuid:uuid});
                 return 'OK';
             }, async(inst, ctx) => {

@@ -1,0 +1,20 @@
+# <- start new panel in current tier
+! <- add a caption
+* <- add list item
+(text)avatar_name) <- speech bubble
+_ <- start new tier
+newline starts text element in current panel
+
+
+
+#
+!panel caption
+asd 
+asd
+a da
+s da
+fds
+#panel
+#panel
+_
+#

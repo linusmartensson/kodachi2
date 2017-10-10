@@ -22,13 +22,12 @@ overflow-y:scroll;
 
     top:10%;
     bottom:10%;
-   font-size:1.2em;
-   line-height:150%;
    font-family:Schoolbell;
 
 }
+
 .TaskPopup-item .Page{
-    margin:0 auto;padding:0;
+    margin:0 auto;padding:1em;
     border-radius:0;
     background:transparent;
     box-shadow:none;

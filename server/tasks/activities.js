@@ -2,11 +2,11 @@
 module.exports = async (app) => {
 
     app.taskApi.step('staff_test', 
-            [{field:'q1', desc:'staff_question_identity', type:'dropdown', values:
+            [{field:'q1', type:'dropdown', values:
                     ['answer_them','answer_he','answer_she','answer_the_person']}, 
-             {field:'q2', desc:'staff_question_fire', type:'dropdown', values:
+             {field:'q2', type:'dropdown', values:
                     ['answer_save', 'answer_warn', 'answer_phone', 'answer_leave', 'answer_put_out']}, 
-             {field:'q3', desc:'staff_question_responsibility', type:'dropdown', values:
+             {field:'q3', type:'dropdown', values:
                     ['answer_friends', 'answer_boss', 'answer_linus', 'answer_team']}].concat(app.taskApi.okcancel()), 
             async (inst) => {
                if(inst.response.cancel) return 'OK';
@@ -25,7 +25,7 @@ module.exports = async (app) => {
     //Base task for working at Kodachicon
     app.taskApi.create_task('activity', 'join_staff', 
             ['user'], [],
-            app.taskApi.okcancel().concat([{field:'work_type', desc:'work_type_field', type:'dropdown', values:['create_area', 'create_schedule_event', 'create_shop', 'work']}]),
+            app.taskApi.okcancel().concat([{field:'work_type', type:'dropdown', values:['create_area', 'create_schedule_event', 'create_shop', 'work']}]),
             async (inst) => {
                 if(inst.response.cancel) return 'OK';
                 if(!app.userApi.isTested()) inst.next_tasks.push('staff_test');
@@ -48,20 +48,20 @@ module.exports = async (app) => {
             });
 
 
-    function f(field, desc, type, values){
-        return {field:field, desc:desc, type:type || 'text', values:values};
+    function f(field, type, values){
+        return {field:field, type:type || 'text', values:values};
     }
 
     app.taskApi.create_task('activity', 'create_area', 
             [], [],
-            app.taskApi.okcancel().concat([f('name', 'area_name_field'), f('desc', 'area_description_field'), f('staff_count', 'staff_count_field', 'number'), f('budget', 'budget_field', 'number'), f('activity_days', 'activity_days_field', 'checkbox', ['wednesday', 'thursday', 'friday', 'saturday', 'sunday']), f('opening_hours', 'opening_hours_field', 'hours')]),
+            app.taskApi.okcancel().concat([f('area_name'), f('area_description'), f('area_staff_count', 'number'), f('area_req_budget', 'number'), f('area_activity_days', 'checkbox', ['wednesday', 'thursday', 'friday', 'saturday', 'sunday']), f('area_opening_hours', 'hours')]),
             async (inst) => {
-                inst.data.name = inst.response.name;
-                inst.data.desc = inst.response.desc;
-                inst.data.staff_count = inst.response.staff_count;
-                inst.data.budget = inst.response.budget;
-                inst.data.activity_days = inst.response.activity_days;
-                inst.data.opening_hours = inst.response.opening_hours;
+                inst.data.area_name = inst.response.area_name;
+                inst.data.area_description = inst.response.area_description;
+                inst.data.area_staff_count = inst.response.area_staff_count;
+                inst.data.area_req_budget = inst.response.area_req_budget;
+                inst.data.area_activity_days = inst.response.area_activity_days;
+                inst.data.area_opening_hours = inst.response.area_opening_hours;
                 if(inst.response.ok)
                     inst.next_tasks.push('accept_area');
                 return 'OK';
@@ -81,7 +81,7 @@ module.exports = async (app) => {
     function updateBudget(inst){
     }
 
-    app.taskApi.create_task('', 'accept_area', [], ['event_admin'], app.taskApi.yesno().concat(f('comments', 'comments_field', 'textbox')), async(inst, ctx) => {
+    app.taskApi.create_task('', 'accept_area', [], ['event_admin'], app.taskApi.yesno().concat(f('comments', 'textbox')), async(inst, ctx) => {
                 if(inst.response.yes){
                     updateSchedule(inst);
                     updateBudget(inst);

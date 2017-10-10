@@ -6,6 +6,7 @@ import './TaskPopup.css'
 import {connect} from 'react-redux'
 
 import {actions} from './reducers/root.js'
+import Surface from './Surface';
 
 class TaskPopup extends Component{
 
@@ -53,9 +54,47 @@ class TaskPopup extends Component{
         if(!this.props.hasTask){
             return null;
         }
+        var pages = [];
+        pages = pages.concat(this.props.task.description);
+        for(var v of this.props.task.type.inputs){
+           
+            if(!v.field) continue; 
+            if(v.type == 'button') continue;
+            pages = pages.concat(v.desc);
+            if(pages.length == 0) pages = {id:0, tiers:[]}
+            console.dir(pages[pages.length-1]);
+            pages[pages.length-1].tiers = pages[pages.length-1].tiers.concat([
+                {id:v.field, panels:[
+                    {id:0, border:true, width:1, content:[
+                        v.name.length>0?{
+                            id:0,
+                            type:'caption',
+                            text:v.name
+                        }:{},
+                        {   
+                            id:2,
+                            type:'text',
+                            text:"field goes here"
+                        }
+                    ]}
+                ]}
+            ]);
+        }
+
+        var buttons = {id:'_buttons', panels:[]};
+        for(var v of this.props.task.type.inputs){
+            if(!v.field || v.type != 'button') continue;
+            buttons.panels.push({
+                id:v.field,
+                border:false, width:1, content:[
+                    {id:0, type:'caption', text:v.name}
+                ]
+            });
+        }
+        if(buttons.panels.length > 0) pages.push({id:"_buttons", tiers:[buttons]});
         return (<div className="TaskPopup"><form ref={this.setFormRef} onSubmit={this.handleSubmit}>
                 <div className="TaskPopup-item" ref={this.setWrapperRef}>
-                    <Page key={this.props.id} tiers={this.props.tiers} />
+                    <Surface key={this.props.id} pages={pages} />
                 </div></form>
             </div>);
     }
@@ -64,12 +103,10 @@ class TaskPopup extends Component{
 const TaskPopupContainer = connect(
         state => {
             var hasTask = !!state.currentTask && !!state.currentTask.task;
-            console.dir(state.currentTask);
             return {
                 hasTask:hasTask,
                 task:hasTask?state.currentTask.task:null,
                 id:hasTask?state.currentTask.task.id:0,
-                tiers:hasTask?state.currentTask.tiers:[]
             }
         },
         dispatch => {

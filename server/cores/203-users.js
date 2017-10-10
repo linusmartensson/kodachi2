@@ -35,6 +35,9 @@ module.exports = (app) => {
     api.getUserRoles = async (ctx) => {
         return api.getRoles(api.userId(ctx));
     }
+    api.getLanguage = async (ctx) => {
+        return 'sv';
+    }
     api.hasAnyRole = async (id, roles) => {
         var userRoles = await api.getRoles(id);
         for(let v of roles){

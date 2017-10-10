@@ -33,22 +33,22 @@ module.exports = (app) => {
     api.add_filter("amount", (d)=>{return d.replace(/\D/g, '');});
 
 
-    api.filterResponse = (response, matches) => {
+    api.filterResponse = (response, inputs) => {
         var out = {};
 
-        for(var v in matches) {
-            if(!inputs[v].field) continue;
-            out[inputs[v].field] = app.taskFilters[inputs[v].type](response[inputs[v].field], inputs[v]);
+        for(var v of inputs) {
+            if(!v.field) continue;
+            out[v.field] = app.taskFilters[v.type](response[v.field], v);
         }
         return out;
     }
 
     //Task creation api
     api.yesno = () => {
-        return [{field:'yes', desc:'yes', type:'button'},{field:'no', desc:'no', type:'button'}];
+        return [{field:'no', type:'button'},{field:'yes', type:'button'}];
     }
     api.okcancel = () => {
-        return [{field:'ok', desc:'ok', type:'button'},{field:'cancel', desc:'cancel', type:'button'}];
+        return [{field:'cancel', type:'button'},{field:'ok', type:'button'}];
     }
     api.step = (task_name, inputs, result_handler, post_handler) => {
         api.create_task("", task_name, [], [], inputs, result_handler, post_handler);
@@ -86,34 +86,61 @@ module.exports = (app) => {
         return false;
     }
 
-    //DB update API
-    async function updateAccessibleTaskInstance(ctx, task_id, data) {
-        if(data){
-            return (await app.cypher("MATCH (t:Task) WHERE t.id={target} RETURN t", {target:task_id})).records;
-        } else {
-            var t = (await app.cypher("MATCH (t:Task) WHERE t.id={target} SET t.data={data} RETURN t", {target:task_id, data:data})).records;
-
-            //Find sessions
-            var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:task_id})).records;
-
-            //Notify task update
-            await app.sessionApi.notifySessions(s);
-            return t;
-        }
-    }
     async function findTaskByType(ctx, type){
         var t = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.type={type} AND s.id={sessionId} RETURN t", {type:type, sessionId:ctx.session.localSession})).records;
         if(!t || t.length==0) return null;
         return t;
     }
-    async function finishTask(task_id){
-        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id})).records;
 
+    //DB update API
+    async function updateTaskInstance(task_id, data) {
+        var v;
+        if(!data){
+            v = (await app.cypher("MATCH (t:Task) WHERE t.id={target} RETURN t", {target:task_id})).records;
+        } else {
+            var d = JSON.stringify(data);
+            v = (await app.cypher("MATCH (t:Task) WHERE t.id={target} SET t.data={data} RETURN t", {target:task_id, data:d})).records;
+        }
+        if(v.length > 0) return JSON.parse(v[0].get('t').properties.data);
+        return undefined;
+    }
+    async function notifyTask(task_id){
+        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:task_id})).records;
+
+        var q = [];
+        for(let m of s){
+            q.push(m.get('s').properties.id);
+        }
+
+        //Notify task update
+        await app.sessionApi.notifySessions(q);
+    }
+    async function secureTask(ctx, task_id){
+        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} AND s.id={sessionId} RETURN s", {target:task_id, sessionId:ctx.session.localSession})).records;
+        if(!s || s.length==0) return false;
+        return true;
+    }
+    async function finishTask(task_id){
         //Find sessions
+        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:task_id})).records;
+        
+        var q = [];
+        for(let m of s){
+            q.push(m.get('s').properties.id);
+        }
+
+        //Delete finished task
         await app.cypher("MATCH (t:Task) WHERE t.id={target} DETACH DELETE t", {target:task_id});
 
         //Notify task finish
-        await app.sessionApi.notifySessions(s);
+        await app.sessionApi.notifySessions(q);
+    }
+    async function finishChildren(inst){
+        for(var v of inst.childIds){
+            var q = await updateTaskInstance(v);
+            await finishChildren(q);
+            await finishTask(q.id);
+        }
     }
     async function addTaskToUser(task){
         await app.cypher("MATCH (u:User) WHERE u.id={target} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(u)", {target:task.origin, id:task.id, data:JSON.stringify(task), type:task.task_name});
@@ -136,16 +163,7 @@ module.exports = (app) => {
             await addTaskToRoles(inst, task.handler_roles);
         }
 
-        //Find sessions
-        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:inst.id})).records;
-
-        var q = [];
-        for(let m of s){
-            q.push(m.get('s').properties.id);
-        }
-
-        //Notify task start
-        await app.sessionApi.notifySessions(q);
+        await notifyTask(inst.id);
     }
     //-----------------------------------
 
@@ -181,54 +199,73 @@ module.exports = (app) => {
         if(child_inst)
             inst.children[child_inst.task_name] = child_inst;
 
-        if(inst.children.length == inst.next_tasks.length){
+        console.dir(inst);
+        console.dir(inst.children.length);
+        console.dir(inst.next_tasks.length);
+
+        if(Object.keys(inst.children).length == inst.next_tasks.length){
+            console.dir("RESOLVING TASK");
 
             inst.finished_tasks = inst.next_tasks;
             inst.next_tasks = [];
 
-            //Merge child data into instance
-            for(n in inst.children){
-                Object.assign(inst.data, inst.children[n].data);
-            }
-            
             //This layer is complete, so call the post handler.
-            var result = app.tasks[inst.task_name].post_handler(inst);
+            var result = await app.tasks[inst.task_name].post_handler(inst);
+
+            console.dir("Post handler result: "+result);
 
             inst.result = result;
 
-            await updateAccessibleTaskInstance(ctx, inst.id, inst);
+            await updateTaskInstance(inst.id, inst);
+
+            console.dir("Updated task");
                     
             switch(result){
                 case 'OK':
                     break;
                 case 'RETRY':
+                    await finishChildren(inst);
                     inst.children = {}; //Reset all sub-tasks.
                     inst.next_tasks = [];
+                    inst.result = 'WAIT_RESPONSE';
+                    await updateTaskInstance(inst.id, inst);
+                    notifyTask(inst.id);
                     return result;
                 case 'FAIL':
                 default:
                     inst.next_tasks = [];
-                    finishTask(inst.id);
                     break;
             }
 
             //As long as we have results and parents, keep trickling.
-            if(!inst.next_tasks){
+            if(!inst.next_tasks || inst.next_tasks.length == 0){
+                console.dir("Trickle up to parent");
+                
                 //We're only returning the top-level result in the api.
-                if(inst.parent) trickleTask(ctx, inst.parent);
+                if(inst.parent) await trickleTask(ctx, await updateTaskInstance(inst.parent), inst);
+
+
+                console.dir("Fininshing task");
+                await finishTask(inst.id);
             } else {
 
+                console.dir("New child tasks");
                 //Start new child tasks
-                nextTask(ctx, inst, app.tasks[inst.task_name]);
+                await nextTask(ctx, inst, app.tasks[inst.task_name]);
             }
 
             return result;
+        } else {
+            console.dir("TASK AWAITING RESPONSES");
+            await updateTaskInstance(inst.id, inst);
+            notifyTask(inst.id);
+            return 'OK';
         }
     }
     async function nextTask(ctx, inst, task){
-    
         if(inst.next_tasks && inst.next_tasks.length > 0) {
             //Handle all child tasks.
+            inst.childIds = [];
             for(n in inst.next_tasks){
                 var uuid = app.uuid();
                 var tasktype = inst.next_tasks[n];
@@ -237,50 +274,68 @@ module.exports = (app) => {
                     tasktype = tasktype.task;
                 }
                 var child_task = app.tasks[tasktype];
-                var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
-                setupTask(ctx, child_inst, child_task);
+                var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst.id, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
+                inst.childIds.push(uuid);
+                await setupTask(ctx, child_inst, child_task);
             }
-        
+            await updateTaskInstance(inst.id, inst);
+            notifyTask(inst.id);
             return inst.result;
         } else {
-
             //Reached end of chain, so trickle the task handler upwards.
-            return trickleTask(ctx, inst);
+            return await trickleTask(ctx, inst);
         }
     }
 
     api.respond_task = async (ctx, task_id, response) => {
 
-        //Find the task instance.
-        var inst = await updateAccessibleTaskInstance(ctx, task_id, null);
-        if(!inst) return 'NO_TASK_ID';  //There is no matching task instance.
+        console.log("Respond task: "+task_id);
+
+        var inst = await updateTaskInstance(task_id);
+
+        if(!inst || inst.result != 'WAIT_RESPONSE' || !await secureTask(ctx, task_id)) return 'NO_TASK_ID';  //There is no matching task instance.
+        
+        console.dir(inst);
 
         //Find the task
         var task = app.tasks[inst.task_name];
 
+        console.dir(task);
+
+
         try{
             response = api.filterResponse(response, task.inputs);
         } catch (e) {
+            console.log("Error, retry");
+            console.dir(e);
             return 'RETRY';
         }
+
+        console.log("Processing response: ");
+        console.dir(response);
 
         //Process the response
         inst.response = response;
         var result = await task.result_handler(inst, ctx);
 
+        console.dir("Response: "+result);
+
         //Store the result
         inst.result = result;
-        await updateAccessibletaskInstance(ctx, task_id, inst);
+        await updateTaskInstance(task_id, inst);
 
         switch(result){
             case 'OK': 
                 result = await nextTask(ctx, inst, task);
                 break;
             case 'RETRY':
+                inst.result = 'WAIT_RESPONSE';
+                await updateTaskInstance(task_id, inst);
+                notifyTask(task_id);
                 break;
             case 'FAIL':
             default:
-                finishTask(task_id);
+                await finishTask(task_id);
                 return result;
         }
         

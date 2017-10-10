@@ -6,21 +6,22 @@
     vertical-align:top;
    display:inline-block; 
    position:relative;
-   border:4px solid rgba(200,150,100,1.0);
+   border:4px solid rgba(80,80,80,1.0);
    padding:3px;
    margin:5px;
    white-space:normal;
    border-radius:3px;
    text-align:left;
-   background:rgba(255,255,255,0.8);
-   box-shadow:0px 0px 50px 2px rgba(192,128,32,0.5);
+   background:rgba(250,250,250,1.0);
+   box-shadow:0px 0px 50px 2px rgba(255,255,255,0.5);
 
 }
 .PanelText{
    font-size:1.2em;
    line-height:150%;
    font-family:Schoolbell;
-   display:inline;
+   display:block;
+   padding:0.1em 1.0em;
 }
 .PanelText:after{
    content:"";

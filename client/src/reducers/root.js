@@ -33,7 +33,7 @@ export const actions = createActions({
                                 dispatch(actions.app.server.update(data));
                                 if(data.tasks && data.tasks[0]){
                                     if(data.tasks[0][0]){
-                                        dispatch(actions.app.task.show(data.tasks[0][0]));
+                                        dispatch(actions.app.task.show(data.tasks[0][0].id));
                                     }   
                                 }
                             });
@@ -111,7 +111,7 @@ export const reducer = handleActions({
                 DO: (state, action) => ({...state})
             },
             SHOW: (state, action) => {
-                var v = _.cloneDeep({task:getTask(state, action.payload.id), tiers:state.session.books[0].content[0].tiers});
+                var v = _.cloneDeep({task:getTask(state, action.payload.id)});
                 return {...state, currentTask: v}
             },
             CLOSE: (state, action) => ({

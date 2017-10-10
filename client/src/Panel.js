@@ -15,7 +15,7 @@ class Panel extends Component {
 
     const content = this.props.content.map((elem) => {
         switch(elem.type){
-            case 'caption': return <Caption key={elem.id} content={elem.text} />;
+            case 'caption': return <Caption key={elem.id} content={elem.text} strength={elem.strength} />;
             case 'clear': return <div key={elem.id} style={{clear:'both'}}></div>
             case 'text': return <p className="PanelText" key={elem.id}>{elem.text}</p>;
             case 'speechbubble': return <SpeechBubble position={elem.position} key={elem.id} text={elem.text} speaker={elem.image} />;
