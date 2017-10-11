@@ -73,18 +73,30 @@ module.exports = (app) => {
                     return 'OK';
                 } else return 'RETRY';
             });
-    app.taskApi.create_task('account', 'register_account', 
-            ['anonymous'],[], 
-            app.taskApi.okcancel().concat([{field:'ssn', type:'ssn'}, {field:'has_ssn', default:'checked', type:'checkbox', enables:'ssn'}]).concat({unique:true}), 
+    app.taskApi.create_task('account', 'register_account',
+            ['anonymous'],[],
+            [{field:'cancel', type:'button'}, {unique:true}].concat(app.taskApi.yesno()),
             async (inst, ctx) => {
-
                 if(inst.response.cancel) return 'OK';
 
                 if(!inst.response.has_ssn){
                     inst.next_tasks.push('manual_ssn_details');
                     inst.data.nossn = true;
                     return 'OK';
+                } else {
+                    inst.next_tasks.push('register_account_ssn');
+                    return 'OK';
                 }
+            }, (inst) => {
+                return 'OK';
+            }
+    ); 
+    app.taskApi.create_task('account', 'register_account_ssn', 
+            [],[], 
+            app.taskApi.okcancel().concat([{field:'ssn', type:'ssn'}]).concat({unique:true}), 
+            async (inst, ctx) => {
+
+                if(inst.response.cancel) return 'OK';
 
                 inst.data.ssnResult = await validateSsn(inst.response.ssn);
                 console.dir(inst.data.ssnResult);
@@ -94,8 +106,9 @@ module.exports = (app) => {
                         inst.next_tasks.push('ssn_exists_forgot_details');
                     else
                         inst.next_tasks.push('check_ssn_details');
-                } else
-                    inst.next_tasks.push('manual_ssn_details');
+                } else {
+                    return 'RETRY';
+                }
                 return 'OK';
             }, (inst) => {
                 if(inst.response.cancel) return 'OK';

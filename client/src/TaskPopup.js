@@ -86,8 +86,8 @@ class TaskPopup extends Component{
             if(!v.field || v.type != 'button') continue;
             buttons.panels.push({
                 id:v.field,
-                border:false, width:1, content:[
-                    {id:0, type:'caption', text:v.name}
+                border:true, width:1, content:[
+                    {id:v.field, type:'button', text:v.name}
                 ]
             });
         }
@@ -116,11 +116,22 @@ const TaskPopupContainer = connect(
                 },
                 submit:(task, node, cancel) => {
                     var q = new FormData();
+                    var i = {};
+                    for(var v of task.type.inputs){
+                        if(v.field && v.type=='button'){
+                            i[v.field] = true;
+                        }
+                    }
                     for(var v of node.elements) {
                         if(v.files && v.files.length > 0) {
                             q.append(v.name, v.files[0], v.value);
                         } else {
-                            q.append(v.name, v.value);
+                            if(i[v.name]){
+                                console.dir("adding button");
+                                q.append(v.name, v.clicked);
+                            } else {
+                                q.append(v.name, v.value);
+                            }
                         }
                     }
                     if(cancel) q.append('cancel', true);

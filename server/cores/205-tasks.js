@@ -12,7 +12,8 @@ module.exports = (app) => {
         app.taskFilters[type] = filterFunc;
     }
 
-    api.add_filter("button", (d)=>{return !!d;});
+    api.add_filter("button", (d)=>{
+        return d=='true';});
     api.add_filter("text", (d)=>{return ''+d;});
     api.add_filter("textbox", (d)=>{return ''+d;});
     api.add_filter("password", (d)=>{return ''+d;});

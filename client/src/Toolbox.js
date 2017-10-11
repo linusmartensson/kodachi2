@@ -10,7 +10,7 @@ import {actions} from './reducers/root.js'
 function Task(props){
     return (
             <div className="Tool"> 
-            <img src="/img/fyrklover.png" alt="" /><input type="button" onClick={() => props.onTaskClick(props.task)} value={props.task.title} />
+            <input type="button" onClick={() => props.onTaskClick(props.task)} value={props.task.title} />
             </div>);
 }
 
@@ -40,7 +40,9 @@ class Toolbox extends Component {
         return (<TaskContainer key={task.id} task={task} />)
     });
 
-    return (<div className="Toolbox">{tasks}{tools}</div>);
+      var taskbox = tasks.length>0?<div className="Taskbox">{tasks}</div>:null;
+
+    return (<div>{taskbox}<div className="Toolbox">{tools}</div></div>);
   }
 }
 

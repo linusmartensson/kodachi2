@@ -3,10 +3,23 @@
     left:0;
     top:0;bottom:0;
     padding:3px;
-    background:rgba(25,205,240,0.6);
-    border-right:4px solid rgba(200,150,100,1.0);
+    border-right:4px solid rgba(50,50,50,0.9);
     box-shadow: 10px 0 40px 0 rgba(0,0,0,0.5);
     font-family:"Schoolbell";
     font-size:1.2em;
+    background:rgba(250,250,250,0.75);
+    //background:#6cbe45;
+}
+.Drawer:after {
+
+    pointer-events:none;
+    content:"";
+    background:rgba(200,200,200,0.95) url("/img/stripes.png") 0/100px;
+    position:absolute;
+    opacity:0.125;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
 }
 

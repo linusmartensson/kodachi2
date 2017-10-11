@@ -18,9 +18,12 @@
  margin-left:10px;
  background:none;
  border:0px;
+ font-family:"Schoolbell";
+ font-size:0.8em;
 }
 .Tool input:hover {
  color:red;
+ cursor:pointer;
 }
 
 .Tool:hover p{

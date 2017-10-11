@@ -1,0 +1,14 @@
+
+.Pages {
+    padding:10px;
+}
+.Pages a{
+    padding:10px;
+    text-decoration:none;
+    font-family:"Schoolbell";
+    font-size:0.8em;
+    color:#000;
+}
+.Pages a:hover{
+    color:red;
+}

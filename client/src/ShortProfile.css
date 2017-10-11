@@ -1,5 +1,10 @@
 
 .ShortProfile {
-    margin:0 10px;
- border-bottom:4px solid black;
+    padding:0 20px;
+ border-bottom:2px solid #333;
 } 
+.ShortProfile img {
+ margin:0 auto;
+ padding:10px;
+ display:block;
+}

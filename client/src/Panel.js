@@ -19,6 +19,7 @@ class Panel extends Component {
             case 'clear': return <div key={elem.id} style={{clear:'both'}}></div>
             case 'text': return <p className="PanelText" key={elem.id}>{elem.text}</p>;
             case 'speechbubble': return <SpeechBubble position={elem.position} key={elem.id} text={elem.text} speaker={elem.image} />;
+            case 'button': return <input className="PanelButton" type="submit" onClick={(e)=>{e.target.clicked=true;}} key={elem.id} name={elem.id} value={elem.text} />
             default: return "";
         }
     });

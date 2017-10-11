@@ -7,14 +7,38 @@
    display:inline-block; 
    position:relative;
    border:4px solid rgba(80,80,80,1.0);
-   padding:3px;
    margin:5px;
    white-space:normal;
    border-radius:3px;
    text-align:left;
    background:rgba(250,250,250,1.0);
    box-shadow:0px 0px 50px 2px rgba(255,255,255,0.5);
+   color:#333;
+    position:relative;
+}
+.Panel:after{
 
+    content:"";
+    pointer-events:none;
+    position:absolute;
+    top:0;left:0;right:0;bottom:0;
+   background:rgba(200,200,200,0.95) url("/img/stripes.png") 0/200px;
+   opacity:0.0125;
+}
+.PanelButton{
+    cursor:pointer;
+    background:none;
+    border:2px solid #aaa;
+   box-shadow:0px 0px 100px 2px rgba(150,255,200,0.5);
+
+
+   color:#777;
+    text-align:center;
+    display:block;
+    height:2em;
+    width:100%;
+    font-size:1.5em;
+    font-family:"Schoolbell";
 }
 .PanelText{
    font-size:1.2em;

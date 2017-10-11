@@ -9,7 +9,7 @@ class Tool extends Component {
   render() {
     return (<div className="Tool">
                 <p>
-                    <img src="/img/fyrklover.png" alt="" /><input type="button" onClick={() => this.props.onTaskClick(this.props.task)} value={this.props.name} />
+                    <input type="button" onClick={() => this.props.onTaskClick(this.props.task)} value={this.props.name} />
                 </p>
             </div>);
   }
