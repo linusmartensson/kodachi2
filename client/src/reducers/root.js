@@ -31,11 +31,6 @@ export const actions = createActions({
                             });
                             sio.on('update', (data) => {
                                 dispatch(actions.app.server.update(data));
-                                if(data.tasks && data.tasks[0]){
-                                    if(data.tasks[0][0]){
-                                        dispatch(actions.app.task.show(data.tasks[0][0].id));
-                                    }   
-                                }
                             });
                         });
                 }
@@ -89,6 +84,10 @@ export const reducer = handleActions({
             UPDATE: (state, action) => {
                 var v = _.cloneDeep(state);  
                 patcher.patch(v.session, action.payload.diff)
+                if(v.session.tasks.length > state.session.tasks.length){
+                    var w = _.cloneDeep(v.session.tasks[v.session.tasks.length-1]);
+                    return {...v, currentTask:{task:w}};
+                }
                 return v;
             },
             STATE: (state, action) => {

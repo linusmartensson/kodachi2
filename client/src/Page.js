@@ -7,6 +7,7 @@ import './Page.css'
 class Page extends Component{
   render() {
 
+      console.dir(this.props.tiers);
     const tiers = this.props.tiers.map((tier) => 
         <Tier key={tier.id} panels={tier.panels} />
     );

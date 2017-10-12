@@ -18,6 +18,7 @@ module.exports = (app) => {
     api.add_filter("textbox", (d)=>{return ''+d;});
     api.add_filter("password", (d)=>{return ''+d;});
     api.add_filter("ssn", (d)=>{
+        if(!d || d=='') return '';
         d = d.replace(/\D/g, '');
         if(d.length != 10){
             throw 'Invalid SSN';
@@ -267,7 +268,7 @@ module.exports = (app) => {
         if(inst.next_tasks && inst.next_tasks.length > 0) {
             //Handle all child tasks.
             inst.childIds = [];
-            for(n in inst.next_tasks){
+            for(var n=0;n<inst.next_tasks.length;++n){
                 var uuid = app.uuid();
                 var tasktype = inst.next_tasks[n];
                 if(typeof inst.next_tasks[n] == 'object'){
@@ -303,17 +304,22 @@ module.exports = (app) => {
 
         console.dir(task);
 
+        console.dir(response);
 
         try{
             response = api.filterResponse(response, task.inputs);
         } catch (e) {
             console.log("Error, retry");
             console.dir(e);
+            inst.error = "{tasks.filterFailure}";
+            updateTaskInstance(task_id, inst)
             return 'RETRY';
         }
 
         console.log("Processing response: ");
         console.dir(response);
+
+
 
         //Process the response
         inst.response = response;

@@ -52,6 +52,8 @@ module.exports = (app) => {
 
 	app.io.on('disconnect', async ctx => {
         ctx.session = app.clientSessions[ctx.socket.socket.id];
+        if(!ctx.session) return;
+
 		winston.info("Disconnected", ctx.session.uuid);
 		delete app.clients[ctx.session.localSession][ctx.session.uuid];
 

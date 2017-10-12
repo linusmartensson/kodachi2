@@ -6,12 +6,16 @@ import cluster from 'cluster';
 import winston from 'winston';
 import os from 'os';
 
+process.on('unhandledRejection', r => {
+    console.dir(r);
+    process.exit(1);
+});
+
 var tools = require('./tools/core')
 
 winston.level = "info";
 
 var app = {};
-
 var reload = () => {
 	winston.info("is master: "+cluster.isMaster);
 	if(cluster.isMaster){

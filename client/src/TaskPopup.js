@@ -8,6 +8,8 @@ import {connect} from 'react-redux'
 import {actions} from './reducers/root.js'
 import Surface from './Surface';
 
+var _ = require('lodash');
+
 class TaskPopup extends Component{
 
     constructor(props) {
@@ -35,7 +37,6 @@ class TaskPopup extends Component{
     }
     handleClickOutside(event) {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-            console.dir(this.props.task.task);
             var t = this.props.task.type.inputs; 
             for(var i of t){
                 if(i.autocancel){
@@ -55,14 +56,14 @@ class TaskPopup extends Component{
             return null;
         }
         var pages = [];
-        pages = pages.concat(this.props.task.description);
+        pages = pages.concat(_.cloneDeep(this.props.task.description));
         for(var v of this.props.task.type.inputs){
            
             if(!v.field) continue; 
             if(v.type == 'button') continue;
             pages = pages.concat(v.desc);
             if(pages.length == 0) pages = {id:0, tiers:[]}
-            console.dir(pages[pages.length-1]);
+
             pages[pages.length-1].tiers = pages[pages.length-1].tiers.concat([
                 {id:v.field, panels:[
                     {id:0, border:true, width:1, content:[
@@ -72,9 +73,8 @@ class TaskPopup extends Component{
                             text:v.name
                         }:{},
                         {   
-                            id:2,
-                            type:'text',
-                            text:"field goes here"
+                            id:v.field,
+                            type:"input_"+v.type,
                         }
                     ]}
                 ]}
@@ -122,19 +122,18 @@ const TaskPopupContainer = connect(
                             i[v.field] = true;
                         }
                     }
-                    for(var v of node.elements) {
+                    if(cancel) q.append('cancel', true);
+                    else for(var v of node.elements) {
                         if(v.files && v.files.length > 0) {
                             q.append(v.name, v.files[0], v.value);
                         } else {
-                            if(i[v.name]){
-                                console.dir("adding button");
+                            if(i[v.name] ){
                                 q.append(v.name, v.clicked);
                             } else {
                                 q.append(v.name, v.value);
                             }
                         }
                     }
-                    if(cancel) q.append('cancel', true);
                     dispatch(actions.app.task.submit(task, q))
                 }
             }

@@ -59,3 +59,12 @@
     background:rgba(192,128,32,0.0);
     box-shadow:0 0 0 0;
 }
+.PanelInput{
+    font-size:1.5em;
+    width:28.5em;
+    margin:1em;
+    padding:0.5em 1em;
+    font-family:"Schoolbell";
+    background:rgba(200,250,200,0.5);
+    border:1px solid #aaa;
+}

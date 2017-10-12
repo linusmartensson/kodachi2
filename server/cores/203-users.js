@@ -86,7 +86,7 @@ module.exports = (app) => {
         //ssn, ssnDetails, avatar, nickname, email, password
         var password = await hash(p.password);
 
-        app.cypher('CREATE (u:User)')//TODO 
+        await app.cypher('CREATE (u:User)')//TODO 
             
 
         //Ensure new user and session are associated.
@@ -96,7 +96,16 @@ module.exports = (app) => {
         //TODO 
     }
     api.findAccount = async (p) => {
-            //TODO 
+        var q = [];
+        if(p.ssn){
+            q = await app.cypher('MATCH (u:User) WHERE u.ssn={ssn} RETURN u', p); 
+        } else if(p.email) {
+            q = await app.cypher('MATCH (u:User) WHERE u.email={email} RETURN u', p);
+        }
+
+        if(q && q.records && q.records.length > 0) return q.records[0].get('u').properties;
+
+        return false;
     }
     api.tryLogin = async (ctx, user, password) => {
         //login account

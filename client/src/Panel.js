@@ -20,14 +20,21 @@ class Panel extends Component {
             case 'text': return <p className="PanelText" key={elem.id}>{elem.text}</p>;
             case 'speechbubble': return <SpeechBubble position={elem.position} key={elem.id} text={elem.text} speaker={elem.image} />;
             case 'button': return <input className="PanelButton" type="submit" onClick={(e)=>{e.target.clicked=true;}} key={elem.id} name={elem.id} value={elem.text} />
-            default: return "";
+            case 'input_text': return <input className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
+            case 'input_password': return <input className="PanelInput" type="password" key={elem.id} name={elem.id} value={elem.text} />
+            default: return <p key={elem.id}>{elem.type}</p>;
         }
     });
 
-    return (
+
+    var v = (
             <div style={panelStyle} className={panelConfig}><div className="Panel-inside">
             {content}
             </div></div>);
+
+
+
+    return v;
   }
 }
 

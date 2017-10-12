@@ -8,9 +8,6 @@ module.exports = (app) => {
         app.strings[name] = string;
     }
     api.add_string = (lang, name, string) => {
-        console.dir(lang);
-        console.dir(name);
-        console.dir(string);
         if(!app.strings[name]) app.strings[name] = {};
         app.strings[name][lang] = string;
     }
@@ -140,7 +137,6 @@ module.exports = (app) => {
         var lang = await app.userApi.getLanguage(ctx);
        
         var w = api.parse(v, lang);
-        console.dir(w);
         return w;
     }
 

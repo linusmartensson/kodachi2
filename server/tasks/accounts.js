@@ -61,13 +61,17 @@ module.exports = (app) => {
             app.taskApi.okcancel().concat({field:'email_or_ssn', type:'text'}, {field:'password', type:'password'}).concat({unique:true,autocancel:true}),
             async (inst, ctx) => {
                 if(inst.response.ok){
-                    var user = await app.userApi.findAccount({ssn:inst.response.email_or_ssn}) || app.userApi.findAccount({email:inst.response.email_or_ssn});
+                    var user = await app.userApi.findAccount({ssn:inst.response.email_or_ssn}) || await app.userApi.findAccount({email:inst.response.email_or_ssn});
                     if(user) {
                         if(await app.userApi.tryLogin(ctx, user, inst.response.password)){
                             return 'OK';
-                        } else return 'RETRY';
+                        } else {
+                            inst.error = "{tasks.account.loginFailed}"
+                            return 'RETRY';
+                        }
                     } else {
-                        return 'OK';
+                        inst.error = "{tasks.account.noSuchUser}"
+                        return 'RETRY';
                     }
                 } else if(inst.response.cancel) {
                     return 'OK';
@@ -79,7 +83,7 @@ module.exports = (app) => {
             async (inst, ctx) => {
                 if(inst.response.cancel) return 'OK';
 
-                if(!inst.response.has_ssn){
+                if(inst.response.no){
                     inst.next_tasks.push('manual_ssn_details');
                     inst.data.nossn = true;
                     return 'OK';
@@ -93,7 +97,7 @@ module.exports = (app) => {
     ); 
     app.taskApi.create_task('account', 'register_account_ssn', 
             [],[], 
-            app.taskApi.okcancel().concat([{field:'ssn', type:'ssn'}]).concat({unique:true}), 
+            app.taskApi.okcancel().concat([{field:'ssnInput', type:'ssn'}]), 
             async (inst, ctx) => {
 
                 if(inst.response.cancel) return 'OK';
@@ -129,7 +133,7 @@ module.exports = (app) => {
             });
     app.taskApi.create_task('account','manual_ssn_details',    //e.g. for people whose preferred gender, name, etc, don't match their ssn details, or for people with bad ssn.
             [],[],
-            [],
+            app.taskApi.okcancel(),
             async (inst) => {
                 return 'OK'; 
             });
