@@ -19,7 +19,7 @@ module.exports = (app) => {
     s('input.yes.name', 'Ja!');
     s('input.cancel.name', 'Avbryt');
     s('input.no.name', 'Nej :(');
-    s('input.ssn.name', '');
+    s('input.ssn.name', 'Ditt personnummer');
     s('input.ssn.desc', 'Först behöver vi ditt personnummer!\nDet använder vi i föreningen för att söka bidrag när du besöker våra event, men också för att hämta ut dina kontaktuppgifter!');
 
 

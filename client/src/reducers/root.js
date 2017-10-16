@@ -85,8 +85,12 @@ export const reducer = handleActions({
                 var v = _.cloneDeep(state);  
                 patcher.patch(v.session, action.payload.diff)
                 if(v.session.tasks.length > state.session.tasks.length){
-                    var w = _.cloneDeep(v.session.tasks[v.session.tasks.length-1]);
-                    return {...v, currentTask:{task:w}};
+                    for(var m of v.session.tasks){
+                        if(m.result === 'WAIT_RESPONSE'){
+                            var w = _.cloneDeep(m);
+                            return {...v, currentTask:{task:w}};
+                        }
+                    }
                 }
                 return v;
             },

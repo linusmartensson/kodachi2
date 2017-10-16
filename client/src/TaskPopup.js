@@ -1,6 +1,5 @@
 
 import React, { Component } from 'react';
-import Page from './Page';
 import './TaskPopup.css'
 
 import {connect} from 'react-redux'
@@ -60,9 +59,9 @@ class TaskPopup extends Component{
         for(var v of this.props.task.type.inputs){
            
             if(!v.field) continue; 
-            if(v.type == 'button') continue;
-            pages = pages.concat(v.desc);
-            if(pages.length == 0) pages = {id:0, tiers:[]}
+            if(v.type === 'button') continue;
+            pages = pages.concat(_.cloneDeep(v.desc));
+            if(pages.length === 0) pages = {id:0, tiers:[]}
 
             pages[pages.length-1].tiers = pages[pages.length-1].tiers.concat([
                 {id:v.field, panels:[
@@ -82,12 +81,12 @@ class TaskPopup extends Component{
         }
 
         var buttons = {id:'_buttons', panels:[]};
-        for(var v of this.props.task.type.inputs){
-            if(!v.field || v.type != 'button') continue;
+        for(var vv of this.props.task.type.inputs){
+            if(!vv.field || vv.type !== 'button') continue;
             buttons.panels.push({
-                id:v.field,
+                id:vv.field,
                 border:true, width:1, content:[
-                    {id:v.field, type:'button', text:v.name}
+                    {id:vv.field, type:'button', text:vv.name}
                 ]
             });
         }
@@ -118,19 +117,19 @@ const TaskPopupContainer = connect(
                     var q = new FormData();
                     var i = {};
                     for(var v of task.type.inputs){
-                        if(v.field && v.type=='button'){
+                        if(v.field && v.type==='button'){
                             i[v.field] = true;
                         }
                     }
                     if(cancel) q.append('cancel', true);
-                    else for(var v of node.elements) {
-                        if(v.files && v.files.length > 0) {
-                            q.append(v.name, v.files[0], v.value);
+                    else for(var vv of node.elements) {
+                        if(vv.files && vv.files.length > 0) {
+                            q.append(vv.name, vv.files[0], vv.value);
                         } else {
-                            if(i[v.name] ){
-                                q.append(v.name, v.clicked);
+                            if(i[vv.name] ){
+                                q.append(vv.name, vv.clicked);
                             } else {
-                                q.append(v.name, v.value);
+                                q.append(vv.name, vv.value);
                             }
                         }
                     }

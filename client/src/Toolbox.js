@@ -35,7 +35,7 @@ class Toolbox extends Component {
             //Hide tasks that finish automatically, as long as they're showing.
             if(v.autocancel && this.props.currentTask) return null;
         }
-        if(task.result != 'WAIT_RESPONSE') return null;
+        if(task.result !== 'WAIT_RESPONSE') return null;
 
 
         return (<TaskContainer key={task.id} task={task} />)

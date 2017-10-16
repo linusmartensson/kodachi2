@@ -20,10 +20,13 @@ module.exports = (app) => {
     api.add_filter("ssn", (d)=>{
         if(!d || d=='') return '';
         d = d.replace(/\D/g, '');
-        if(d.length != 10){
-            throw 'Invalid SSN';
-        }
-        return d;
+        if(d.length == 10){
+            if(d[0] == '0' || d[0] == '1') d = "20"+d;
+            else d = "19" + d;
+            return d;
+        } else if(d.length == 12)
+            return d;
+        throw 'Invalid SSN';
     });
     api.add_filter("checkbox", (d)=>{return d;}); //TODO How2handle checkboxes??
     api.add_filter("hours", (d)=>{return d;}); //TODO How2handle hours??

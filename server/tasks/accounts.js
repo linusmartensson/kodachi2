@@ -1,4 +1,4 @@
-
+import https from 'https'
 module.exports = (app) => {
 
     //Login
@@ -6,6 +6,7 @@ module.exports = (app) => {
     //Create account
     //Edit account
     //Forgot account details
+
 
     function query(target){
         return new Promise((resolve, reject) => {
@@ -20,6 +21,7 @@ module.exports = (app) => {
                     'Package': 'personadress'
                 }
             }
+            console.dir(options);
             const req = https.request(options, (res) => {
                 console.log('statusCode:', res.statusCode);
                 console.log('headers:', res.headers);
@@ -97,12 +99,12 @@ module.exports = (app) => {
     ); 
     app.taskApi.create_task('account', 'register_account_ssn', 
             [],[], 
-            app.taskApi.okcancel().concat([{field:'ssnInput', type:'ssn'}]), 
+            app.taskApi.okcancel().concat([{field:'ssn', type:'ssn'}]), 
             async (inst, ctx) => {
 
                 if(inst.response.cancel) return 'OK';
 
-                inst.data.ssnResult = await validateSsn(inst.response.ssn);
+                inst.data.ssnResult = JSON.parse(await validateSsn(inst.response.ssn));
                 console.dir(inst.data.ssnResult);
 
                 if(inst.data.ssnResult && inst.data.ssnResult.responseCode && inst.data.ssnResult.responseCode == 'Ok') {
