@@ -94,7 +94,7 @@ module.exports = async (app) => {
                 inst.data.points = inst.response.points;
                 var uuid = app.uuid();
                 var result = queryToken(ctx, uuid, inst.data.points/10, app.stringApi.get_string("buy_points_payson"));
-                inst.private.token = result.get('TOKEN');
+                inst.data.private.token = result.get('TOKEN');
                 inst.next_tasks.push({task:'goto_payson', uuid:uuid});
                 return 'OK';
             }, async(inst, ctx) => {

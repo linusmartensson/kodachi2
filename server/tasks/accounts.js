@@ -60,7 +60,9 @@ module.exports = (app) => {
             });
     app.taskApi.create_task('account','login',
             ['anonymous'],[],
-            app.taskApi.okcancel().concat({field:'email_or_ssn', type:'text'}, {field:'password', type:'password'}).concat({unique:true,autocancel:true}),
+            app.taskApi.okcancel().concat(  {field:'email_or_ssn', type:'text'}, 
+                                            {field:'password', type:'password'},
+                                            {unique:true,autocancel:true}),
             async (inst, ctx) => {
                 if(inst.response.ok){
                     var user = await app.userApi.findAccount({ssn:inst.response.email_or_ssn}) || await app.userApi.findAccount({email:inst.response.email_or_ssn});
@@ -75,9 +77,8 @@ module.exports = (app) => {
                         inst.error = "{tasks.account.noSuchUser}"
                         return 'RETRY';
                     }
-                } else if(inst.response.cancel) {
-                    return 'OK';
-                } else return 'RETRY';
+                }
+                return 'OK';
             });
     app.taskApi.create_task('account', 'register_account',
             ['anonymous'],[],
@@ -99,19 +100,27 @@ module.exports = (app) => {
     ); 
     app.taskApi.create_task('account', 'register_account_ssn', 
             [],[], 
-            app.taskApi.okcancel().concat([{field:'ssn', type:'ssn'}]), 
+            app.taskApi.okcancel().concat({field:'ssn', type:'ssn'}), 
             async (inst, ctx) => {
 
                 if(inst.response.cancel) return 'OK';
 
                 inst.data.ssnResult = JSON.parse(await validateSsn(inst.response.ssn));
-                console.dir(inst.data.ssnResult);
 
                 if(inst.data.ssnResult && inst.data.ssnResult.responseCode && inst.data.ssnResult.responseCode == 'Ok') {
-                    if(app.userApi.findAccount({ssn:inst.data.ssnResult.ssn}))
+                    var res = await app.userApi.findAccount({ssn:inst.data.ssnResult.ssn})
+                    if(res)
                         inst.next_tasks.push('ssn_exists_forgot_details');
-                    else
+                    else {
                         inst.next_tasks.push('check_ssn_details');
+                        inst.data.ssn = inst.response.ssn;
+                        inst.data.givenName = inst.data.ssnResult.basic.givenName;
+                        inst.data.lastName = inst.data.ssnResult.basic.lastName;
+                        inst.data.street = inst.data.ssnResult.basic.street;
+                        inst.data.zipCode = inst.data.ssnResult.basic.zipCode;
+                        inst.data.city = inst.data.ssnResult.basic.city;
+                        inst.data.country = 'Sverige';
+                    }
                 } else {
                     return 'RETRY';
                 }
@@ -135,20 +144,49 @@ module.exports = (app) => {
             });
     app.taskApi.create_task('account','manual_ssn_details',    //e.g. for people whose preferred gender, name, etc, don't match their ssn details, or for people with bad ssn.
             [],[],
-            app.taskApi.okcancel(),
+            app.taskApi.okcancel().concat(
+                {field:'givenName',type:'text'},
+                {field:'lastName',type:'text'},
+                {field:'street',type:'text'},
+                {field:'zipCode',type:'text'},
+                {field:'city',type:'text'},
+                {field:'country',type:'text'}
+            ),
             async (inst) => {
+                if(inst.response.cancel) return 'OK';
+
+                if(inst.response.givenName == "" || inst.response.lastName == "" || inst.response.street == "" || inst.response.zipCode == "" || inst.response.city == "" || inst.response.country == ""){
+                    inst.error = '{tasks.account.emptyFields}';
+                    return 'RETRY';
+                }
+
+                inst.next_tasks.push('fill_user_details');
                 return 'OK'; 
             });
-    app.taskApi.create_task('account','ssn_exists_forgot_details', //info page before forgot_account
+    app.taskApi.create_task('account','ssn_exists_forgot_details',
             [],[],
-            [],
+            [{field:'ok', type:'button'}],
             async (inst) => {
                 return 'OK'; 
             });
     app.taskApi.create_task('account','fill_user_details',     //for email, avatar, nickname & password
             [],[],
-            [],
-            async (inst) => {
+            app.taskApi.okcancel().concat(  {field:'email', type:'email'},
+                                            {field:'email_verify', type:'email'},
+                                            {field:'password', type:'password'},
+                                            {field:'password_verify', type:'password'}),
+            async (inst, ctx) => {
+                if(inst.response.cancel) return 'OK';
+                if(inst.response.email != inst.response.email_verify) return 'RETRY';
+                if(inst.response.password != inst.response.password_verify) return 'RETRY';
+
+                inst.data.email = inst.response.email;
+                inst.data.password = inst.response.password;
+
+                await app.userApi.createUser(ctx, inst.data); 
+
+                delete inst.data.password;
+
                 return 'OK'; 
             });
     app.taskApi.create_task('account','forgot_account_details',

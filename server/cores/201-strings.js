@@ -20,10 +20,21 @@ module.exports = (app) => {
         }
     }
 
-    api.get_string = (name, lang) => {
-        var q = app.strings[name];
-        if(!q) return undefined;
-        return app.strings[name][lang];
+    api.get_string = (name, t) => {
+        if(typeof t !== 'string'){
+            if(t[name]) return t[name];
+            name = name.split('.');
+            while(name.length){
+                if(!t[name[0]]) return '';
+                t = t[name[0]];
+                name = name.slice(1);
+            }
+            return t;
+        } else {
+            var q = app.strings[name];
+            if(!q) return undefined;
+            return app.strings[name][t];
+        }
     }
     api.bookParser = (v, idbase) => {
         //We assume there's a localized string here, that may or may not be a book
@@ -119,15 +130,15 @@ module.exports = (app) => {
         return pages;
 
     }
-    api.parse = (v, lang) => {
+    api.parse = (v, tokens) => {
         if(v.startsWith("{|")){
             var q = v.slice(2, -1);
-            v = api.get_string(q, lang);
+            v = api.get_string(q, tokens);
             return api.bookParser(v&&v.length>0?v:"", q);
         }
         var r = v.replace(/{[^}]+}/g, function(m){
             m = m.slice(1, -1);
-            var q = api.get_string(m, lang);
+            var q = api.get_string(m, tokens);
             if(q === undefined) return m;
             return q;
         });
@@ -147,6 +158,12 @@ module.exports = (app) => {
         }
     }
     
+    api.parseDeep = (v, tokens) => {
+        if(v) for(var w in v) {
+            if(typeof v[w] === 'object') api.parseDeep(v[w], tokens);
+            if(typeof v[w] === 'string') v[w] = api.parse(v[w], tokens);
+        }
+    }
 
 
     app.stringApi = api;

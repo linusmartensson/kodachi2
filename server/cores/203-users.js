@@ -84,7 +84,7 @@ module.exports = (app) => {
     api.createUser = async (ctx, p) => {
 
         //ssn, ssnDetails, avatar, nickname, email, password
-        var password = await hash(p.password);
+        p.password = await hash(p.password);
 
         await app.cypher('CREATE (u:User)')//TODO 
             

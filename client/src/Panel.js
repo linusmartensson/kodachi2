@@ -22,6 +22,9 @@ class Panel extends Component {
             case 'button': return <input className="PanelButton" type="submit" onClick={(e)=>{e.target.clicked=true;}} key={elem.id} name={elem.id} value={elem.text} />
             case 'input_password': return <input className="PanelInput" type="password" key={elem.id} name={elem.id} value={elem.text} />
             case 'input_ssn': return <input placeholder='YYMMDD-NNNN' className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
+            case 'input_text': return <input placeholder="" className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
+            case 'input_email': return <input placeholder="you@kodachi.se" className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
+
             default: return <p key={elem.id}>{elem.type}</p>;
         }
     });

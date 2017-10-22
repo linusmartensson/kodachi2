@@ -58,7 +58,7 @@ module.exports = (app) => {
 
             for(let q of s){
                 var task = JSON.parse(q.get('t').properties.data);
-                delete task.private;
+                delete task.data.private;
                 task.type = _.cloneDeep(app.tasks[task.task_name]);
                 task.description = '{|task.'+task.type.task_name+'.desc}';
                 task.title = '{task.'+task.type.task_name+'.title.active}';
@@ -74,7 +74,6 @@ module.exports = (app) => {
                     }
                 }
 
-
                 tasks.push(task);
             }
 
@@ -89,6 +88,9 @@ module.exports = (app) => {
                 ]
             }
             await app.stringApi.translate(ctx, state);
+            for(var v of state.tasks){
+               await app.stringApi.parseDeep(v.description, v.data); 
+            }
         } catch (e) {
             console.dir(e);
         }

@@ -11,7 +11,10 @@ module.exports = (app) => {
     api.add_filter = (type, filterFunc) => {
         app.taskFilters[type] = filterFunc;
     }
-
+    function validateEmail(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
     api.add_filter("button", (d)=>{
         return d=='true';});
     api.add_filter("text", (d)=>{return ''+d;});
@@ -27,6 +30,10 @@ module.exports = (app) => {
         } else if(d.length == 12)
             return d;
         throw 'Invalid SSN';
+    });
+    api.add_filter("email", (d)=>{
+        if(!validateEmail(d)) throw 'Invalid Email';
+        return ''+d;
     });
     api.add_filter("checkbox", (d)=>{return d;}); //TODO How2handle checkboxes??
     api.add_filter("hours", (d)=>{return d;}); //TODO How2handle hours??
