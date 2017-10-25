@@ -18,7 +18,7 @@ module.exports = (app) => {
         ctx.session = app.clientSessions[cid];
 
         if(u.length > 0){
-            ctx.session.userId = u[0].id;
+            ctx.session.userId = u[0].get('u').id;
             ctx.session.localSession = token;
         } else {
             var s = (await app.cypher("MATCH (s:Session) WHERE s.id={id} RETURN s", {id:token})).records;
