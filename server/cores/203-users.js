@@ -1,9 +1,18 @@
 
 import bcrypt from 'bcrypt'
 
-module.exports = (app) => {
+module.exports = async (app) => {
 
     var api = {};
+
+    var coreRoles = ['user', 'anonymous'];
+
+    for(var v of coreRoles){
+        var role = await app.cypher('MATCH (r:Role {type:{type}}) RETURN r', {type:v});
+        if(role.records.length==0){
+            await app.cypher('CREATE (r:Role {type:{type}})', {type:v});
+        }
+    }
 
     function hash(pwd){
         return new Promise((resolve, reject) => {
@@ -30,10 +39,16 @@ module.exports = (app) => {
         if(!id) return ['anonymous'];
         var userRoles = await app.cypher(
                 'MATCH (u:User)-[:HAS_ROLE]->(r:Role) WHERE u.id={id} RETURN r', {id:id});
-        return userRoles.records.length>0?user.records:undefined;
+        if(userRoles.records.length == 0) return [];
+
+        var r = [];
+        for(var v of userRoles.records){
+            r.push(v.get('r').properties.type);
+        }
+        return r;
     }
     api.getUserRoles = async (ctx) => {
-        return api.getRoles(api.userId(ctx));
+        return api.getRoles(await api.userId(ctx));
     }
     api.getLanguage = async (ctx) => {
         return 'sv';
@@ -45,6 +60,14 @@ module.exports = (app) => {
         }
         return false;
     }
+    api.userId = async (ctx) => {
+        var u = await app.cypher(
+            'MATCH (u:User)-[:HAS_SESSION]->(s:Session) WHERE s.id={id} AND NOT EXISTS(s.insecure) RETURN u',
+            {id:ctx.session.localSession});
+        return u.records.length>0?u.records[0].get('u').properties.id:false;
+    }
+
+
     api.session = async (ctx) => {
         //Return current session
         var s = ctx.session.localSession;
@@ -57,43 +80,27 @@ module.exports = (app) => {
             return s;
         }
 
-        //Find a session associated with current user
-        var u = api.userId(ctx);
-        if(u) {
-            var cs = await app.cypher(
-                    'MATCH (u:User)-[:HAS_SESSION]->(s:Session) WHERE u.id={id} AND NOT EXISTS(s.insecure) RETURN s.id',
-                    {id:id});
-            cs = cs.records.length>0?cs.records[0].get('s.id'):undefined;
-            ctx.session.localSession = cs;
-            if(cs) return cs;
-        }
         //Create a new session
         var id = app.uuid() + app.uuid() + app.uuid();
         await app.cypher("CREATE (:Session {id:{id}})", {id:id});
 
-        //If necessary, associate new session with user
-        if(u){
-            await app.cypher('CREATE (u:User)-[:HAS_SESSION]->(s:Session) WHERE u.id={userId} AND s.id={sessionId}', {userId:u, sessionId:id});
-        }
         ctx.session.localSession = id;
         return id;
     }
-    api.userId = (ctx) => {
-        return ctx.session.userId;
-    }
+
     api.createUser = async (ctx, p) => {
 
         //ssn, ssnDetails, avatar, nickname, email, password
         p.password = await hash(p.password);
 
-        await app.cypher('CREATE (u:User)')//TODO 
-            
+        p.userId = app.uuid();
+
+        await app.cypher('CREATE (:User {id:{userId}, email:{email}, password:{password}, ssn:{ssn}, givenName:{givenName}, lastName:{lastName}, street:{street}, zipCode:{zipCode}, city:{city}, country:{country}})', p);
 
         //Ensure new user and session are associated.
-        await app.cypher('CREATE (u:User)-[:HAS_SESSION]->(s:Session) WHERE u.id={userId} AND s.id={sessionId}', {userId:api.userId(ctx), sessionId:api.session(ctx)});
-    }
-    api.updateUser = async (id, p) => {
-        //TODO 
+        await app.cypher('MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}) CREATE (u)-[:HAS_SESSION]->(s)', {userId:p.userId, sessionId: await api.session(ctx)});
+
+        await app.cypher('MATCH (u:User {id:{userId}}), (r:Role {type:{type}}) CREATE (u)-[:HAS_ROLE]->(r)', {userId:p.userId, type:'user'});
     }
     api.findAccount = async (p) => {
         var q = [];
@@ -113,22 +120,26 @@ module.exports = (app) => {
         var pwCheck = await compare(password, user.password); 
         if(!pwCheck) return false;
 
-        ctx.session.userId = user.id;
         //associate current session with user
-        await app.cypher('CREATE (u:User)-[:HAS_SESSION]->(s:Session) WHERE u.id={userId} AND s.id={sessionId}', {userId:api.userId(ctx), sessionId:api.session(ctx)});
+        await app.cypher('MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}) CREATE (u)-[:HAS_SESSION]->(s)', {userId:user.id, sessionId: await api.session(ctx)});
+
+        return true;
         
     }
     api.logout = async (ctx) => {
-        ctx.session = {};
+        await app.cypher('MATCH (u:User {id:{userId}})-[h:HAS_SESSION]->(s:Session) DETACH DELETE h', {userId:await api.userId(ctx)});
     }
-    api.loggedIn = (ctx) => {
-        if(api.userId(ctx)) return true;
+    api.updateUser = async (id, p) => {
+        //TODO 
+    }
+    api.loggedIn = async (ctx) => {
+        if(await api.userId(ctx)) return true;
         return false;
     }
     api.requireAuth = () => {
         return async (ctx, next) => {
-            if(!api.loggedIn(ctx)) return;
-            return next();
+            if(!await api.loggedIn(ctx)) return;
+            return await next();
         }
     }
 

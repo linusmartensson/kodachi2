@@ -164,9 +164,15 @@ module.exports = (app) => {
         await app.cypher("MATCH (r:Role) WHRE r.name IN {targets} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(r)", {targets:roles, id:task.id, data:JSON.stringify(task), type:task.task_name});
     }
     async function setupTask(ctx, inst, task) {
+        var onSession = false;
+        for(var v of task.inputs){
+            if(v.onSession){
+                onSession = v.onSession;
+            }
+        }
         if(task.handler_roles.length == 0){
             var user = await app.userApi.getUser(inst.origin);
-            if(user){
+            if(!onSession && user){
                 await addTaskToUser(inst);
             } else {
                 await addTaskToSession(inst);
@@ -195,11 +201,25 @@ module.exports = (app) => {
         
             //Check if user may start app.
             if(!task.starter_roles) return false; //Can't be started manually.
-            if(!await app.userApi.hasAnyRole(app.userApi.userId(ctx), task.starter_roles)) return false;
+            if(!await app.userApi.hasAnyRole(await app.userApi.userId(ctx), task.starter_roles)) return false;
         }
 
         if(!start_data) start_data = {};
-        var inst = {task_name:task.task_name, id:app.uuid(), data:{start_data:start_data}, next_tasks:[], origin:origin||await app.userApi.userId(ctx)||await app.userApi.session(ctx), result:'WAIT_RESPONSE', response:{}}
+        if(!origin){
+            var onSession = false;
+            for(var v of task.inputs){
+                if(v.onSession){
+                    onSession = v.onSession;
+                }
+            }
+            var user = await app.userApi.userId(ctx);
+            if(onSession || !user){
+                origin = await app.userApi.session(ctx);
+            } else {
+                origin = user;
+            }
+        }
+        var inst = {task_name:task.task_name, id:app.uuid(), data:{start_data:start_data}, next_tasks:[], origin:origin, result:'WAIT_RESPONSE', response:{}}
         
         setupTask(ctx, inst, task);
         return true;

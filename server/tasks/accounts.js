@@ -53,7 +53,7 @@ module.exports = (app) => {
 
     app.taskApi.create_task('account', 'logout',
             ['user'],[],
-            app.taskApi.okcancel().concat({unique:true,autocancel:true}),
+            app.taskApi.okcancel().concat({onSession:true,unique:true,autocancel:true}),
             async (inst, ctx) => {
                 if(inst.response.ok) app.userApi.logout(ctx);
                 return 'OK';
