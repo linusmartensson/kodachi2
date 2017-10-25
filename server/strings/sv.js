@@ -20,6 +20,9 @@ module.exports = (app) => {
     s('task.fill_user_details.desc', 'Nu ska du bara fylla i dina inloggningsuppgifter, sen är du en del av oss! :D');
     s('task.ssn_exists_forgot_details.desc', '!Whoops!\nDet finns redan ett konto för detta personnumret! Testa att logga in istället!');
 
+    s('task.logout.title', 'Logga ut');
+    s('task.logout.desc', 'Är du säker på att du vill logga ut?');
+
     s('input.ok.name', 'Ok!');
     s('input.yes.name', 'Ja!');
     s('input.cancel.name', 'Avbryt');
