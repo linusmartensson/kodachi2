@@ -126,8 +126,6 @@ module.exports = (app) => {
                 }
                 return 'OK';
             }, (inst) => {
-                if(inst.response.cancel) return 'OK';
-                if(!createAccount(ctx, inst)) return 'RETRY';
                 return 'OK'; 
             }
     );
@@ -159,6 +157,12 @@ module.exports = (app) => {
                     inst.error = '{tasks.account.emptyFields}';
                     return 'RETRY';
                 }
+                inst.data.givenName = inst.response.givenName;
+                inst.data.lastName = inst.response.lastName;
+                inst.data.street = inst.response.street;
+                inst.data.zipCode = inst.response.zipCode;
+                inst.data.city = inst.response.city;
+                inst.data.country = inst.response.country;
 
                 inst.next_tasks.push('fill_user_details');
                 return 'OK'; 
