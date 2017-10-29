@@ -24,7 +24,9 @@ module.exports = (app) => {
         throw 'Invalid Simpletext';
     });
     api.add_filter("select", (d)=>{
-        return d;
+        var v = JSON.parse(d);
+        if(!Array.isArray(v)) throw 'Invalid select data';
+        return v;
     });
     api.add_filter("editor", (d)=>{
         return ''+d;

@@ -61,7 +61,7 @@ class TaskPopup extends Component{
             if(!v.field) continue; 
             if(v.type === 'button') continue;
             pages = pages.concat(_.cloneDeep(v.desc));
-            if(pages.length === 0) pages = {id:0, tiers:[]}
+            if(pages.length === 0) pages = [{id:0, tiers:[]}]
 
             pages[pages.length-1].tiers = pages[pages.length-1].tiers.concat([
                 {id:v.field, panels:[
@@ -74,6 +74,7 @@ class TaskPopup extends Component{
                         {   
                             id:v.field,
                             type:"input_"+v.type,
+                            content:v
                         }
                     ]}
                 ]}
@@ -129,7 +130,15 @@ const TaskPopupContainer = connect(
                             if(i[vv.name] ){
                                 q.append(vv.name, vv.clicked);
                             } else {
-                                q.append(vv.name, vv.value);
+                                if(vv.selectedOptions){
+                                    var opts = [];
+                                    for(var v of vv.selectedOptions){
+                                        opts.push(v.value);
+                                    }
+                                    q.append(vv.name, JSON.stringify(opts));
+                                } else {
+                                    q.append(vv.name, vv.value);
+                                }
                             }
                         }
                     }

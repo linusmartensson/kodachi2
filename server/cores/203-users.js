@@ -5,7 +5,7 @@ module.exports = async (app) => {
 
     var api = {};
 
-    var coreRoles = ['user', 'anonymous'];
+    var coreRoles = ['user', 'anonymous', 'editor', 'admin'];
 
     for(var v of coreRoles){
         var role = await app.cypher('MATCH (r:Role {type:{type}}) RETURN r', {type:v});
