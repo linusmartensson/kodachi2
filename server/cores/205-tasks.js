@@ -1,4 +1,5 @@
 
+var _ = require('lodash');
 module.exports = (app) => {
     var api = {};
 
@@ -21,6 +22,12 @@ module.exports = (app) => {
     api.add_filter("simpletext", (d)=>{
         if(/^[a-zA-Z0-9-_]+$/.test(d)) return d;
         throw 'Invalid Simpletext';
+    });
+    api.add_filter("select", (d)=>{
+        return d;
+    });
+    api.add_filter("editor", (d)=>{
+        return ''+d;
     });
     api.add_filter("textbox", (d)=>{return ''+d;});
     api.add_filter("password", (d)=>{return ''+d;});
@@ -334,13 +341,16 @@ module.exports = (app) => {
         console.dir(inst);
 
         //Find the task
-        var task = app.tasks[inst.task_name];
+        var task = _.cloneDeep(app.tasks[inst.task_name]);
 
         console.dir(task);
 
         console.dir(response);
 
         try{
+            for(var v of task.inputs){
+                if(v.prepare) await v.prepare(v, ctx);
+            }
             response = api.filterResponse(response, task.inputs);
         } catch (e) {
             console.log("Error, retry");
@@ -358,6 +368,7 @@ module.exports = (app) => {
         //Process the response
         inst.response = response;
         var result = await task.result_handler(inst, ctx);
+        delete inst.response;
 
         console.dir("Response: "+result);
 

@@ -14,6 +14,10 @@ module.exports = (app) => {
             task.description = '{|task.'+task.type.task_name+'.desc}';
             task.title = '{task.'+task.type.task_name+'.title.active}';
             for(var v of task.type.inputs) {
+
+                if(v.prepare) await v.prepare(v, ctx);
+
+
                 if(!v.field) continue;
                 v.desc = '{|input.'+v.field+'.desc}';
                 v.name = '{input.'+v.field+'.name}';
