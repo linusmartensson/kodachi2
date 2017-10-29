@@ -55,7 +55,7 @@ module.exports = (app) => {
             ['user'],[],
             app.taskApi.okcancel().concat({onSession:true,unique:true,autocancel:true}),
             async (inst, ctx) => {
-                if(inst.response.ok) app.userApi.logout(ctx);
+                if(inst.response.ok) await app.userApi.logout(ctx);
                 return 'OK';
             });
     app.taskApi.create_task('account','login',
@@ -175,7 +175,8 @@ module.exports = (app) => {
             });
     app.taskApi.create_task('account','fill_user_details',     //for email, avatar, nickname & password
             [],[],
-            app.taskApi.okcancel().concat(  {field:'email', type:'email'},
+            app.taskApi.okcancel().concat(  {field:'nickname', type:'simpletext'},
+                                            {field:'email', type:'email'},
                                             {field:'email_verify', type:'email'},
                                             {field:'password', type:'password'},
                                             {field:'password_verify', type:'password'}),
@@ -184,6 +185,12 @@ module.exports = (app) => {
                 if(inst.response.email != inst.response.email_verify) return 'RETRY';
                 if(inst.response.password != inst.response.password_verify) return 'RETRY';
 
+                if(app.userApi.findAccount({nickname:inst.response.nickname})){
+                    inst.error = "{tasks.account.nickNameTaken}";
+                    return 'RETRY';
+                }
+
+                inst.data.nickname = inst.response.nickname;
                 inst.data.email = inst.response.email;
                 inst.data.password = inst.response.password;
 

@@ -8,6 +8,7 @@
     font-family:"Schoolbell";
     font-size:1.2em;
     background:rgba(250,250,250,0.75);
+    z-index:10000;
     //background:#6cbe45;
 }
 .Drawer:after {

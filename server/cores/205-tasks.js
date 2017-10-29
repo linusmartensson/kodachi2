@@ -18,6 +18,10 @@ module.exports = (app) => {
     api.add_filter("button", (d)=>{
         return d=='true';});
     api.add_filter("text", (d)=>{return ''+d;});
+    api.add_filter("simpletext", (d)=>{
+        if(/^[a-zA-Z0-9-_]+$/.test(d)) return d;
+        throw 'Invalid Simpletext';
+    });
     api.add_filter("textbox", (d)=>{return ''+d;});
     api.add_filter("password", (d)=>{return ''+d;});
     api.add_filter("ssn", (d)=>{
