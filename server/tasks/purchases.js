@@ -103,7 +103,7 @@ module.exports = async (app) => {
 
     //Purchase handling - called by router.
     app.taskApi.step('goto_payson', 
-            {external:app.paysonkey.ext, append:'token'},
+            [{external:app.paysonkey.ext, append:'token'}],
             async (inst, ctx) => {
                 var response = await validate(inst.response.ipn);
                 if(response != 'VERIFIED') return 'RETRY';

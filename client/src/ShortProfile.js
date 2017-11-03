@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './ShortProfile.css'
 
+import {connect} from 'react-redux'
+
 class ShortProfile extends Component {
   render() {
     return (<div className="ShortProfile">
@@ -11,4 +13,14 @@ class ShortProfile extends Component {
             </div>);
   }
 }
-export default ShortProfile;
+
+const ShortProfileContainer = connect(
+        state => {
+            console.dir(state.session.profile);
+            return {};
+        },
+        dispatch => {
+            return {};
+        }
+        )(ShortProfile);
+export default ShortProfileContainer;

@@ -50,6 +50,17 @@ module.exports = async (app) => {
     api.getUserRoles = async (ctx) => {
         return api.getRoles(await api.userId(ctx));
     }
+    api.getActiveEvent = async (ctx) => {
+        var e = false;
+        if(await api.hasAnyRole(await api.userId(ctx), ['admin'])) {
+            e = await app.cypher('MATCH (e:Event) RETURN e ORDER BY e.publish DESC LIMIT 1');
+        } else {
+            e = await app.cypher('MATCH (e:Event) WHERE e.publish < {now} RETURN e ORDER BY e.publish DESC LIMIT 1', {now:Date.now()});
+        }
+
+        return e.records.length>0?e.records[0].get('e').properties:false;
+        
+    }
     api.getLanguage = async (ctx) => {
         return 'sv';
     }

@@ -1,3 +1,80 @@
-* finish task popups
-* convert task fields to more generic config
-* add "limit 1" tasks, where only one instance of a task can exist for a user
+
+
+users
+* user details in drawer [HI]
+* move to real checkbiz [HI]
+
+work [HI]
+* create group & get group role
+ - name
+ - description
+ - budget
+ - needs uniform
+ - member count
+* create activity/competition/vendor/artist
+ - name
+ - description
+ - budget request
+ - member count
+ - needs uniform
+ - schedule request / time+days open
+* self-application to group/activity/etc
+ - pre application test
+ - tshirt size
+ - sleep @ event
+
+
+** accept group/activity/competition/vendor
+ - assign location
+ - assign administration
+ - assign time/date/opening hours
+
+* apply to group
+ - pre application test
+ - description
+ - tshirt size
+ - sleep @ event
+* accept group members
+* email on accept reject
+* list members
+* email members
+* submit receipt
+ - pick cost center
+ - recipt value
+ - image
+* verify receipt
+* post competition results
+ - category (1st, 2nd, 3rd, best runner up, coolest whatever, etc)
+ - winner (searchable name)
+
+budget [HI]
+* add budget cost center
+* adjust budget
+* view whole budget
+* mark receipt as paid
+
+purchase [HI]
+* buy tickets for event
+* increment budget
+* get roles
+
+core [HIGH]
+* notify email on new remote task 
+
+content [MED]
+* edit content
+* preview content
+
+users
+* verify user email [HI]
+* forgot password [MED]
+
+
+
+
+bonus [LOW]
+* set current event [LOW]
+* achievements
+ - create achievement
+ - get achievement
+ - ui notification

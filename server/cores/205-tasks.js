@@ -48,6 +48,12 @@ module.exports = (app) => {
         if(!validateEmail(d)) throw 'Invalid Email';
         return ''+d;
     });
+    api.add_filter("bool", (d)=>{
+        return !!d;
+    });
+    api.add_filter("datetime", (d)=>{
+        return new Date(d).getTime();
+    });
     api.add_filter("checkbox", (d)=>{return d;}); //TODO How2handle checkboxes??
     api.add_filter("hours", (d)=>{return d;}); //TODO How2handle hours??
     api.add_filter("dropdown", (d,q)=>{ //Index of values-list.
@@ -104,9 +110,17 @@ module.exports = (app) => {
     }
     //-----------------------------------
 
-    function uniqueTask(task){
+    api.uniqueTask = (task) => {
+        if(!task) return false;
         for(let i of task.inputs){
             if(i.unique) return true;
+        }
+        return false;
+    }
+    api.eventTask = (task) => {
+        if(!task) return false;
+        for(let i of task.inputs) {
+            if(i.event_task) return true;
         }
         return false;
     }
@@ -197,16 +211,43 @@ module.exports = (app) => {
         await notifyTask(inst.id);
     }
     //-----------------------------------
+    
+    api.getTask = (task_name) => {
+        var task = app.tasks[task_name]?_.cloneDeep(app.tasks[task_name]):false;
+        
+        if(!task){
+            //Retrieving task for event:
+            var split = task_name.split('.');
+            task = app.tasks[split[0]]?_.cloneDeep(app.tasks[split[0]]):false;
+
+            //No task exists
+            if(!task || !api.eventTask(task)) return false;
+
+            //Mark target event
+            if(!start_data) start_data = {};
+            start_data.event_id = split[1];
+            start_data.event_task_name = split[0];
+            for(var v in task.starter_roles){
+                task.starter_roles[v] = task.starter_roles[v]+'.'+split[1];
+            }
+            for(var v in task.handler_roles){
+                task.handler_roles[v] = task.handler_roles[v]+'.'+split[1];
+            }
+        }
+        return task;
+
+    }
 
     //NOTE: Setting origin bypasses security. Do NOT set origin in user calls.
     api.start_task = async (ctx, task_name, start_data, origin) => {
-        if(!app.tasks || !app.tasks[task_name]) return false; 
-        console.dir("starting task!");
+        if(!app.tasks) return false; 
 
-        var task = app.tasks[task_name];
+        var task = api.getTask(task_name);
+        if(!task) return false;
 
+        
         //This user/session/whatever already has a unique task for this type.
-        if(uniqueTask(task)){
+        if(api.uniqueTask(task)){
             if((await findTaskByType(ctx, task_name)) != null) return false;
         }
 
@@ -318,7 +359,7 @@ module.exports = (app) => {
                     uuid = tasktype.uuid;
                     tasktype = tasktype.task;
                 }
-                var child_task = app.tasks[tasktype];
+                var child_task = api.getTask(tasktype);
                 var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst.id, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
                 inst.childIds.push(uuid);
                 await setupTask(ctx, child_inst, child_task);
@@ -343,7 +384,7 @@ module.exports = (app) => {
         console.dir(inst);
 
         //Find the task
-        var task = _.cloneDeep(app.tasks[inst.task_name]);
+        var task = api.getTask(inst.task_name);
 
         console.dir(task);
 
