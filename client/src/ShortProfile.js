@@ -8,8 +8,8 @@ class ShortProfile extends Component {
   render() {
     return (<div className="ShortProfile">
                 <img src="/img/fyrklover.png" alt="" />
-                <p>Nickname</p>
-                <p>Level 21 Arrangör</p>
+                <p>Tjenare {this.props.nickname}</p>
+                <p>Level {this.props.level} {this.props.rolename}</p>
             </div>);
   }
 }
@@ -17,7 +17,13 @@ class ShortProfile extends Component {
 const ShortProfileContainer = connect(
         state => {
             console.dir(state.session.profile);
-            return {};
+            var mainRole = state.session.profile&&state.session.profile.mainRole?state.session.profile.mainRole:{role:'Konventare', xp:0, level:1};
+            var nickname = state.session.profile&&state.session.profile.user?state.session.profile.user.nickname?state.session.profile.user.nickname:state.session.profile.user.givenName:"Konventare!";
+            return {
+                nickname,
+                rolename:mainRole.role,
+                level: mainRole.level
+                };
         },
         dispatch => {
             return {};

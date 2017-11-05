@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 
 module.exports = async (app) => {
 
+    await app.cypher('CREATE CONSTRAINT ON (u:User) ASSERT u.id IS UNIQUE');
     var api = {};
 
     var coreRoles = ['user', 'anonymous', 'editor', 'admin'];
@@ -109,7 +110,9 @@ module.exports = async (app) => {
         await app.cypher('CREATE (:User {id:{userId}, email:{email}, password:{password}, ssn:{ssn}, givenName:{givenName}, lastName:{lastName}, street:{street}, zipCode:{zipCode}, city:{city}, country:{country}, nickname:{nickname}})', p);
 
         //Ensure new user and session are associated.
-        await app.cypher('MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (r:Role {type:"user"}), (:Role {type:"anonymous"})<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) CREATE (u)-[:HAS_ROLE]->(r) DELETE d', {userId:p.userId, sessionId: await api.session(ctx)});
+        await app.cypher('MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (:Role {type:"anonymous"})<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d', {userId:p.userId, sessionId: await api.session(ctx)});
+
+        await app.roleApi.addRole(p.userId, "user", "1500");
     }
     api.findAccount = async (p) => {
         var q = [];

@@ -41,6 +41,10 @@ module.exports = (app) => {
     s('input.city.name', "Din hemstad?");
 
 
+    s('role.user', "Konventare");
+    s('role.visitor', "Kodachiturist");
+    s('role.admin', "Sajtmagiker");
+    s('role.editor', "Sajtfifflare");
 
     s('input.has_ssn.name', 'Har du ett Svenskt personnummer?');
 

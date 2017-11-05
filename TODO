@@ -1,8 +1,7 @@
 
 
-users
-* user details in drawer [HI]
-* move to real checkbiz [HI]
+loading spinner [HI]
+datetime ui [HI]
 
 work [HI]
 * create group & get group role
@@ -22,7 +21,6 @@ work [HI]
  - pre application test
  - tshirt size
  - sleep @ event
-
 
 ** accept group/activity/competition/vendor
  - assign location

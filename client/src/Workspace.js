@@ -1,5 +1,6 @@
 
 import 'babel-polyfill'
+import {connect} from 'react-redux'
 
 import React, { Component } from 'react';
 import Surface from './Surface'
@@ -16,6 +17,7 @@ import {createStore, applyMiddleware} from 'redux';
 import {actions, reducer} from './reducers/root.js'
 
 import TaskPopup from './TaskPopup';
+import Loader from './Loader';
 
 import './Workspace.css'
 
@@ -41,6 +43,7 @@ class Workspace extends Component {
                 <Provider store={store}>
                     <Router>
                         <div className="Workspace" style={backgroundConfig}>
+                            <Loader/>
                             <Drawer/>
                             <div className="Workspace-head"><img src={headerImage} alt=""/></div>
                             <Route path="/:path" component={SurfaceRoute}/>
@@ -51,6 +54,7 @@ class Workspace extends Component {
                )
     }
 }
+
 
 const SurfaceRoute = ({match}) => {
     const books = store.getState().session.books || [];

@@ -6,7 +6,8 @@ module.exports = app => {
         state.profile = {
             roles: await app.userApi.getUserRoles(ctx),
             lang: await app.userApi.getLanguage(ctx),
-            event: await app.userApi.getActiveEvent(ctx)
+            event: await app.userApi.getActiveEvent(ctx),
+
         }
         if(app.userApi.userId(ctx)){
             var user = await app.userApi.getUser(await app.userApi.userId(ctx));
@@ -14,9 +15,14 @@ module.exports = app => {
                 user = user.get('u').properties;
                 delete user.password;
                 state.profile.user = user;
+                state.profile.mainRole = await app.roleApi.getBestRole(user.id);
+
+                state.profile.mainRole.role = "{role."+state.profile.mainRole.role+"}";
+
             }
 
         }
+        await app.stringApi.translate(ctx, state.profile);
 
 
     });

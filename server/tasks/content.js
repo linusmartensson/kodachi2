@@ -1,6 +1,7 @@
 
-module.exports = app => {
+module.exports = async (app) => {
 
+    await app.cypher('CREATE CONSTRAINT ON (c:Content) ASSERT c.id IS UNIQUE');
 
     app.taskApi.create_task('content', 'create_page', 
         ['editor', 'admin'], [],
