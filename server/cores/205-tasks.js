@@ -20,7 +20,7 @@ module.exports = (app) => {
         return d=='true';});
     api.add_filter("text", (d)=>{return ''+d;});
     api.add_filter("simpletext", (d)=>{
-        if(/^[a-zA-Z0-9-_]+$/.test(d)) return d;
+        if(/^[a-zA-Z0-9-_]*$/.test(d)) return d;
         throw 'Invalid Simpletext';
     });
     api.add_filter("select", (d)=>{
@@ -227,14 +227,16 @@ module.exports = (app) => {
             if(!task || !api.eventTask(task)) return false;
 
             //Mark target event
-            if(!start_data) start_data = {};
-            start_data.event_id = split[1];
-            start_data.event_task_name = split[0];
+            if(!task.start_data) task.start_data = {};
+            task.start_data.event_id = split[1];
+            task.start_data.event_task_name = split[0];
             for(var v in task.starter_roles){
-                task.starter_roles[v] = task.starter_roles[v]+'.'+split[1];
+                if(!/\.$/.test(task.starter_roles[v])) continue;
+                task.starter_roles[v] = task.starter_roles[v]+split[1];
             }
             for(var v in task.handler_roles){
-                task.handler_roles[v] = task.handler_roles[v]+'.'+split[1];
+                if(!/\.$/.test(task.handler_roles[v])) continue;
+                task.handler_roles[v] = task.handler_roles[v]+split[1];
             }
         }
         return task;

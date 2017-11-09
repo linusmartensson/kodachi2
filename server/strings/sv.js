@@ -43,6 +43,7 @@ module.exports = (app) => {
 
     s('role.user', "Konventare");
     s('role.visitor', "Kodachiturist");
+    s('role.staff', "Arbetsmyra");
     s('role.admin', "Sajtmagiker");
     s('role.editor', "Sajtfifflare");
 

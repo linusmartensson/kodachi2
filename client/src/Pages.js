@@ -7,8 +7,26 @@ import {connect} from 'react-redux'
 
 class Pages extends Component {
   render() {
-    const books = this.props.books.map((book) => <StoredPage key={book.id} name={book.title} path={book.path} />);
-    return (<div className="Pages">{books}</div>);
+
+    var books = {};
+    var bp = this.props.books;
+    
+    for(var v of bp){
+        if(!books[v.group]) books[v.group] = [];
+
+        books[v.group].push(v);
+    }
+    var q = [];
+    for(var b in books){
+        var bs = books[b];
+        var group = bs[0].group;
+        var storedPages = bs.map((book) => <StoredPage key={book.id} name={book.title} path={book.path} />);
+        q.push({group, storedPages});
+    }
+
+    q = q.map(v => <div key={v.group} className="Pages">{v.storedPages}</div>);
+    console.dir(q);
+    return q.length>0?<div key="pagesWrapper" className="PagesWrapper">{q}</div>:null;
   }
 }
 

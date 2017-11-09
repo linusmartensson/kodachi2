@@ -8,12 +8,16 @@ module.exports = async (app) => {
                     ['answer_save', 'answer_warn', 'answer_phone', 'answer_leave', 'answer_put_out']}, 
              {field:'q3', type:'dropdown', values:
                     ['answer_friends', 'answer_boss', 'answer_linus', 'answer_team']}].concat(app.taskApi.okcancel()), 
-            async (inst) => {
+            async (inst, ctx) => {
                if(inst.response.cancel) return 'OK';
                if(inst.response.q1 != 'answer_the_person') return 'RETRY';
                if(inst.response.q2 != 'answer_save') return 'RETRY';
                if(inst.response.q3 != 'answer_boss') return 'RETRY';
-               app.userApi.markTested();
+               
+               var user = await app.userApi.userId(ctx);
+
+               await app.roleApi.addRole(user, 'done_staff_test', 1000);
+               await app.roleApi.addAchievement(user, 'done_staff_test');
                return 'OK';
             });
 
@@ -25,7 +29,7 @@ module.exports = async (app) => {
     //Base task for working at Kodachicon
     app.taskApi.create_task('activity', 'join_staff', 
             ['user'], [],
-            app.taskApi.okcancel().concat([{field:'work_type', type:'dropdown', values:['create_area', 'create_schedule_event', 'create_shop', 'work']}]),
+            app.taskApi.okcancel().concat({event_task:true}, [{field:'work_type', type:'dropdown', values:['create_area', 'create_schedule_event', 'create_shop', 'work']}]),
             async (inst) => {
                 if(inst.response.cancel) return 'OK';
                 if(!app.userApi.isTested()) inst.next_tasks.push('staff_test');

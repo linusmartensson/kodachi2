@@ -68,6 +68,5 @@ users
 bonus [LOW]
 * set current event [LOW]
 * achievements
- - create achievement
  - get achievement
  - ui notification

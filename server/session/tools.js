@@ -12,7 +12,7 @@ module.exports = (app) => {
             var rs = app.tasks[t].starter_roles;
             var event_task = false;
             if(app.taskApi.eventTask(app.tasks[t])){
-                rs = app.sessionApi.getTask(t+'.'+activeEvent).starter_roles;
+                rs = app.taskApi.getTask(t+'.'+activeEvent).starter_roles;
                 event_task = true;
             }
             for(let v of rs){

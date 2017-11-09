@@ -1,6 +1,7 @@
 
 .Pages {
     padding:10px;
+    border-bottom:2px dashed #777;
 }
 .Pages a{
     padding:10px;
