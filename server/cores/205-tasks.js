@@ -61,7 +61,7 @@ module.exports = (app) => {
     api.add_filter("hours", (d)=>{return d;}); //TODO How2handle hours??
     api.add_filter("dropdown", (d,q)=>{ //Index of values-list.
         if(~~d >= q.values.length) throw 'Invalid dropdown selection';
-        return ~~d;
+        return q.values[~~d];
     });
     api.add_filter("number", (d)=>{return d.replace(/\D/g, '');});
     api.add_filter("amount", (d)=>{return d.replace(/\D/g, '');});
@@ -178,7 +178,7 @@ module.exports = (app) => {
         await app.sessionApi.notifySessions(q);
     }
     async function finishChildren(inst){
-        for(var v of inst.childIds){
+        if(inst.childIds) for(var v of inst.childIds){
             var q = await updateTaskInstance(v);
             await finishChildren(q);
             await finishTask(q.id);
@@ -278,7 +278,7 @@ module.exports = (app) => {
                 origin = user;
             }
         }
-        var inst = {task_name:task.task_name, id:app.uuid(), data:{start_data:start_data}, next_tasks:[], origin:origin, result:'WAIT_RESPONSE', response:{}}
+        var inst = {task_name:task.task_name, id:app.uuid(), data:{private:{}, start_data:start_data}, next_tasks:[], origin:origin, result:'WAIT_RESPONSE', response:{}}
         
         setupTask(ctx, inst, task);
         return true;

@@ -132,8 +132,8 @@ const TaskPopupContainer = connect(
                             } else {
                                 if(vv.selectedOptions){
                                     var opts = [];
-                                    for(var v of vv.selectedOptions){
-                                        opts.push(v.value);
+                                    for(var w of vv.selectedOptions){
+                                        opts.push(w.value);
                                     }
                                     q.append(vv.name, JSON.stringify(opts));
                                 } else {

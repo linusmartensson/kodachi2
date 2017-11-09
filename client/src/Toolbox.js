@@ -29,6 +29,7 @@ class Toolbox extends Component {
     const tools = this.props.tools.map((tool) => 
         <Tool key={tool.id} name={tool.title} task={tool.task} />
     );
+    var count = 0;
     const tasks = this.props.tasks.map((task) => {
 
         for(var v of task.type.inputs) {
@@ -37,11 +38,12 @@ class Toolbox extends Component {
         }
         if(task.result !== 'WAIT_RESPONSE') return null;
 
+        count++;
 
         return (<TaskContainer key={task.id} task={task} />)
     });
 
-      var taskbox = tasks.length>0?<div className="Taskbox">{tasks}</div>:null;
+      var taskbox = count>0?<div className="Taskbox">{tasks}</div>:null;
 
     return (<div>{taskbox}<div className="Toolbox">{tools}</div></div>);
   }

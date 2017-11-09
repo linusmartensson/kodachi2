@@ -2,22 +2,20 @@
 module.exports = async (app) => {
 
     app.taskApi.step('staff_test', 
-            [{field:'q1', type:'dropdown', values:
-                    ['answer_them','answer_he','answer_she','answer_the_person']}, 
-             {field:'q2', type:'dropdown', values:
-                    ['answer_save', 'answer_warn', 'answer_phone', 'answer_leave', 'answer_put_out']}, 
-             {field:'q3', type:'dropdown', values:
-                    ['answer_friends', 'answer_boss', 'answer_linus', 'answer_team']}].concat(app.taskApi.okcancel()), 
+            [{field:'stafftest_q1', type:'dropdown', values:
+                    ['{stafftest.answer_them}','{stafftest.answer_he}','{stafftest.answer_she}','{stafftest.answer_the_person}']}, 
+             {field:'stafftest_q2', type:'dropdown', values:
+                    ['{stafftest.answer_save}', '{stafftest.answer_warn}', '{stafftest.answer_phone}', '{stafftest.answer_leave}', '{stafftest.answer_put_out}']}, 
+             {field:'stafftest_q3', type:'dropdown', values:
+                    ['{stafftest.answer_friends}', '{stafftest.answer_boss}', '{stafftest.answer_linus}', '{stafftest.answer_team}']}].concat(app.taskApi.okcancel()), 
             async (inst, ctx) => {
                if(inst.response.cancel) return 'OK';
-               if(inst.response.q1 != 'answer_the_person') return 'RETRY';
-               if(inst.response.q2 != 'answer_save') return 'RETRY';
-               if(inst.response.q3 != 'answer_boss') return 'RETRY';
-               
-               var user = await app.userApi.userId(ctx);
+               if(inst.response.q1 != '{stafftest.answer_the_person}') return 'RETRY';
+               if(inst.response.q2 != '{stafftest.answer_save}') return 'RETRY';
+               if(inst.response.q3 != '{stafftest.answer_boss}') return 'RETRY';
 
-               await app.roleApi.addRole(user, 'done_staff_test', 1000);
-               await app.roleApi.addAchievement(user, 'done_staff_test');
+               await app.roleApi.addRole(inst.data.private.user, 'done_staff_test', 1000);
+               await app.roleApi.addAchievement(inst.data.private.user, 'done_staff_test');
                return 'OK';
             });
 
@@ -30,9 +28,18 @@ module.exports = async (app) => {
     app.taskApi.create_task('activity', 'join_staff', 
             ['user'], [],
             app.taskApi.okcancel().concat({event_task:true}, [{field:'work_type', type:'dropdown', values:['create_area', 'create_schedule_event', 'create_shop', 'work']}]),
-            async (inst) => {
-                if(inst.response.cancel) return 'OK';
-                if(!app.userApi.isTested()) inst.next_tasks.push('staff_test');
+            async (inst, ctx) => {
+                if(inst.response.cancel){
+                    inst.data.cancel = true;
+                    return 'OK';
+                }
+                if(!inst.data.private) inst.data.private = {};
+                inst.data.private.user = await app.userApi.userId(ctx);
+                if(!await app.roleApi.hasRole(inst.data.private.user, 'done_staff_test')){
+                    inst.next_tasks.push('staff_test');
+                    return 'OK';
+                }
+                inst.data.doneStaffTest = true;
                 switch(inst.response.work_type){
                     case 'create_area':
                         inst.next_tasks.push('create_area');
@@ -49,6 +56,9 @@ module.exports = async (app) => {
                     default:
                         return 'FAIL';
                 }
+            }, async (inst) => {
+                if(!inst.data.doneStaffTest && !inst.data.cancel) return 'RETRY';
+                return 'OK';
             });
 
 

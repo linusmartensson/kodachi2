@@ -15,7 +15,7 @@ module.exports = async (app) => {
 
     api.addAchievement = async (user, achievement, points) => {
         if(!points) points = 1;
-        var er = await app.cypher(  'MATCH (u:User {id:{user}}), (r:Achievement {type:{achievement}}) ' + 
+        await app.cypher(  'MATCH (u:User {id:{user}}), (r:Achievement {type:{achievement}}) ' + 
                                     'MERGE (u)-[e:ACHIEVEMENT_PROGRESS]->(r) '+
                                     'ON MATCH SET   e.achieved = (e.points + {points} > r.req) , e.points = e.points + {points} '+
                                     'ON CREATE SET  e.achieved = ({points} > r.req) , e.points = {points}'
@@ -27,6 +27,10 @@ module.exports = async (app) => {
                             'ON MATCH SET   e.level = (e.xp + {xp} + 1000)/1000 , e.xp = e.xp + {xp} '+
                             'ON CREATE SET  e.level = (1000+{xp})/1000          , e.xp = {xp}'
                          , {user, role, xp});
+    }
+    api.hasRole = async (user, role) => {
+        var r = await app.cypher('MATCH (:User {id:{user}})-[e:HAS_ROLE]->(:Role {type:{role}}) RETURN e', {user, role});
+        return r.records.length > 0;
     }
 
     api.getBestRole = async (user) => {

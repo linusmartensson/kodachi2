@@ -3,7 +3,7 @@ var _ = require('lodash');
 
 module.exports = (app) => {
 
-    app.cypher('MATCH (s:Session) DETACH DELETE s'); //On server boot, delete all sessions.
+    //app.cypher('MATCH (s:Session) DETACH DELETE s'); //On server boot, delete all sessions.
 
     var patcher = require('jsondiffpatch').create({
         objectHash: (obj) => {

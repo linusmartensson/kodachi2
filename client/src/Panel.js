@@ -40,13 +40,14 @@ class Panel extends Component {
             case 'input_amount':
 
                 var values = [];
-                if(elem.type == "input_amount") {
+                if(elem.type === "input_amount") {
                     elem.content.values = [0,1,2,3,4,5,6,7,8,9,10];
                 } 
+                var pos = 0;
                 values = elem.content.values.map((p) => 
-                    <option className="PanelSelectOption" key={p} value={p}>{p}</option>
+                    <option className="PanelSelectOption" key={p} value={elem.type=='dropdown'?pos++:p}>{p}</option>
                 );
-                if(elem.type=="input_select")
+                if(elem.type === "input_select")
                     return <select className="PanelSelect" key={elem.id} name={elem.id} multiple>{values}</select>
                 else
                     return <select className="PanelSelect" key={elem.id} name={elem.id}>{values}</select>

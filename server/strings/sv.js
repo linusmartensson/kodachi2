@@ -54,8 +54,17 @@ module.exports = (app) => {
     s('input.email_or_ssn.desc', '');
 
 
-    s('my-test-book', '!Yo\nDet är dags att bygga saker\n#\nLet\'s see what happens\n_\nBurning down the house!');
-    
+    s('task.staff_test.desc', "!Innan du börjar!\nTjohej och välkommen in i värmen! I Kodachikai är vi jättenoga med att allt ska vara trevligt och mysigt för alla som är med på våra aktiviteter. Därför har vi ett liiiiitet test som alla som vill arbeta på något av våra evenemang måste lösa innan de får delta!");
+    s('input.stafftest_q1.name', "");
+    s('input.stafftest_q1.desc', "!Fråga ett!\nNär du pratar om någon du inte känner med någon på en av våra evenemang, vilket pronomen ska du använda?");
+    s('input.stafftest_q2.name', "");
+    s('input.stafftest_q2.desc', "!Fråga två!\n");
+    s('input.stafftest_q3.name', "");
+    s('input.stafftest_q3.desc', "");
+    s('stafftest.answer_them', 'De/dem');
+    s('stafftest.answer_he', 'Han');
+    s('stafftest.answer_she', 'Hon');
+    s('stafftest.answer_the_person', 'Personen');
 
 
 }

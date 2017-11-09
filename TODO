@@ -5,6 +5,7 @@ work [HI]
  - budget
  - needs uniform
  - member count
+
 * create activity/competition/vendor/artist
  - name
  - description
@@ -12,15 +13,19 @@ work [HI]
  - member count
  - needs uniform
  - schedule request / time+days open
+
 * self-application to group/activity/etc
  - pre application test
  - tshirt size
  - sleep @ event
 
+
 ** accept group/activity/competition/vendor
  - assign location
  - assign administration
  - assign time/date/opening hours
+
+
 
 * apply to group
  - pre application test
