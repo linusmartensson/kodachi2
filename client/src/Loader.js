@@ -1,12 +1,15 @@
 
 import React, { Component } from 'react';
-import './ShortProfile.css'
+import './Loader.css'
 
 import {connect} from 'react-redux'
 
 class Loader extends Component {
   render() {
-    if(!this.props.loading) return null;
+    if(!this.props.loading) {
+        console.dir("No :(");
+        return null;
+    }
     console.log("YO");
     return (<div className="Loader">&nbsp;</div>);
   }
@@ -14,6 +17,7 @@ class Loader extends Component {
 
 const LoaderContainer = connect(
         state => {
+            console.dir("loading state:"+state.isFetching);
             return {loading:state.isFetching};
         },
         dispatch => {

@@ -35,22 +35,22 @@ store.dispatch(actions.app.server.start());
 class Workspace extends Component {
     render() {
 
-        var backgroundConfig = {"backgroundImage":"url('/img/bg2017.png')"};
+        var backgroundConfig = {"backgroundImage":"url('/img/bg2018.png')"};
         var headerImage = "/img/kodachicon_new.png";
 
 
         return (
-                <Provider store={store}>
+                <Provider store={store}><div>
+                    <Loader/>
                     <Router>
                         <div className="Workspace" style={backgroundConfig}>
-                            <Loader/>
                             <Drawer/>
                             <div className="Workspace-head"><img src={headerImage} alt=""/></div>
                             <Route path="/:path" component={SurfaceRoute}/>
                             <TaskPopup />
                         </div>
                     </Router>
-                </Provider>
+                </div></Provider>
                )
     }
 }

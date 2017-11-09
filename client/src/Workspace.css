@@ -5,6 +5,7 @@
     overflow-y:scroll;
     overflow-x:show;
     background-size:cover;
+    background-position:0 20%;
 }
 .Workspace-head {
     margin:50px auto; 

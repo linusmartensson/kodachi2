@@ -8,10 +8,10 @@ module.exports = async (app) => {
                 {field:'tagline', type:'text'},
                 {field:'description', type:'editor'},
                 {field:'id', type:'simpletext'},
-                {field:'starts', type:'datetime'},
-                {field:'ends', type:'datetime'},   
+                {field:'starts', type:'date'},
+                {field:'ends', type:'date'},   
                 {field:'location', type:'text'},
-                {field:'publish', type:'datetime'}
+                {field:'publish', type:'date'}
             ),
             async (inst, ctx) => {
                 if(inst.response.cancel) return 'OK';

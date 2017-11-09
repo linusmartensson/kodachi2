@@ -142,7 +142,7 @@ const TaskPopupContainer = connect(
                             }
                         }
                     }
-                    dispatch(actions.app.task.submit(task, q))
+                    dispatch(actions.app.task.respond.do(task, q))
                 }
             }
         }

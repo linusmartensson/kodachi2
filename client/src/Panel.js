@@ -28,14 +28,28 @@ class Panel extends Component {
             case 'input_email': return <input placeholder="you@kodachi.se" className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
             case 'input_editor': 
                 return <textarea autoCapitalize="sentences" autoComplete="off" cols="60" rows="8" placeholder="Texttexttext!" className="PanelEditor" key={elem.id} name={elem.id} value={elem.text} />
+            case 'input_time':
+                return <input className="PanelInput" type="time" key={elem.id} name={elem.id} value={elem.text} />
+            case 'input_date':
+                return <input className="PanelInput" type="date" key={elem.id} name={elem.id} value={elem.text} />
+            case 'input_bool':
+                return <input className="PanelCheckbox" type="checkbox" key={elem.id} name={elem.id} value={elem.text} />
+
             case 'input_select':
+            case 'input_dropdown':
+            case 'input_amount':
 
-                console.dir(elem);
-
-                const values = elem.content.values.map((p) => 
+                var values = [];
+                if(elem.type == "input_amount") {
+                    elem.content.values = [0,1,2,3,4,5,6,7,8,9,10];
+                } 
+                values = elem.content.values.map((p) => 
                     <option className="PanelSelectOption" key={p} value={p}>{p}</option>
                 );
-                return <select className="PanelSelect" key={elem.id} name={elem.id} multiple>{values}</select>
+                if(elem.type=="input_select")
+                    return <select className="PanelSelect" key={elem.id} name={elem.id} multiple>{values}</select>
+                else
+                    return <select className="PanelSelect" key={elem.id} name={elem.id}>{values}</select>
 
             default: return <p key={elem.id}>{elem.type}</p>;
         }

@@ -51,7 +51,10 @@ module.exports = (app) => {
     api.add_filter("bool", (d)=>{
         return !!d;
     });
-    api.add_filter("datetime", (d)=>{
+    api.add_filter("date", (d)=>{
+        return new Date(d).getTime();
+    });
+    api.add_filter("time", (d)=>{
         return new Date(d).getTime();
     });
     api.add_filter("checkbox", (d)=>{return d;}); //TODO How2handle checkboxes??
@@ -285,12 +288,7 @@ module.exports = (app) => {
         if(child_inst)
             inst.children[child_inst.task_name] = child_inst;
 
-        console.dir(inst);
-        console.dir(inst.children.length);
-        console.dir(inst.next_tasks.length);
-
         if(Object.keys(inst.children).length == inst.next_tasks.length){
-            console.dir("RESOLVING TASK");
 
             inst.finished_tasks = inst.next_tasks;
             inst.next_tasks = [];
@@ -298,14 +296,10 @@ module.exports = (app) => {
             //This layer is complete, so call the post handler.
             var result = await app.tasks[inst.task_name].post_handler(inst);
 
-            console.dir("Post handler result: "+result);
-
             inst.result = result;
 
             await updateTaskInstance(inst.id, inst);
 
-            console.dir("Updated task");
-                    
             switch(result){
                 case 'OK':
                     break;
@@ -325,24 +319,21 @@ module.exports = (app) => {
 
             //As long as we have results and parents, keep trickling.
             if(!inst.next_tasks || inst.next_tasks.length == 0){
-                console.dir("Trickle up to parent");
+                await finishTask(inst.id);
+
                 
                 //We're only returning the top-level result in the api.
                 if(inst.parent) await trickleTask(ctx, await updateTaskInstance(inst.parent), inst);
 
 
-                console.dir("Fininshing task");
-                await finishTask(inst.id);
             } else {
 
-                console.dir("New child tasks");
                 //Start new child tasks
                 await nextTask(ctx, inst, app.tasks[inst.task_name]);
             }
 
             return result;
         } else {
-            console.dir("TASK AWAITING RESPONSES");
             await updateTaskInstance(inst.id, inst);
             notifyTask(inst.id);
             return 'OK';
@@ -352,6 +343,7 @@ module.exports = (app) => {
         if(inst.next_tasks && inst.next_tasks.length > 0) {
             //Handle all child tasks.
             inst.childIds = [];
+            var cinsts = [];
             for(var n=0;n<inst.next_tasks.length;++n){
                 var uuid = app.uuid();
                 var tasktype = inst.next_tasks[n];
@@ -362,9 +354,12 @@ module.exports = (app) => {
                 var child_task = api.getTask(tasktype);
                 var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst.id, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
                 inst.childIds.push(uuid);
-                await setupTask(ctx, child_inst, child_task);
+                cinsts.push({child_inst, child_task});
             }
             await updateTaskInstance(inst.id, inst);
+            for(var v of cinsts){
+                await setupTask(ctx, v.child_inst, v.child_task);
+            }
             notifyTask(inst.id);
             return inst.result;
         } else {
@@ -375,20 +370,17 @@ module.exports = (app) => {
 
     api.respond_task = async (ctx, task_id, response) => {
 
-        console.log("Respond task: "+task_id);
+        console.log("respond_task("+task_id+")");
 
         var inst = await updateTaskInstance(task_id);
 
         if(!inst || inst.result != 'WAIT_RESPONSE' || !await secureTask(ctx, task_id)) return 'NO_TASK_ID';  //There is no matching task instance.
-        
-        console.dir(inst);
+        console.log("Found "+task_id+". Processing response!");
 
+        await updateTaskInstance(task_id, inst);
+        
         //Find the task
         var task = api.getTask(inst.task_name);
-
-        console.dir(task);
-
-        console.dir(response);
 
         try{
             for(var v of task.inputs){
@@ -396,24 +388,18 @@ module.exports = (app) => {
             }
             response = api.filterResponse(response, task.inputs);
         } catch (e) {
-            console.log("Error, retry");
+            console.log("Task processing error:");
             console.dir(e);
             inst.error = "{tasks.filterFailure}";
-            updateTaskInstance(task_id, inst)
+            inst.result = 'WAIT_RESPONSE';
+            await updateTaskInstance(task_id, inst)
             return 'RETRY';
         }
-
-        console.log("Processing response: ");
-        console.dir(response);
-
-
 
         //Process the response
         inst.response = response;
         var result = await task.result_handler(inst, ctx);
         delete inst.response;
-
-        console.dir("Response: "+result);
 
         //Store the result
         inst.result = result;

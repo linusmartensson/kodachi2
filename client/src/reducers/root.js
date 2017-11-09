@@ -43,7 +43,7 @@ export const actions = createActions({
                 },
                 SUCCESS: () => ({}),
                 FAILURE: () => ({}),
-                DO: (task) => {
+                DO: (task, form) => {
                     return dispatch => {
                         dispatch(actions.app.task.start.request());
                         fetch(host+'task/start_task/'+task,{credentials:'include'}).then(()=>{
@@ -56,17 +56,19 @@ export const actions = createActions({
                 REQUEST: () => ({}),
                 SUCCESS: () => ({}),
                 FAILURE: () => ({}),
-                DO: () => ({})
+                DO: (task, form) => {
+                    return dispatch => {
+                        dispatch(actions.app.task.close());
+                        dispatch(actions.app.task.respond.request());
+                        fetch(host+'task/respond_task/'+task.id,
+                            {credentials:'include', method:'POST', body:form}).then(()=>{
+                                dispatch(actions.app.task.respond.success());
+                            });
+                    }
+                }
             },
             SHOW: (id) => ({id}),
             CLOSE: () => ({}),
-            SUBMIT: (task, form) => {
-                return dispatch => {
-                    dispatch(actions.app.task.close());
-                    fetch(host+'task/respond_task/'+task.id,
-                        {credentials:'include', method:'POST', body:form});
-                }
-            }
         }
     }
 });
@@ -103,9 +105,6 @@ export const reducer = handleActions({
                 REQUEST: (state, action) => ({...state, isFetching:true}),
                 SUCCESS: (state, action) => ({...state, isFetching:false}),
                 FAILURE: (state, action) => ({...state, isFetching:false}),
-                DO: (state, action) => {
-                    return {...state}
-                }
             },
             RESPOND:{
                 REQUEST: (state, action) => ({...state, isFetching:true}),

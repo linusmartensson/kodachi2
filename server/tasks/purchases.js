@@ -77,6 +77,7 @@ module.exports = async (app) => {
             ['user'],[],
             app.taskApi.okcancel().concat({field:'tickets', type:'amount'}, {field:'sleep', type:'amount'}),
             async (inst, ctx) => {
+                if(inst.response.cancel) return 'OK';
                 inst.data.numTickets = inst.response.tickets;
                 inst.data.numSleep = inst.response.sleep;
                 var uuid = app.uuid();
@@ -91,6 +92,7 @@ module.exports = async (app) => {
             ['user'],[],
             app.taskApi.okcancel().concat({field:'points', type:'dropdown', values:[100, 500, 1500, 3000]}),
             async (inst, ctx) => {
+                if(inst.response.cancel) return 'OK';
                 inst.data.points = inst.response.points;
                 var uuid = app.uuid();
                 var result = queryToken(ctx, uuid, inst.data.points/10, app.stringApi.get_string("buy_points_payson"));
