@@ -9,7 +9,7 @@ module.exports = async (app) => {
             {field:'title', type:'text'}, 
             {field:'id', type:'simpletext'}, 
             {field:'event', type:'bool'},
-            {field:'lang', type:'dropdown', values:['sv', 'eng', 'all']},
+            {field:'lang', type:'dropdown', translate:true, values:['sv', 'eng', 'all']},
             {field:'access', type:'select', prepare:async (v, ctx)=>{
                 var r = await app.cypher('MATCH (r:Role) RETURN r');
                 v.values = [];

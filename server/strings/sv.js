@@ -23,6 +23,16 @@ module.exports = (app) => {
     s('task.logout.title', 'Logga ut');
     s('task.logout.desc', 'Är du säker på att du vill logga ut?');
 
+
+    s('task.staff_test.title', 'Jobba med Kodachicon!');
+    s('task.join_staff.title', 'Jobba med Kodachicon!');
+    s('task.join_staff.desc', '!Välkommen!\nDet finns många olika sätt att bli en del av Kodachicon! Förhoppningsvis ska du kunna hitta något som passar dig extraspecielltmycket bra!\n|\nVissa är intresserade av att sälja saker på en av våra försäljningsytor, som till exempel i vår jättetuffa Artist Alley!\n#\nAndra är mer intresserade av att vara med och bygga upp eventet i sig och bli en helt egen magisk del av Kodachicon!\n#\nSen finns det hjältar också som driver sina egna aktiviteter, såsom föreläsningar, workshops eller tävlingar!\n_\nVad skulle just du vilja göra på Kodachicon?');
+    s('input.work_type.name', "Jag skulle vilja...");
+    s('input.value.create_team', "Skapa ett helt eget team på Kodachicon!");
+    s('input.value.create_activity', "Arrangera en häftig aktivitet eller tävling!");
+    s('input.value.create_shop', "Sälja saker!");
+    s('input.value.work', "Jobba någonstans!");
+
     s('input.ok.name', 'Ok!');
     s('input.yes.name', 'Ja!');
     s('input.cancel.name', 'Avbryt');
@@ -46,6 +56,8 @@ module.exports = (app) => {
     s('role.staff', "Arbetsmyra");
     s('role.admin', "Sajtmagiker");
     s('role.editor', "Sajtfifflare");
+    s('role.base_budget', "Budgetkrånglare");
+    s('role.base_admin', "Eventmagiker");
 
     s('input.has_ssn.name', 'Har du ett Svenskt personnummer?');
 
@@ -58,13 +70,25 @@ module.exports = (app) => {
     s('input.stafftest_q1.name', "");
     s('input.stafftest_q1.desc', "!Fråga ett!\nNär du pratar om någon du inte känner med någon på en av våra evenemang, vilket pronomen ska du använda?");
     s('input.stafftest_q2.name', "");
-    s('input.stafftest_q2.desc', "!Fråga två!\n");
+    s('input.stafftest_q2.desc', "!Fråga två!\nDu upptäcker att det brinner på konventet! Vad är det första du ska göra?");
     s('input.stafftest_q3.name', "");
-    s('input.stafftest_q3.desc', "");
+    s('input.stafftest_q3.desc', "!Fråga tre!\nOm någonting har hänt på konventet, vem är det du ska berätta detta för så att det blir löst så effektivt som möjligt?");
+    
     s('stafftest.answer_them', 'De/dem');
     s('stafftest.answer_he', 'Han');
     s('stafftest.answer_she', 'Hon');
     s('stafftest.answer_the_person', 'Personen');
+
+    s('stafftest.answer_save', 'Hjälpa personer i akut fara');
+    s('stafftest.answer_warn', 'Varna folk i omgivningen');
+    s('stafftest.answer_phone', 'Ringa 112');
+    s('stafftest.answer_leave', 'Lämna platsen');
+    s('stafftest.answer_put_out', 'Släcka elden!');
+
+    s('stafftest.answer_friends', 'Mina vänner!');
+    s('stafftest.answer_boss', 'Min chef!');
+    s('stafftest.answer_linus', 'Linus!');
+    s('stafftest.answer_team', 'Mitt team!');
 
 
 }

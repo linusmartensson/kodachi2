@@ -1,37 +1,35 @@
 work [HI]
-* create group & get group role
- - name
- - description
- - budget
- - needs uniform
- - member count
 
-* create activity/competition/vendor/artist
+* select event activity type
  - name
  - description
- - budget request
- - member count
- - needs uniform
+ - team size
+ - logo / image
+ - team/activity/competition/artistalley/shop
  - schedule request / time+days open
-
-* self-application to group/activity/etc
+-- create group/team
+-- create activity/competition
+ - budget
+ - participant count
+ - needs uniform
+-- create shop/artistalley
+ - shop size/table count
+ 
+* common work application
+ - personal letter
  - pre application test
  - tshirt size
  - sleep @ event
-
 
 ** accept group/activity/competition/vendor
  - assign location
- - assign administration
+ - assign event activity administrator
  - assign time/date/opening hours
 
+** add event manager
+ - type (overseer/admin)
+ - user
 
-
-* apply to group
- - pre application test
- - description
- - tshirt size
- - sleep @ event
 * accept group members
 * email on accept reject
 * list members

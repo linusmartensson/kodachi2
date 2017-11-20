@@ -31,9 +31,17 @@ module.exports = (app) => {
             }
             return t;
         } else {
-            var q = app.strings[name];
-            if(!q) return undefined;
-            return app.strings[name][t];
+            while(name.length > 0){
+                var q = app.strings[name];
+                if(!q) {
+                    var j = name;
+                    name = name.replace(/\.[^.]*$/, '');   
+                    if(j == name) return undefined;
+                    continue;
+                }
+                return app.strings[name][t];
+            }
+            return undefined;
         }
     }
     api.bookParser = (v, idbase) => {
@@ -144,17 +152,18 @@ module.exports = (app) => {
         });
         return r;
     }
-    api.userParse = async (ctx, v) => {
-        var lang = await app.userApi.getLanguage(ctx);
-       
+    api.userParse = async (ctx, v, lang) => {
+        if(!lang)
+            lang = await app.userApi.getLanguage(ctx);
         var w = api.parse(v, lang);
         return w;
     }
 
-    api.translate = async (ctx, v) => {
+    api.translate = async (ctx, v, lang) => {
+        if(!lang) lang = await app.userApi.getLanguage(ctx);
         if(v) for(var w in v) {
-            if(typeof v[w] === 'object') await api.translate(ctx, v[w]);
-            if(typeof v[w] === 'string') v[w] = await api.userParse(ctx, v[w]);
+            if(typeof v[w] === 'object') await api.translate(ctx, v[w], lang);
+            if(typeof v[w] === 'string') v[w] = await api.userParse(ctx, v[w], lang);
         }
     }
     

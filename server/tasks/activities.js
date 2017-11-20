@@ -1,109 +1,135 @@
 
 module.exports = async (app) => {
 
-    app.taskApi.step('staff_test', 
-            [{field:'stafftest_q1', type:'dropdown', values:
-                    ['{stafftest.answer_them}','{stafftest.answer_he}','{stafftest.answer_she}','{stafftest.answer_the_person}']}, 
-             {field:'stafftest_q2', type:'dropdown', values:
-                    ['{stafftest.answer_save}', '{stafftest.answer_warn}', '{stafftest.answer_phone}', '{stafftest.answer_leave}', '{stafftest.answer_put_out}']}, 
-             {field:'stafftest_q3', type:'dropdown', values:
-                    ['{stafftest.answer_friends}', '{stafftest.answer_boss}', '{stafftest.answer_linus}', '{stafftest.answer_team}']}].concat(app.taskApi.okcancel()), 
-            async (inst, ctx) => {
-               if(inst.response.cancel) return 'OK';
-               if(inst.response.q1 != '{stafftest.answer_the_person}') return 'RETRY';
-               if(inst.response.q2 != '{stafftest.answer_save}') return 'RETRY';
-               if(inst.response.q3 != '{stafftest.answer_boss}') return 'RETRY';
+    app.taskApi.create_task('activity', 'staff_test', ['user', '!done_staff_test'], [],
+        [{unique:true, field:'stafftest_q1', type:'dropdown', values:
+            ['{stafftest.answer_them}','{stafftest.answer_he}','{stafftest.answer_she}','{stafftest.answer_the_person}']}, 
+            {field:'stafftest_q2', type:'dropdown', values:
+                ['{stafftest.answer_save}', '{stafftest.answer_warn}', '{stafftest.answer_phone}', '{stafftest.answer_leave}', '{stafftest.answer_put_out}']}, 
+            {field:'stafftest_q3', type:'dropdown', values:
+                ['{stafftest.answer_friends}', '{stafftest.answer_boss}', '{stafftest.answer_linus}', '{stafftest.answer_team}']}].concat(app.taskApi.okcancel()), 
+        async (inst, ctx) => {
+            if(inst.response.cancel) return 'OK';
 
-               await app.roleApi.addRole(inst.data.private.user, 'done_staff_test', 1000);
-               await app.roleApi.addAchievement(inst.data.private.user, 'done_staff_test');
-               return 'OK';
-            });
 
-    //Create area - Driv ett område, såsom ett rum, en arbetsuppgift, eller löpande aktivitet.
-    //Create schedule event - Schemalägg en aktivitet i ett område, exempelvis en tävling eller en föreläsning
-    //Create shop - Sälj saker på eventet
-    //Work - Jobba i ett område.
+            if(inst.response.stafftest_q1 != '{stafftest.answer_the_person}') return 'RETRY';
+            if(inst.response.stafftest_q2 != '{stafftest.answer_save}') return 'RETRY';
+            if(inst.response.stafftest_q3 != '{stafftest.answer_boss}') return 'RETRY';
 
-    //Base task for working at Kodachicon
+
+            var user = await app.userApi.userId(ctx);
+
+            await app.roleApi.addRole(user, 'done_staff_test', 1000);
+            await app.roleApi.addAchievement(user, 'done_staff_test');
+
+            inst.next_tasks.push('join_staff');
+            return 'OK';
+        }, async (inst) => {return 'OK'});
+
     app.taskApi.create_task('activity', 'join_staff', 
-            ['user'], [],
-            app.taskApi.okcancel().concat({event_task:true}, [{field:'work_type', type:'dropdown', values:['create_area', 'create_schedule_event', 'create_shop', 'work']}]),
-            async (inst, ctx) => {
-                if(inst.response.cancel){
-                    inst.data.cancel = true;
-                    return 'OK';
-                }
-                if(!inst.data.private) inst.data.private = {};
-                inst.data.private.user = await app.userApi.userId(ctx);
-                if(!await app.roleApi.hasRole(inst.data.private.user, 'done_staff_test')){
-                    inst.next_tasks.push('staff_test');
-                    return 'OK';
-                }
-                inst.data.doneStaffTest = true;
-                switch(inst.response.work_type){
-                    case 'create_area':
-                        inst.next_tasks.push('create_area');
-                        return 'OK';
-                    case 'create_schedule_event':
-                        inst.next_tasks.push('create_schedule_event');
-                        return 'OK';
-                    case 'create_shop':
-                        inst.next_tasks.push('pick_shop_type');
-                        return 'OK';
-                    case 'work':
-                        inst.next_tasks.push('join_work');
-                        return 'OK';
-                    default:
-                        return 'FAIL';
-                }
-            }, async (inst) => {
-                if(!inst.data.doneStaffTest && !inst.data.cancel) return 'RETRY';
+        ['done_staff_test'], [],
+        app.taskApi.okcancel().concat({event_task:true, unique:true}, [{translate:true, field:'work_type', type:'dropdown', values:['create_team', 'create_activity', 'create_shop', 'work']}]),
+        async (inst, ctx) => {
+            if(inst.response.cancel){
                 return 'OK';
-            });
-
-
-    function f(field, type, values){
-        return {field:field, type:type || 'text', values:values};
-    }
-
-    app.taskApi.create_task('activity', 'create_area', 
-            [], [],
-            app.taskApi.okcancel().concat([f('area_name'), f('area_description'), f('area_staff_count', 'number'), f('area_req_budget', 'number'), f('area_activity_days', 'checkbox', ['wednesday', 'thursday', 'friday', 'saturday', 'sunday']), f('area_opening_hours', 'hours')]),
-            async (inst) => {
-                inst.data.area_name = inst.response.area_name;
-                inst.data.area_description = inst.response.area_description;
-                inst.data.area_staff_count = inst.response.area_staff_count;
-                inst.data.area_req_budget = inst.response.area_req_budget;
-                inst.data.area_activity_days = inst.response.area_activity_days;
-                inst.data.area_opening_hours = inst.response.area_opening_hours;
-                if(inst.response.ok)
-                    inst.next_tasks.push('accept_area');
-                return 'OK';
-            }, async (inst) => {
-                if(inst.data.denied) {
-                    delete inst.data.denied;
-                    return 'RETRY';
-                }
-                return 'OK';
-            });
-
-    function createArea(inst){
-        //Note: add achievement points
-    }
-    function updateSchedule(inst){
-    }
-    function updateBudget(inst){
-    }
-
-    app.taskApi.create_task('', 'accept_area', [], ['event_admin'], app.taskApi.yesno().concat(f('comments', 'textbox')), async(inst, ctx) => {
-                if(inst.response.yes){
-                    updateSchedule(inst);
-                    updateBudget(inst);
-                    createArea(inst);
-                    app.taskApi.start_task(ctx, 'manage_area', [], inst.origin);
-                } else {
-                    inst.data.denied = true;
+            }
+            inst.data.submitter = await app.userApi.userId(ctx);
+            switch(inst.response.work_type){
+                case 'create_team':
+                    inst.next_tasks.push('create_team');
                     return 'OK';
-                }
-            });
+                case 'create_activity':
+                    inst.next_tasks.push('create_activity');
+                    return 'OK';
+                case 'create_shop':
+                    inst.next_tasks.push('create_shop');
+                    return 'OK';
+                case 'work':
+                    inst.next_tasks.push('join_work');
+                    return 'OK';
+                default:
+                    return 'FAIL';
+            }
+        }, async (inst) => {
+            return 'OK';
+        });
+
+    app.taskApi.create_task('activity', 'create_team', 
+        [], [],
+        app.taskApi.okcancel().concat(
+            {field:'team_name', type:'text'},
+            {field:'team_description', type:'editor'},
+            {field:'team_size', type:'number'},
+            {field:'team_image', type:'image'},
+            {field:'team_schedule', type:'select', translate:true, values:['wed','thu','fri','sat','sun']},
+            //early: 06-08, morning: 08-10, day: 10-14, afternoon: 14-18, evening: 18-23, night:23-03, until_sunrise:03-06
+            {field:'team_open', type:'select', translate:true, values:['early', 'morning', 'day', 'afternoon', 'evening', 'night', 'until_sunrise']},
+            {field:'team_budget', type:'number'},
+            {field:'team_needs_uniform', type:'bool'}
+        ),
+        async (inst, ctx) => {
+            if(inst.response.cancel){
+                return 'OK';
+            }
+            var q = {};
+            q.type = 'team';
+            q.name = inst.response.team_name;
+            q.desc = inst.response.team_description;
+            q.size = inst.response.team_size;
+            q.image = inst.response.team_image;
+            q.schedule = inst.response.team_schedule;
+            q.open = inst.response.team_open;
+            q.budget = inst.response.team_budget;
+            q.uniform = inst.response.team_needs_uniform;
+            inst.data.application = q;
+            inst.next_task.push('review_application');
+        }, async (inst) => {
+            return 'OK';
+        });
+    app.taskApi.create_task('activity', 'create_activity', 
+        [], [],
+        app.taskApi.okcancel().concat(
+            {field:'act_name', type:'text'},
+            {field:'act_description', type:'editor'},
+            {field:'act_size', type:'number'},
+            {field:'act_image', type:'image'},
+            {field:'act_available_days', type:'staticselect', translate:true, values:['wed','thu','fri','sat','sun']},
+            //early: 06-08, morning: 08-10, day: 10-14, afternoon: 14-18, evening: 18-23, night:23-03, until_sunrise:03-06
+            {field:'act_available_times', type:'staticselect', translate: true, values:['early', 'morning', 'day', 'afternoon', 'evening', 'night', 'until_sunrise']},
+            {field:'act_length', type:'dropdown', translate:true, values:['short', 'medium', 'long', 'half_day', 'day']},
+            {field:'act_budget', type:'number'},
+            {field:'act_needs_uniform', type:'bool'}
+        ),
+        async (inst, ctx) => {
+            if(inst.response.cancel){
+                return 'OK';
+            }
+            var q = {};
+            q.type = 'activity';
+            q.name = inst.response.act_name;
+            q.desc = inst.response.act_description;
+            q.size = inst.response.act_size;
+            q.image = inst.response.act_image;
+            q.avail_days = inst.response.act_available_days;
+            q.avail_times = inst.response.act_available_times;
+            q.length = inst.response.act_length;
+            q.budget = inst.response.act_budget;
+            q.uniform = inst.response.act_needs_uniform;
+            inst.data.application = q;
+            inst.next_task.push('review_application');
+            inst.next_task.push('review_schedule');
+            inst.next_task.push('review_budget');
+        }, async (inst) => {
+            return 'OK';
+        });
+
+    app.taskApi.create_task('activity', 'review_application', [], ['admin.', 'overseer.'],
+        app.taskApi.yesno().concat(),
+        async (inst, ctx) => {
+
+        }, async (inst) => {
+
+        });
+
+
 }

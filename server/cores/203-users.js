@@ -9,10 +9,7 @@ module.exports = async (app) => {
     var coreRoles = ['user', 'anonymous', 'editor', 'admin'];
 
     for(var v of coreRoles){
-        var role = await app.cypher('MATCH (r:Role {type:{type}}) RETURN r', {type:v});
-        if(role.records.length==0){
-            await app.cypher('CREATE (r:Role {type:{type}})', {type:v});
-        }
+        await app.roleApi.create_role(v);
     }
 
     function hash(pwd){
@@ -67,6 +64,11 @@ module.exports = async (app) => {
     }
     api.hasAnyRole = async (id, roles) => {
         var userRoles = await api.getRoles(id);
+        for(let v of roles){
+            if(v.match(/^!/) != null){
+                if(userRoles.includes(v.split('!')[1])) return false;
+            }
+        }
         for(let v of roles){
             if(userRoles.includes(v)) return true;
         }

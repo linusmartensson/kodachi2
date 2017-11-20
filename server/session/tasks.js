@@ -1,6 +1,6 @@
 
 var _ = require('lodash');
-module.exports = (app) => {
+module.exports = async (app) => {
 
     app.sessionApi.register(async (ctx, state) => {
 
@@ -22,9 +22,9 @@ module.exports = (app) => {
                 v.desc = '{|input.'+v.field+'.desc}';
                 v.name = '{input.'+v.field+'.name}';
 
-                if(v.values){
-                    for(var w of v.values) {
-                        w = '{input.value.'+w+'}';
+                if(v.values && v.translate){
+                    for(var w in v.values) {
+                        v.values[w] = '{input.value.'+v.values[w]+'}';
                     }
                 }
             }

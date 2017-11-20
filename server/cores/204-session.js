@@ -1,7 +1,7 @@
 
 var _ = require('lodash');
 
-module.exports = (app) => {
+module.exports = async (app) => {
 
     //app.cypher('MATCH (s:Session) DETACH DELETE s'); //On server boot, delete all sessions.
 
@@ -55,5 +55,5 @@ module.exports = (app) => {
 
     app.sessionApi = api;
 
-    require('../tools/core').loader("session", app);
+    await require('../tools/core').loader("session", app);
 }

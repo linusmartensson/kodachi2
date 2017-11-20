@@ -124,6 +124,8 @@ const TaskPopupContainer = connect(
                     }
                     if(cancel) q.append('cancel', true);
                     else for(var vv of node.elements) {
+                                    console.dir(vv.name);
+                                    console.dir(vv.value);
                         if(vv.files && vv.files.length > 0) {
                             q.append(vv.name, vv.files[0], vv.value);
                         } else {

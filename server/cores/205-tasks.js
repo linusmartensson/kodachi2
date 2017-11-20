@@ -48,6 +48,8 @@ module.exports = (app) => {
         if(!validateEmail(d)) throw 'Invalid Email';
         return ''+d;
     });
+    api.add_filter("file", (d)=>{return d;});
+    api.add_filter("image", (d)=>{return d;});
     api.add_filter("bool", (d)=>{
         return !!d;
     });
@@ -60,11 +62,24 @@ module.exports = (app) => {
     api.add_filter("checkbox", (d)=>{return d;}); //TODO How2handle checkboxes??
     api.add_filter("hours", (d)=>{return d;}); //TODO How2handle hours??
     api.add_filter("dropdown", (d,q)=>{ //Index of values-list.
+        d = JSON.parse(d);
+        if(!Array.isArray(d) || d.length < 1) throw 'Invalid dropdown selection';
+        d = d[0];
         if(~~d >= q.values.length) throw 'Invalid dropdown selection';
-        return q.values[~~d];
+        var v = q.values[~~d];
+        return v;
     });
-    api.add_filter("number", (d)=>{return d.replace(/\D/g, '');});
-    api.add_filter("amount", (d)=>{return d.replace(/\D/g, '');});
+    api.add_filter("staticselect", (d,q)=>{ //Index of values-list.
+        d = JSON.parse(d);
+        if(!Array.isArray(d) || d.length < 1) throw 'Invalid dropdown selection';
+        for(var v in d){
+            if(~~d[v] >= q.values.length) throw 'Invalid dropdown selection';
+            d[v] = q.values[~~d[v]];
+        }
+        return v;
+    });
+    api.add_filter("number", (d)=>{if(!d) return 0; return d.replace(/\D/g, '');});
+    api.add_filter("amount", (d)=>{if(!d) return 0; return d.replace(/\D/g, '');});
 
 
     api.filterResponse = (response, inputs) => {
@@ -180,8 +195,10 @@ module.exports = (app) => {
     async function finishChildren(inst){
         if(inst.childIds) for(var v of inst.childIds){
             var q = await updateTaskInstance(v);
-            await finishChildren(q);
-            await finishTask(q.id);
+            if(q) {
+                await finishChildren(q);
+                await finishTask(q.id);
+            }
         }
     }
     async function addTaskToUser(task){
@@ -264,6 +281,7 @@ module.exports = (app) => {
         }
 
         if(!start_data) start_data = {};
+        if(task.start_data) Object.assign(start_data, task.start_data);
         if(!origin){
             var onSession = false;
             for(var v of task.inputs){
@@ -285,6 +303,7 @@ module.exports = (app) => {
     }
 
     async function trickleTask(ctx, inst, child_inst){
+        if(!inst) return;
         if(!inst.children) inst.children = {};
         
         if(child_inst)

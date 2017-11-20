@@ -12,6 +12,12 @@ module.exports = async (app) => {
             await app.cypher('CREATE (r:Achievement {type:{name}, req:{req}, value:{value}})', {name, req, value});
         }
     }
+    api.create_role = async (name) => {
+        var role = await app.cypher('MATCH (r:Role {type:{name}}) RETURN r', {name});
+        if(role.records.length==0){
+            await app.cypher('CREATE (r:Role {type:{name}})', {name});
+        }
+    }
 
     api.addAchievement = async (user, achievement, points) => {
         if(!points) points = 1;
@@ -22,7 +28,13 @@ module.exports = async (app) => {
                          , {user, achievement, points});
     }
     api.addRole = async (user, role, xp) => {
-        await app.cypher(   'MATCH (u:User {id:{user}}), (r:Role {type:{type}}) ' + 
+        await api.create_role(role);    //pre-generate any non-existant role dynamically.
+        if(role.match(/\./) != null){
+            //When adding .-roles such as for events, add the xp to a role named base_[rolename] instead of [rolename].[eventname].
+            await api.addRole(user, "base_"+role.replace(/\.[^.]*/, ''), xp);
+            xp = 0;
+        }
+        await app.cypher(   'MATCH (u:User {id:{user}}), (r:Role {type:{role}}) ' + 
                             'MERGE (u)-[e:HAS_ROLE]->(r) '+
                             'ON MATCH SET   e.level = (e.xp + {xp} + 1000)/1000 , e.xp = e.xp + {xp} '+
                             'ON CREATE SET  e.level = (1000+{xp})/1000          , e.xp = {xp}'
@@ -43,11 +55,11 @@ module.exports = async (app) => {
 
         return {
             role:r.type,
-            xp:e.xp?e.xp.toNumber():0,
-            level:e.level?e.level.toNumber():1,
+            xp:e.xp?typeof e.xp.toNumber === 'function'?e.xp.toNumber():e.xp:0,
+            level:e.level?typeof e.level.toNumber === 'function'?e.level.toNumber():e.level:1,
         }
     }
 	
-    require('../tools/core').loader("achievements", app);
     app.roleApi = api;
+    await require('../tools/core').loader("achievements", app);
 }

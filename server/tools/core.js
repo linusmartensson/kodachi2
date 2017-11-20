@@ -11,10 +11,11 @@ var loader = async (dir, app)=> {
 		if(!file.match("\.js$")) return;
 		mw.push("../"+dir+"/" + file);
 	})
-	mw.sort().forEach((elem) => {
+	var v = mw.sort();
+    for(var elem of v){
 		winston.info(elem);
-		require(elem)(app);
-	});
+		await require(elem)(app);
+	};
 }
 
 //Watch for file changes
