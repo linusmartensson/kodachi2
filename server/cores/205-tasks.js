@@ -48,8 +48,8 @@ module.exports = (app) => {
         if(!validateEmail(d)) throw 'Invalid Email';
         return ''+d;
     });
-    api.add_filter("file", (d)=>{return d;});
-    api.add_filter("image", (d)=>{return d;});
+    api.add_filter("file", (d)=>{return {file:d.path, mimeType:d.mimeType};});
+    api.add_filter("image", (d)=>{return {file:d.path, mimeType:d.mimeType};});
     api.add_filter("bool", (d)=>{
         return !!d;
     });
@@ -76,7 +76,7 @@ module.exports = (app) => {
             if(~~d[v] >= q.values.length) throw 'Invalid dropdown selection';
             d[v] = q.values[~~d[v]];
         }
-        return v;
+        return d;
     });
     api.add_filter("number", (d)=>{if(!d) return 0; return d.replace(/\D/g, '');});
     api.add_filter("amount", (d)=>{if(!d) return 0; return d.replace(/\D/g, '');});
@@ -208,7 +208,9 @@ module.exports = (app) => {
         await app.cypher("MATCH (s:Session) WHERE s.id={target} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(s)", {target:task.origin, id:task.id, data:JSON.stringify(task), type:task.task_name});
     }
     async function addTaskToRoles(task, roles){
-        await app.cypher("MATCH (r:Role) WHRE r.name IN {targets} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(r)", {targets:roles, id:task.id, data:JSON.stringify(task), type:task.task_name});
+        console.dir(task);
+        console.dir(roles);
+        await app.cypher("MATCH (r:Role) WHERE r.type IN {targets} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(r)", {targets:roles, id:task.id, data:JSON.stringify(task), type:task.task_name});
     }
     async function setupTask(ctx, inst, task) {
         var onSession = false;
@@ -373,6 +375,9 @@ module.exports = (app) => {
                     tasktype = tasktype.task;
                 }
                 var child_task = api.getTask(tasktype);
+                if(api.eventTask(child_task)){
+                    child_task = api.getTask(tasktype+"."+inst.data.start_data.event_id);
+                }
                 var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst.id, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
                 inst.childIds.push(uuid);
                 cinsts.push({child_inst, child_task});
@@ -437,7 +442,8 @@ module.exports = (app) => {
                 break;
             case 'FAIL':
             default:
-                await finishTask(task_id);
+                inst.next_tasks = [];
+                await nextTask(ctx, inst, task);
                 return result;
         }
         
