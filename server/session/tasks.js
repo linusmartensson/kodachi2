@@ -15,7 +15,7 @@ module.exports = async (app) => {
             task.title = '{task.'+task.type.task_name+'.title.active}';
             for(var v of task.type.inputs) {
 
-                if(v.prepare) await v.prepare(v, ctx);
+                if(v.prepare) await v.prepare(v, ctx, task);
 
 
                 if(!v.field) continue;
@@ -25,6 +25,10 @@ module.exports = async (app) => {
                 if(v.values && v.translate){
                     for(var w in v.values) {
                         v.values[w] = '{input.value.'+v.values[w]+'}';
+                    }
+                } else if (v.values) {
+                    for(var w in v.values) {
+                        if(typeof v.values[w] === 'object' && v.values[w].desc) v.values[w].desc = app.stringApi.bookParser(v.values[w].desc, v.values[w].id);
                     }
                 }
             }

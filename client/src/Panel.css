@@ -79,3 +79,14 @@ font-size:1.5em;
     background:rgba(200,250,200,0.5);
     border:1px solid #aaa;
 }
+.PanelSelect {
+    width:735px;
+}
+.Panel .Surface{
+    margin:0;padding:0;
+}
+.Panel .Tier{
+    width:750px;
+    padding:0;
+    margin:0;
+}

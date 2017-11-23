@@ -1,8 +1,85 @@
 
 import React, { Component } from 'react';
+import Surface from './Surface';
 import Caption from './Caption';
 import SpeechBubble from './SpeechBubble';
 import './Panel.css'
+import {connect} from 'react-redux'
+
+class Selector extends Component {
+    constructor(props){
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+    setWrapperRef(node){
+        this.wrapperRef = node;
+    }
+    handleChange(event){
+        console.dir(event);
+        var t = event.target.value;
+        var pos = 0, found = -1;
+        for(var v of this.props.data.content.values){
+            if(v.id === t) {
+                found=pos; 
+                break;
+            }
+            pos++;
+        }
+
+        console.dir(found);
+    }
+
+    render() {
+
+        var elem = this.props.data;
+        var values = [];
+        if(elem.type === "input_amount") {
+            elem.content.values = [0,1,2,3,4,5,6,7,8,9,10];
+        } 
+        var pos = -1;
+        values = elem.content.values.map((p) => {
+            pos++;
+
+            if(typeof p === 'object'){
+                return <option className="PanelSelectOption" key={p.id} value={p.id}>{p.label}</option>
+            } else {
+                return <option className="PanelSelectOption" key={p} value={elem.type==='input_dropdown'||elem.type=='input_staticselect'?pos:p}>{p}</option>
+            }
+        });
+
+        var extra = null;
+        var selected = -1;
+        if(!this.props.selected){
+            selected = elem.content.values.length>0?0:-1;
+        } else selected = this.props.selected;
+
+        if(selected >= 0){
+            var current = elem.content.values[selected];
+            if(typeof current === 'object' && current.desc){
+                extra = <Surface key={elem.id + "_extra"} pages={current.desc} />;
+            }
+        }
+
+        if(elem.type === "input_select" || elem.type==='input_staticselect')
+            return <div><select className="PanelSelect" key={elem.id} name={elem.id} multiple onChange={this.handleChange}>{values}</select>{extra}</div>
+            else
+            return <div><select className="PanelSelect" key={elem.id} name={elem.id} onChange={this.handleChange}>{values}</select>{extra}</div>
+
+
+    }
+}
+
+const SelectorContainer = connect(
+    state => {
+    
+        return {};
+    },
+    dispatch => {
+        return {};
+    
+    })(Selector);
+
+
 class Panel extends Component {
   render() {
 
@@ -46,19 +123,7 @@ class Panel extends Component {
             case 'input_dropdown':
             case 'input_amount':
 
-                var values = [];
-                if(elem.type === "input_amount") {
-                    elem.content.values = [0,1,2,3,4,5,6,7,8,9,10];
-                } 
-                var pos = 0;
-                values = elem.content.values.map((p) => 
-                    <option className="PanelSelectOption" key={p} value={elem.type==='input_dropdown'||elem.type=='input_staticselect'?pos++:p}>{p}</option>
-                );
-                if(elem.type === "input_select" || elem.type==='input_staticselect')
-                    return <select className="PanelSelect" key={elem.id} name={elem.id} multiple>{values}</select>
-                else
-                    return <select className="PanelSelect" key={elem.id} name={elem.id}>{values}</select>
-
+                return <SelectorContainer key={elem.id} data={elem} />;
             default: 
                 return <p key={elem.id}>{elem.type}</p>;
         }

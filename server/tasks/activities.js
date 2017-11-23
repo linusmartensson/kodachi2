@@ -56,9 +56,19 @@ module.exports = async (app) => {
 
     app.taskApi.create_task('activity', 'join_work', [], [], 
         app.taskApi.okcancel().concat({event_task:true},
-            {field:'team', type:'dropdown', prepare:async (v, ctx) => {
-            
-            }}
+            {field:'team', type:'dropdown', prepare:async (v, ctx, task) => {
+                var w = (await app.cypher('MATCH (:Event {id:{eventId}})<-[:PART_OF]-(a) WITH a, SIZE((a)<-[:TEAM_MEMBER]-(:User)) AS member_count WHERE member_count < toInt(a.size) RETURN a, member_count', {eventId:task.data.start_data.event_id})).records;
+                v.values = [];
+                for(var r of w){
+                    var team = r.get('a').properties;
+                    v.values.push({label:team.name, id:team.id, desc:team.desc});
+                }
+
+            }},
+            {field:'description', type:'editor'},
+            {field:'sleep_at_event', type:'bool'},
+            {field:'can_work_wednesday', type:'bool'},
+            {field:'can_cleanup_sunday', type:'bool'},
         ), async(inst, ctx) => {
             return 'OK';
         }, async(inst) => {
@@ -74,9 +84,9 @@ module.exports = async (app) => {
             {field:'team_description', type:'editor'},
             {field:'team_size', type:'number'},
             {field:'team_image', type:'image'},
-            {field:'team_schedule', type:'select', translate:true, values:['wed','thu','fri','sat','sun']},
+            {field:'team_schedule', type:'staticselect', translate:true, values:['wed','thu','fri','sat','sun']},
             //early: 06-08, morning: 08-10, day: 10-14, afternoon: 14-18, evening: 18-23, night:23-03, until_sunrise:03-06
-            {field:'team_open', type:'select', translate:true, values:['early', 'morning', 'day', 'afternoon', 'evening', 'night', 'until_sunrise']},
+            {field:'team_open', type:'staticselect', translate:true, values:['early', 'morning', 'day', 'afternoon', 'evening', 'night', 'until_sunrise']},
             {field:'team_budget', type:'number'},
             {field:'team_needs_uniform', type:'bool'}
         ),
@@ -185,16 +195,14 @@ module.exports = async (app) => {
             q.budget = inst.response.team_budget;
             q.uniform = inst.response.team_needs_uniform;*/
 
-            inst.data.application = q;
-            inst.next_tasks.push('review_team');
-
             var q = inst.data.application;
             var team = app.uuid();
             q.team = team;
             q.teamRole = 'team_manager.'+team;
+            q.image = JSON.stringify(q.image);
             q.event_id = inst.data.start_data.event_id;
             await app.roleApi.addRole(inst.origin, q.teamRole);
-            await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event, {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Team {id:{team}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, open:{open}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Team {id:{team}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, open:{open}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
 
 
 
@@ -228,9 +236,10 @@ module.exports = async (app) => {
             var activity = app.uuid();
             q.activity = activity;
             q.activityRole = 'activity_manager.'+activity;
+            q.image = JSON.stringify(q.image);
             q.event_id = inst.data.start_data.event_id;
             await app.roleApi.addRole(inst.origin, q.activityRole);
-            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event, {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Activity {id:{activity}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, avail_times:{avail_times}, length:{length}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Activity {id:{activity}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, avail_times:{avail_times}, length:{length}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
 
 
             inst.next_tasks.push('accept_application');
@@ -252,9 +261,10 @@ module.exports = async (app) => {
             var shop = app.uuid();
             q.shop = shop;
             q.shopRole = 'store_vendor.'+shop;
+            q.image = JSON.stringify(q.image);
             q.event_id = inst.data.start_data.event_id;
             await app.roleApi.addRole(inst.origin, q.shopRole);
-            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event, {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Shop {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, type:{type}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Shop {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, type:{type}})-[:PART_OF]->(e)", q);
 
             inst.next_tasks.push('accept_application');
             return 'OK';
@@ -275,9 +285,10 @@ module.exports = async (app) => {
             var shop = app.uuid();
             q.shop = shop;
             q.shopRole = 'artist_alley_vendor.'+shop;
+            q.image = JSON.stringify(q.image);
             q.event_id = inst.data.start_data.event_id;
             await app.roleApi.addRole(inst.origin, q.shopRole);
-            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event, {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Shop {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, type:{type}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Shop {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, type:{type}})-[:PART_OF]->(e)", q);
 
             inst.next_tasks.push('accept_application');
             return 'OK';

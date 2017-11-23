@@ -54,12 +54,13 @@ module.exports = (app) => {
         var page = {id:0, tiers:[]};
         var tier = {id:0, panels:[]};
         var panel = {id:0, content:[]};
+        var pos = 0;
 
         var parsers = {
             '!': function(s){
                 var c = s.search(/[^!]/);
                 if(c > 0) panel.content.push({
-                    id:panel.content.length,
+                    id:pos++,
                     type:'caption',
                     strength:c,
                     text:s.slice(c)
@@ -69,7 +70,7 @@ module.exports = (app) => {
                 var c = s.search(/[^(]/);
                 var q = s.slice(c).split(')');
                 panel.content.push({
-                    id:panel.content.length,
+                    id:pos++,
                     type:'speechbubble',
                     position:c>1?'right':'left',
                     text:q[0],
@@ -78,39 +79,39 @@ module.exports = (app) => {
             },
             '#': function(s){
                 tier.panels.push(panel);
-                panel = {id:tier.panels.length, content:[]};
+                panel = {id:pos++, content:[]};
 
                 parsers['!']('!'+s.slice(1));
             },
             '_': function(s){
                 tier.panels.push(panel);
-                panel = {id:0, content:[]};
+                panel = {id:pos++, content:[]};
 
                 page.tiers.push(tier);
-                tier = {id:page.tiers.length, panels:[]};
+                tier = {id:pos++, panels:[]};
 
                 parsers['!']('!'+s.slice(1));
             },
             '|': function(s){
                 tier.panels.push(panel);
-                panel = {id:0, content:[]};
+                panel = {id:pos++, content:[]};
 
                 page.tiers.push(tier);
-                tier = {id:page.tiers.length, panels:[]};
+                tier = {id:pos++, panels:[]};
 
                 pages.push(page);
-                page = {id:pages.length, tiers:[]};
+                page = {id:pos++, tiers:[]};
             },
             '*': function(s){
                 if(s.length > 1) panel.content.push({
-                    id:panel.content.length,
+                    id:pos++,
                     type:'point',
                     text:s.slice(1)
                 });
             },
             '': function(s){
                 if(s.length > 0) panel.content.push({
-                    id:panel.content.length,
+                    id:pos++,
                     type:'text',
                     text:s
                 });

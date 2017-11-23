@@ -410,7 +410,7 @@ module.exports = (app) => {
 
         try{
             for(var v of task.inputs){
-                if(v.prepare) await v.prepare(v, ctx);
+                if(v.prepare) await v.prepare(v, ctx, inst);
             }
             response = api.filterResponse(response, task.inputs);
         } catch (e) {

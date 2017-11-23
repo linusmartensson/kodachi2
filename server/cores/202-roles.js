@@ -29,6 +29,7 @@ module.exports = async (app) => {
     }
     api.addRole = async (user, role, xp) => {
         await api.create_role(role);    //pre-generate any non-existant role dynamically.
+        if(!xp) xp = 1000;
         if(role.match(/\./) != null){
             //When adding .-roles such as for events, add the xp to a role named base_[rolename] instead of [rolename].[eventname].
             await api.addRole(user, "base_"+role.replace(/\.[^.]*/, ''), xp);
