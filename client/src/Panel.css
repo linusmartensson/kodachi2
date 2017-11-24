@@ -90,3 +90,7 @@ font-size:1.5em;
     padding:0;
     margin:0;
 }
+.Panel .Panel {
+    border-color:#ddd;
+    border-style:dotted;
+}

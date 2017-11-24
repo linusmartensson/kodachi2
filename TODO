@@ -1,39 +1,26 @@
 work [HI]
 
 * select event activity type
- - name
- - description
- - team size
- - logo / image
- - team/activity/competition/artistalley/shop
- - schedule request / time+days open
--- create group/team
--- create activity/competition
- - budget
+ - competition
  - participant count
- - needs uniform
--- create shop/artistalley
  - shop size/table count
  
 * common work application
- - personal letter
- - pre application test
  - tshirt size
- - sleep @ event
 
 ** accept group/activity/competition/vendor
  - assign location
  - assign event activity administrator
  - assign time/date/opening hours
 
-** add event manager
- - type (overseer/admin)
- - user
-
 * accept group members
+
 * email on accept reject
+
 * list members
+
 * email members
+
 * submit receipt
  - pick cost center
  - recipt value

@@ -5,6 +5,49 @@ import Caption from './Caption';
 import SpeechBubble from './SpeechBubble';
 import './Panel.css'
 import {connect} from 'react-redux'
+import {actions} from './reducers/root.js'
+
+import bookParser from './bookParser';
+
+class Editor extends Component {
+    constructor(props){
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+    setWrapperRef(node){
+        this.wrapperRef = node;
+    }
+    handleChange(event){
+        this.props.change(this.props.data.id, event.target.value);
+    }
+
+    render() {
+
+        var elem = this.props.data;
+
+        var extra = null;
+        var current = elem.text;
+        if(this.props.editors[elem.id]){
+            current = this.props.editors[elem.id];
+            var book = bookParser(current, elem.id);
+            if(current.length > 0) extra = <Surface pages={book} />;
+        }
+        return <div><textarea onChange={this.handleChange} autoCapitalize="sentences" autoComplete="off" cols="60" rows="8" placeholder="Texttexttext!" className="PanelEditor" key={elem.id} name={elem.id} value={current} />{extra}</div>
+    }
+}
+const EditorContainer = connect(
+    state => {
+    
+        return {editors: state.ui.editors};
+    },
+    dispatch => {
+        return {
+            change: (elem, content) => {
+                dispatch(actions.app.ui.editor.update(elem,content));
+            }
+        };
+    })(Editor);
+
 
 class Selector extends Component {
     constructor(props){
@@ -15,7 +58,6 @@ class Selector extends Component {
         this.wrapperRef = node;
     }
     handleChange(event){
-        console.dir(event);
         var t = event.target.value;
         var pos = 0, found = -1;
         for(var v of this.props.data.content.values){
@@ -26,7 +68,8 @@ class Selector extends Component {
             pos++;
         }
 
-        console.dir(found);
+        this.props.change(this.props.data.id, found);
+
     }
 
     render() {
@@ -43,15 +86,15 @@ class Selector extends Component {
             if(typeof p === 'object'){
                 return <option className="PanelSelectOption" key={p.id} value={p.id}>{p.label}</option>
             } else {
-                return <option className="PanelSelectOption" key={p} value={elem.type==='input_dropdown'||elem.type=='input_staticselect'?pos:p}>{p}</option>
+                return <option className="PanelSelectOption" key={p} value={elem.type==='input_dropdown'||elem.type==='input_staticselect'?pos:p}>{p}</option>
             }
         });
 
         var extra = null;
         var selected = -1;
-        if(!this.props.selected){
+        if(!this.props.selectors[elem.id]){
             selected = elem.content.values.length>0?0:-1;
-        } else selected = this.props.selected;
+        } else selected = this.props.selectors[elem.id];
 
         if(selected >= 0){
             var current = elem.content.values[selected];
@@ -72,11 +115,14 @@ class Selector extends Component {
 const SelectorContainer = connect(
     state => {
     
-        return {};
+        return {selectors: state.ui.selectors};
     },
     dispatch => {
-        return {};
-    
+        return {
+            change: (elem, pos) => {
+                dispatch(actions.app.ui.selector.update(elem,pos));
+            }
+        };
     })(Selector);
 
 
@@ -105,7 +151,7 @@ class Panel extends Component {
                 return <input placeholder="" className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
             case 'input_email': return <input placeholder="you@kodachi.se" className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
             case 'input_editor': 
-                return <textarea autoCapitalize="sentences" autoComplete="off" cols="60" rows="8" placeholder="Texttexttext!" className="PanelEditor" key={elem.id} name={elem.id} value={elem.text} />
+                return <EditorContainer key={elem.id} data={elem} />
             case 'input_time':
                 return <input className="PanelInput" type="time" key={elem.id} name={elem.id} value={elem.text} />
             case 'input_date':

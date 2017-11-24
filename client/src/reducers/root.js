@@ -12,7 +12,7 @@ var patcher = require('jsondiffpatch').create({
 });
 var host = 'https://localhost:3001/';
 
-var initialState = {session:{}};
+var initialState = {session:{}, ui:{selectors:{}, editors:{}}, currentTask:{}};
 
 
 export const actions = createActions({
@@ -69,7 +69,16 @@ export const actions = createActions({
             },
             SHOW: (id) => ({id}),
             CLOSE: () => ({}),
+        },
+        UI: {
+            SELECTOR:{
+                UPDATE: (elem, pos) => ({elem, pos})
+            },
+            EDITOR:{
+                UPDATE: (elem, content) => ({elem, content})
+            }
         }
+
     }
 });
 
@@ -119,7 +128,22 @@ export const reducer = handleActions({
             CLOSE: (state, action) => ({
                 ...state, currentTask:undefined
             })
-
+        },
+        UI: {
+            SELECTOR:{
+                UPDATE: (state, action) => {
+                    var v = _.cloneDeep(state);
+                    v.ui.selectors[action.payload.elem] = action.payload.pos;
+                    return v;
+                }
+            },
+            EDITOR:{
+                UPDATE: (state, action) => {
+                    var v = _.cloneDeep(state);
+                    v.ui.editors[action.payload.elem] = action.payload.content;
+                    return v;
+                }
+            }
         }
     }
 }, initialState);
