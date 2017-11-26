@@ -18,6 +18,14 @@ module.exports = async (app) => {
             await app.cypher('CREATE (r:Role {type:{name}})', {name});
         }
     }
+    api.emailMembers = async (role) => {
+        var members = await app.cypher('MATCH (r:Role {type:{role}})->(u:User) RETURN u', {role}).records; 
+        for(var v of members){
+            var u = v.get('u').properties;
+            var lang = app.userApi.getUserLanguage(u);
+            await app.utils.email(u.email, app.stringApi.translate(null, "{email.assignment.title}", lang), app.stringApi.translate(null, "{email.assignment.text}", lang), app.stringApi.translate(null, "{email.assignment.text.html}", lang));
+        }
+    }
 
     api.addAchievement = async (user, achievement, points) => {
         if(!points) points = 1;

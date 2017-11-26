@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "async-busboy": "0.6.2",
+    "aws-sdk": "2.156.0",
     "bcrypt": "1.0.3",
     "cookie": "0.3.1",
     "ioredis": "3.1.1",
@@ -42,6 +43,7 @@
     "passport-local": "1.0.0",
     "react": "15.5.4",
     "react-dom": "15.5.4",
+    "s3-upload-stream": "1.0.7",
     "socket.io": "2.0.2",
     "socket.io-client": "2.0.2",
     "socketio-jwt": "4.5.0",

@@ -19,6 +19,23 @@ module.exports = (app) => {
             
     ]
 
+    app.emailTransport = mail.createTransport({
+        host: '',
+        port: '',
+        pool: true,
+        secure: true,
+        auth: {
+            user: '',
+            pass: ''
+        }
+    });
+
+
+    app.awskey = {
+        accessKeyId: "",
+        secretAccessKey: "",
+        region: ''
+    };
     
     app.paysonkey = {};
     app.paysonkey.agent = '';

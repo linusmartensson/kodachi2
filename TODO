@@ -1,19 +1,11 @@
 work [HI]
 
-* select event activity type
- - competition
- - participant count
- - shop size/table count
- 
-* common work application
- - tshirt size
-
 ** accept group/activity/competition/vendor
  - assign location
  - assign event activity administrator
  - assign time/date/opening hours
 
-* accept group members
+* accept/reject group members
 
 * email on accept reject
 
@@ -21,28 +13,17 @@ work [HI]
 
 * email members
 
-* submit receipt
- - pick cost center
- - recipt value
- - image
-* verify receipt
 * post competition results
  - category (1st, 2nd, 3rd, best runner up, coolest whatever, etc)
  - winner (searchable name)
-
-budget [HI]
-* add budget cost center
-* adjust budget
-* view whole budget
-* mark receipt as paid
 
 purchase [HI]
 * buy tickets for event
 * increment budget
 * get roles
 
-core [HIGH]
-* notify email on new remote task 
+budget [HI]
+* view whole budget
 
 content [MED]
 * edit content
@@ -52,11 +33,7 @@ users
 * verify user email [HI]
 * forgot password [MED]
 
-
-
-
 bonus [LOW]
 * set current event [LOW]
 * achievements
- - get achievement
  - ui notification

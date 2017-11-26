@@ -31,7 +31,7 @@ module.exports = async (app) => {
                 var w = q.get('u').properties;
                 v.values.push(w.email);
             }
-        }}, {field:'type', type:'dropdown', values:['admin', 'overseer', 'budget', 'schedule']}),
+        }}, {field:'type', type:'dropdown', values:['admin', 'budget', 'schedule']}),
         async (inst, ctx) => {
             if(inst.response.cancel) return 'OK';
 

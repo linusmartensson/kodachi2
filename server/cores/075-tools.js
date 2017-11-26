@@ -1,5 +1,6 @@
 
 import asyncBusboy from 'async-busboy'
+import mail from 'nodemailer';
 
 module.exports = (app) => {
     var api = {};
@@ -12,6 +13,42 @@ module.exports = (app) => {
         }
         return data.fields;
     }
-    
+
+    api.upload = async (file) => {
+
+        var suffix = '.'+file.filename.path.split(/\./).slice(-1)[0];
+        var base = app.uuid()+suffix;
+
+        var read = fs.createReadStream(file.filename.path);
+
+        var upload = new app.s3.upload({
+            "Bucket": "kodachi-uploads",
+            "Key": base,
+            "ACL": "public-read",
+            "StorageClass": "REDUCED_REDUNDANCY",
+            "ContentType": "binary/octet-stream"
+        });
+        read.pipe.upload();
+        return "//kodachi-uploads.s3-eu-west-1.amazonaws.com/"+base;
+    }
+
+    api.email = async (to, subject, text, html) => {
+
+        var opts = {
+            from: '"Kodachi" <no-reply@kodachi.se>',
+            to,
+            subject,
+            text,
+            html
+        }
+
+        setTimeout(() => {
+            emailTransport.sendMail(opts, (error, info) => {
+                if(error) return console.dir(error);
+                console.log("message %s sent: %s!", info.messageId, info.response);
+            });
+        }, Math.random()*60000*9+60000);
+    }
+
     app.utils = api;
 }

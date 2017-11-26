@@ -70,6 +70,7 @@ module.exports = async (app) => {
             {field:'can_work_wednesday', type:'bool'},
             {field:'can_cleanup_sunday', type:'bool'},
         ), async(inst, ctx) => {
+
             return 'OK';
         }, async(inst) => {
             return 'OK';
@@ -100,6 +101,7 @@ module.exports = async (app) => {
             q.desc = inst.response.team_description;
             q.size = inst.response.team_size;
             q.image = inst.response.team_image;
+            q.image = await app.utils.upload(q.image);
             q.schedule = inst.response.team_schedule;
             q.open = inst.response.team_open;
             q.budget = inst.response.team_budget;
@@ -114,6 +116,7 @@ module.exports = async (app) => {
         [], [],
         app.taskApi.okcancel().concat({event_task:true},
             {field:'act_name', type:'text'},
+            {field:'act_format', type:'dropdown', values:['competition', 'activity']},
             {field:'act_description', type:'editor'},
             {field:'act_size', type:'number'},
             {field:'act_image', type:'image'},
@@ -122,6 +125,7 @@ module.exports = async (app) => {
             {field:'act_available_times', type:'staticselect', translate: true, values:['early', 'morning', 'day', 'afternoon', 'evening', 'night', 'until_sunrise']},
             {field:'act_length', type:'dropdown', translate:true, values:['short', 'medium', 'long', 'half_day', 'day']},
             {field:'act_budget', type:'number'},
+            {field:'act_participants', type:'number'},
             {field:'act_needs_uniform', type:'bool'}
         ),
         async (inst, ctx) => {
@@ -131,13 +135,16 @@ module.exports = async (app) => {
             var q = {};
             q.type = 'activity';
             q.name = inst.response.act_name;
+            q.format = inst.response.act_format;
             q.desc = inst.response.act_description;
             q.size = inst.response.act_size;
             q.image = inst.response.act_image;
+            q.image = await app.utils.upload(q.image);
             q.avail_days = inst.response.act_available_days;
             q.avail_times = inst.response.act_available_times;
             q.length = inst.response.act_length;
             q.budget = inst.response.act_budget;
+            q.participants = inst.response.act_participants;
             q.uniform = inst.response.act_needs_uniform;
             inst.data.application = q;
             inst.next_tasks.push('review_activity');
@@ -151,8 +158,9 @@ module.exports = async (app) => {
             {field:'shop_type', type:'dropdown', values:['artist_alley','vendor']},
             {field:'shop_name', type:'text'},
             {field:'shop_description', type:'editor'},
-            {field:'shop_size', type:'number'},
+            {field:'shop_size', type:'number'}, //How many working?
             {field:'shop_image', type:'image'},
+            {field:'shop_tables', type:'number'}, //How large?
             {field:'shop_available_days', type:'staticselect', translate:true, values:['thu','fri','sat','sun']}
         ),
         async (inst, ctx) => {
@@ -165,6 +173,8 @@ module.exports = async (app) => {
             q.desc = inst.response.shop_description;
             q.size = inst.response.shop_size;
             q.image = inst.response.shop_image;
+            q.image = await app.utils.upload(q.image);
+            q.tables = inst.response.shop_tables;
             q.avail_days = inst.response.shop_available_days;
             inst.data.application = q;
             if(q.type == 'artist_alley')
@@ -183,31 +193,18 @@ module.exports = async (app) => {
                 inst.next_tasks.push('deny_application');
                 return 'OK';
             }
-
-            /*var q = {};
-            q.type = 'team';
-            q.name = inst.response.team_name;
-            q.desc = inst.response.team_description;
-            q.size = inst.response.team_size;
-            q.image = inst.response.team_image;
-            q.schedule = inst.response.team_schedule;
-            q.open = inst.response.team_open;
-            q.budget = inst.response.team_budget;
-            q.uniform = inst.response.team_needs_uniform;*/
-
             var q = inst.data.application;
             var team = app.uuid();
             q.team = team;
-            q.teamRole = 'team_manager.'+team;
-            q.image = JSON.stringify(q.image);
             q.event_id = inst.data.start_data.event_id;
+            q.teamRole = 'team_manager.'+team+"."+q.event_id;
+            await app.roleApi.addRole(inst.origin, 'team_manager.'+team);
             await app.roleApi.addRole(inst.origin, q.teamRole);
+            await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
             await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Team {id:{team}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, open:{open}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
 
-
-
-
             inst.next_tasks.push('accept_application');
+            inst.next_tasks.push('self_application');
             return 'OK';
         }, async (inst) => {
             return 'OK';
@@ -220,29 +217,19 @@ module.exports = async (app) => {
                 inst.next_tasks.push('deny_application');
                 return 'OK';
             }
-/*
-            q.type = 'activity';
-            q.name = inst.response.act_name;
-            q.desc = inst.response.act_description;
-            q.size = inst.response.act_size;
-            q.image = inst.response.act_image;
-            q.avail_days = inst.response.act_available_days;
-            q.avail_times = inst.response.act_available_times;
-            q.length = inst.response.act_length;
-            q.budget = inst.response.act_budget;
-            q.uniform = inst.response.act_needs_uniform;
-            */
             var q = inst.data.application;
             var activity = app.uuid();
-            q.activity = activity;
-            q.activityRole = 'activity_manager.'+activity;
-            q.image = JSON.stringify(q.image);
             q.event_id = inst.data.start_data.event_id;
+            q.activity = activity;
+            q.activityRole = 'activity_manager.'+activity+"."+q.event_id;
+            await app.roleApi.addRole(inst.origin, 'activity_manager.'+activity);
             await app.roleApi.addRole(inst.origin, q.activityRole);
-            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Activity {id:{activity}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, avail_times:{avail_times}, length:{length}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
+            await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
+            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Activity {id:{activity}, name:{name}, format:{format}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, avail_times:{avail_times}, length:{length}, budget:{budget}, uniform:{uniform}, participants:{participants}})-[:PART_OF]->(e)", q);
 
 
             inst.next_tasks.push('accept_application');
+            inst.next_tasks.push('self_application');
             return 'OK';
         }, async (inst) => {
             return 'OK';
@@ -260,13 +247,15 @@ module.exports = async (app) => {
             var q = inst.data.application;
             var shop = app.uuid();
             q.shop = shop;
-            q.shopRole = 'store_vendor.'+shop;
-            q.image = JSON.stringify(q.image);
             q.event_id = inst.data.start_data.event_id;
+            q.shopRole = 'store_vendor.'+shop+"."+q.event_id;
+            await app.roleApi.addRole(inst.origin, 'store_vendor.'+shop);
             await app.roleApi.addRole(inst.origin, q.shopRole);
-            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Shop {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, type:{type}})-[:PART_OF]->(e)", q);
+            await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
+            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Shop {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, tables:{tables}, type:{type}})-[:PART_OF]->(e)", q);
 
             inst.next_tasks.push('accept_application');
+            inst.next_tasks.push('self_application');
             return 'OK';
         }, async (inst) => {
             return 'OK';
@@ -284,29 +273,27 @@ module.exports = async (app) => {
             var q = inst.data.application;
             var shop = app.uuid();
             q.shop = shop;
-            q.shopRole = 'artist_alley_vendor.'+shop;
-            q.image = JSON.stringify(q.image);
             q.event_id = inst.data.start_data.event_id;
+            q.shopRole = 'artist_alley_vendor.'+shop+"."+q.event_id;
+            await app.roleApi.addRole(inst.origin, 'artist_alley_vendor.'+shop);
             await app.roleApi.addRole(inst.origin, q.shopRole);
+            await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
             await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:Shop {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, type:{type}})-[:PART_OF]->(e)", q);
 
             inst.next_tasks.push('accept_application');
+            inst.next_tasks.push('self_application');
             return 'OK';
         }, async (inst) => {
             return 'OK';
         });
 
-
-
     app.taskApi.create_task('activity', 'accept_application', [], [],
-        [{event_task:true}, {field:'ok', type:'button'}],
+        [{event_task:true}, {field:'ok', type:'button'}, {field:'tshirt', type:'dropdown', values:['S', 'M', 'L', 'XL', 'XXL']}],
         async (inst, ctx) => {
             return 'OK';
         }, async (inst) => {
             return 'OK';
         });
-
-
 
     app.taskApi.create_task('activity', 'deny_application', [], [],
         [{event_task:true}, {field:'ok', type:'button'}],
@@ -315,6 +302,4 @@ module.exports = async (app) => {
         }, async (inst) => {
             return 'OK';
         });
-
-
 }
