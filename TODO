@@ -1,21 +1,8 @@
 work [HI]
 
-** accept group/activity/competition/vendor
- - assign location
- - assign event activity administrator
- - assign time/date/opening hours
-
-* accept/reject group members
-
-* email on accept reject
-
 * list members
 
 * email members
-
-* post competition results
- - category (1st, 2nd, 3rd, best runner up, coolest whatever, etc)
- - winner (searchable name)
 
 purchase [HI]
 * buy tickets for event
@@ -37,3 +24,7 @@ bonus [LOW]
 * set current event [LOW]
 * achievements
  - ui notification
+
+** accept activity/competition [LOW]
+ - assign location
+ - assign time/date/opening hours

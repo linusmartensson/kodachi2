@@ -211,6 +211,8 @@ module.exports = (app) => {
         console.dir(task);
         console.dir(roles);
         await app.cypher("MATCH (r:Role) WHERE r.type IN {targets} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(r)", {targets:roles, id:task.id, data:JSON.stringify(task), type:task.task_name});
+        for(var role of roles)
+            await app.roleApi.emailMembers(role);
     }
     async function setupTask(ctx, inst, task) {
         var onSession = false;
@@ -219,7 +221,7 @@ module.exports = (app) => {
                 onSession = v.onSession;
             }
         }
-        if(task.handler_roles.length == 0){
+        if(task.handler_roles.length == 0 && !inst.handler_roles || inst.handler_roles.length == 0){
             var user = await app.userApi.getUser(inst.origin);
             if(!onSession && user){
                 await addTaskToUser(inst);
@@ -227,7 +229,7 @@ module.exports = (app) => {
                 await addTaskToSession(inst);
             }
         } else {
-            await addTaskToRoles(inst, task.handler_roles);
+            await addTaskToRoles(inst, inst.handler_roles?inst.handler_roles:task.handler_roles);
         }
 
         await notifyTask(inst.id);
@@ -370,7 +372,7 @@ module.exports = (app) => {
             for(var n=0;n<inst.next_tasks.length;++n){
                 var uuid = app.uuid();
                 var tasktype = inst.next_tasks[n];
-                if(typeof inst.next_tasks[n] == 'object'){
+                if(typeof inst.next_tasks[n] === 'object'){
                     uuid = tasktype.uuid;
                     tasktype = tasktype.task;
                 }
@@ -379,6 +381,10 @@ module.exports = (app) => {
                     child_task = api.getTask(tasktype+"."+inst.data.start_data.event_id);
                 }
                 var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst.id, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
+                if(typeof inst.next_tasks[n] === 'object'){
+                    if(tasktype.handlers) child_inst.handler_roles = tasktype.handlers;
+                }
+
                 inst.childIds.push(uuid);
                 cinsts.push({child_inst, child_task});
             }

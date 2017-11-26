@@ -119,6 +119,13 @@ module.exports = async (app) => {
 
         await app.roleApi.addRole(p.userId, "user", "1500");
     }
+    api.emailUser = async(userId, subject, text, html) => {
+        var u = await app.cypher('MATCH (u:User {id:{id}}) RETURN u', {id:userId}).records;
+        if(u.length == 0) return false;
+        u = u[0].get('u').properties;
+        var lang = app.userApi.getUserLanguage(u);
+        await app.utils.email(u.email, app.stringApi.translate(null, subject, lang), app.stringApi.translate(null, text, lang), app.stringApi.translate(null, html, lang));
+    }
     api.findAccount = async (p) => {
         var q = [];
         if(p.ssn){
