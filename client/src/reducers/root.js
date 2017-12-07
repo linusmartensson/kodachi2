@@ -10,7 +10,7 @@ var patcher = require('jsondiffpatch').create({
         return obj.id || obj._id;
     }
 });
-var host = 'https://localhost:3001/';
+var host = 'https://'+window.location.hostname+':3001/';
 
 var initialState = {session:{}, ui:{selectors:{}, editors:{}}, currentTask:{}};
 
@@ -25,7 +25,7 @@ export const actions = createActions({
                     fetch(host+'session', {credentials:'include'})
                         .then(r=>{return r.text()})
                         .then(t=>{
-                            var sio = io("https://localhost:3001/?token="+t);
+                            var sio = io(host+"?token="+t);
                             sio.on('state', (data) => {
                                 dispatch(actions.app.server.state(data));
                             });
