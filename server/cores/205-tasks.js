@@ -45,6 +45,7 @@ module.exports = (app) => {
         throw 'Invalid SSN';
     });
     api.add_filter("email", (d)=>{
+        if(d === '') return d;
         if(!validateEmail(d)) throw 'Invalid Email';
         return ''+d;
     });

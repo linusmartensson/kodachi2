@@ -31,8 +31,8 @@ module.exports = async (app) => {
         if(!points) points = 1;
         await app.cypher(  'MATCH (u:User {id:{user}}), (r:Achievement {type:{achievement}}) ' + 
                                     'MERGE (u)-[e:ACHIEVEMENT_PROGRESS]->(r) '+
-                                    'ON MATCH SET   e.achieved = (e.points + {points} > r.req) , e.points = e.points + {points} '+
-                                    'ON CREATE SET  e.achieved = ({points} > r.req) , e.points = {points}'
+                                    'ON MATCH SET   e.achieved = (toInt(e.points) + toInt({points}) > toInt(r.req)) , e.points = toInt(e.points) + toInt({points}) '+
+                                    'ON CREATE SET  e.achieved = (toInt({points}) > toInt(r.req)) , e.points = toInt({points})'
                          , {user, achievement, points});
     }
     api.addRole = async (user, role, xp) => {
@@ -45,8 +45,8 @@ module.exports = async (app) => {
         }
         await app.cypher(   'MATCH (u:User {id:{user}}), (r:Role {type:{role}}) ' + 
                             'MERGE (u)-[e:HAS_ROLE]->(r) '+
-                            'ON MATCH SET   e.level = (e.xp + {xp} + 1000)/1000 , e.xp = e.xp + {xp} '+
-                            'ON CREATE SET  e.level = (1000+{xp})/1000          , e.xp = {xp}'
+                            'ON MATCH SET   e.level = (toInt(e.xp) + toInt({xp}) + 1000)/1000 , e.xp = toInt(e.xp) + toInt({xp}) '+
+                            'ON CREATE SET  e.level = (1000+toInt({xp}))/1000          , e.xp = toInt({xp})'
                          , {user, role, xp});
     }
     api.hasRole = async (user, role) => {

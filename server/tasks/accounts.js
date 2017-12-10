@@ -89,6 +89,7 @@ module.exports = (app) => {
                 if(inst.response.no){
                     inst.next_tasks.push('manual_ssn_details');
                     inst.data.nossn = true;
+                    inst.data.ssn = '';
                     return 'OK';
                 } else {
                     inst.next_tasks.push('register_account_ssn');
@@ -185,7 +186,7 @@ module.exports = (app) => {
                 if(inst.response.email != inst.response.email_verify) return 'RETRY';
                 if(inst.response.password != inst.response.password_verify) return 'RETRY';
 
-                if(app.userApi.findAccount({nickname:inst.response.nickname})){
+                if((await app.userApi.findAccount({nickname:inst.response.nickname})) != false){
                     inst.error = "{tasks.account.nickNameTaken}";
                     return 'RETRY';
                 }
