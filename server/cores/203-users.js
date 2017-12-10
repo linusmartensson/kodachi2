@@ -112,12 +112,24 @@ module.exports = async (app) => {
 
         p.userId = app.uuid();
 
+        var firstUser = false;
+        var users = (await app.cypher('MATCH (s:User) RETURN s'));
+
+        if(users && users.records && users.records.length == 0){
+            firstUser = true;
+        }
+
         await app.cypher('CREATE (:User {id:{userId}, email:{email}, password:{password}, ssn:{ssn}, givenName:{givenName}, lastName:{lastName}, street:{street}, zipCode:{zipCode}, city:{city}, country:{country}, nickname:{nickname}})', p);
 
         //Ensure new user and session are associated.
         await app.cypher('MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (:Role {type:"anonymous"})<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d', {userId:p.userId, sessionId: await api.session(ctx)});
 
         await app.roleApi.addRole(p.userId, "user", "1500");
+        
+        if(firstUser){
+            await app.roleApi.addRole(p.userId, "admin", "50500");
+        }
+        
     }
     api.emailUser = async(userId, subject, text, html) => {
         var u = await app.cypher('MATCH (u:User {id:{id}}) RETURN u', {id:userId}).records;
