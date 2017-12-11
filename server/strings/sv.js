@@ -23,6 +23,11 @@ module.exports = (app) => {
     s('task.logout.title', 'Logga ut');
     s('task.logout.desc', 'Är du säker på att du vill logga ut?');
 
+    s('task.create_page.title', 'Skapa en sida');
+    s('task.create_event.title', 'Skapa ett konvent');
+    s('task.add_event_manager.title', 'Lägg till en event-admin');
+    s('task.buy_tickets.title', 'Köp biljetter');
+    s('task.buy_points.title', 'Köp poäng');
 
     s('task.staff_test.title', 'Jobba med Kodachicon!');
     s('task.join_staff.title', 'Jobba med Kodachicon!');
