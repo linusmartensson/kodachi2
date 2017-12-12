@@ -4,19 +4,19 @@ module.exports = async (app) => {
     app.taskApi.create_task('event', 'create_event',
         ['admin'],[],
         app.taskApi.okcancel().concat(
-            {field:'name', type:'text'},
+            {field:'event_name', type:'text'},
             {field:'tagline', type:'text'},
-            {field:'description', type:'editor'},
+            {field:'event_description', type:'editor'},
             {field:'id', type:'simpletext'},
             {field:'starts', type:'date'},
             {field:'ends', type:'date'},   
-            {field:'location', type:'text'},
+            {field:'event_location', type:'text'},
             {field:'publish', type:'date'}
         ),
         async (inst, ctx) => {
             if(inst.response.cancel) return 'OK';
 
-            await app.cypher('CREATE (:Event {name:{name}, tagline:{tagline}, description:{description}, id:{id}, starts:{starts}, ends:{ends}, location:{location}, publish:{publish}})', inst.response);
+            await app.cypher('CREATE (:Event {name:{event_name}, tagline:{tagline}, description:{event_description}, id:{id}, starts:{starts}, ends:{ends}, location:{event_location}, publish:{publish}})', inst.response);
 
             return 'OK';
         }, (inst) => {

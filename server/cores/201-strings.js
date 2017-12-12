@@ -1,6 +1,6 @@
 
 
-module.exports = (app) => {
+module.exports = async (app) => {
     var api = {};
     app.strings = {};
 
@@ -178,5 +178,5 @@ module.exports = (app) => {
 
     app.stringApi = api;
 	
-    require('../tools/core').loader("strings", app);
+    await require('../tools/core').loader("strings", app);
 }

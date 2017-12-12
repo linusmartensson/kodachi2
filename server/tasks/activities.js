@@ -63,7 +63,7 @@ module.exports = async (app) => {
                     v.values.push({label:team.name, id:team.id, desc:team.desc});
                 }
             }},
-            {field:'description', type:'editor'},
+            {field:'app_description', type:'editor'},
             {field:'sleep_at_event', type:'bool'},
             {field:'can_work_wednesday', type:'bool'},
             {field:'can_cleanup_sunday', type:'bool'},
@@ -96,7 +96,7 @@ module.exports = async (app) => {
             q.id = inst.origin;
             q.team = inst.data.team;
 
-            await app.cypher('MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}, description:{description}}]->(t)', q);
+            await app.cypher('MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}, description:{app_description}}]->(t)', q);
             return 'OK';
         }, async(inst) => {
             return 'OK';

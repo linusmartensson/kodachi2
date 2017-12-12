@@ -1,6 +1,6 @@
 
 var _ = require('lodash');
-module.exports = (app) => {
+module.exports = async (app) => {
     var api = {};
 
     if(!app.taskFilters) app.taskFilters = {};
@@ -460,5 +460,21 @@ module.exports = (app) => {
 
     app.taskApi = api;
 
-	require('../tools/core').loader("tasks", app);
+	await (require('../tools/core').loader("tasks", app));
+
+    var q = app.tasks;
+    for(var v in q){
+        for(var w of q[v].inputs){
+            if(!w.field)continue;
+            var a = "input."+w.field+".desc";
+            var b = "input."+w.field+".name";
+            if(app.stringApi.get_string(a,"sv") == undefined){
+                console.dir("missing: "+a);
+            }
+            if(app.stringApi.get_string(b,"sv") == undefined){
+                console.dir("missing: "+b);
+            }
+
+        }
+    }
 }
