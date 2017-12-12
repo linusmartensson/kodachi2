@@ -1,11 +1,16 @@
-
+.Root{
+	position:fixed;
+	top:0;left:0;bottom:0;right:0;
+	background: linear-gradient(#211574 0%, #c3305d 100%);
+}
 .Workspace{
-    position:fixed;
-    top:0;left:0;bottom:0;right:0;
-    overflow-y:scroll;
-    overflow-x:show;
-    background-size:cover;
-    background-position:0 20%;
+	position:fixed;
+	top:0;left:0;bottom:0;right:0;
+	overflow-y:scroll;
+	overflow-x:show;
+	background-color:transparent;
+	background-size:cover;
+	background-position:0 50%;
 }
 .Workspace-head {
     margin:50px auto; 

@@ -42,12 +42,12 @@ class Workspace extends Component {
                 <Provider store={store}><div>
                     <Loader/>
                     <Router>
-                        <div className="Workspace" style={backgroundConfig}>
+                        <div className="Root"><div className="Workspace" style={backgroundConfig}>
                             <Drawer/>
                             <div className="Workspace-head"><img src={headerImage} alt=""/></div>
                             <Route path="/:path" component={SurfaceRoute}/>
                             <TaskPopup />
-                        </div>
+                        </div></div>
                     </Router>
                 </div></Provider>
                )
