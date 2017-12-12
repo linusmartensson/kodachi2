@@ -124,8 +124,6 @@ const TaskPopupContainer = connect(
                     }
                     if(cancel) q.append('cancel', true);
                     else for(var vv of node.elements) {
-                                    console.dir(vv.name);
-                                    console.dir(vv.value);
                         if(vv.files && vv.files.length > 0) {
                             q.append(vv.name, vv.files[0], vv.value);
                         } else {
@@ -138,6 +136,8 @@ const TaskPopupContainer = connect(
                                         opts.push(w.value);
                                     }
                                     q.append(vv.name, JSON.stringify(opts));
+                                } else if(vv.type === 'checkbox') {
+                                    q.append(vv.name, vv.checked);
                                 } else {
                                     q.append(vv.name, vv.value);
                                 }
@@ -145,6 +145,7 @@ const TaskPopupContainer = connect(
                         }
                     }
                     dispatch(actions.app.task.respond.do(task, q))
+
                 }
             }
         }

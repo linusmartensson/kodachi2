@@ -20,9 +20,12 @@ module.exports = async (app) => {
             }},
             {field:'content', type:'editor'} 
         ),
-        async (inst) => {
-            if(inst.response.cancel) return 'OK'; 
+        async (inst, ctx) => {
+            if(inst.response.cancel || inst.response.id=="") return 'OK'; 
 
+            if(inst.response.event == true){
+                inst.response.event = (await app.userApi.getActiveEvent(ctx)).id;
+            }
             await app.cypher('CREATE (:Content {id:{id}, content:{content}, title:{title}, event:{event}, lang:{lang}})', inst.response);
             for(var v of inst.response.access){
                 await app.cypher('MATCH (c:Content {id:{id}}), (r:Role {type:{type}}) CREATE (r)-[:HAS_ACCESS]->(c)', {type:v, id:inst.response.id});

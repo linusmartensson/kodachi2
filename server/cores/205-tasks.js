@@ -52,7 +52,7 @@ module.exports = (app) => {
     api.add_filter("file", (d)=>{return {file:d.path, mimeType:d.mimeType};});
     api.add_filter("image", (d)=>{return {file:d.path, mimeType:d.mimeType};});
     api.add_filter("bool", (d)=>{
-        return !!d;
+        return d=='true';
     });
     api.add_filter("date", (d)=>{
         return new Date(d).getTime();
