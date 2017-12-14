@@ -143,6 +143,13 @@ module.exports = async (app) => {
         }
         return false;
     }
+    api.externalTask = (task) => {
+        if(!task) return false;
+        for(let i of task.inputs) {
+            if(i.external) return true;
+        }
+        return false;
+    }
 
     async function findTaskByType(ctx, type){
         var t = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.type={type} AND s.id={sessionId} RETURN t", {type:type, sessionId:ctx.session.localSession})).records;
@@ -173,7 +180,11 @@ module.exports = async (app) => {
         //Notify task update
         await app.sessionApi.notifySessions(q);
     }
-    async function secureTask(ctx, task_id){
+    async function secureTask(ctx, task_id, inst){
+        var task = api.getTask(inst.task_name);
+
+        if(api.externalTask(task)) return true;
+
         var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} AND s.id={sessionId} RETURN s", {target:task_id, sessionId:ctx.session.localSession})).records;
         if(!s || s.length==0) return false;
         return true;
@@ -407,7 +418,7 @@ module.exports = async (app) => {
 
         var inst = await updateTaskInstance(task_id);
 
-        if(!inst || inst.result != 'WAIT_RESPONSE' || !await secureTask(ctx, task_id)) return 'NO_TASK_ID';  //There is no matching task instance.
+        if(!inst || inst.result != 'WAIT_RESPONSE' || !await secureTask(ctx, task_id, inst)) return 'NO_TASK_ID';  //There is no matching task instance.
         console.log("Found "+task_id+". Processing response!");
 
         await updateTaskInstance(task_id, inst);

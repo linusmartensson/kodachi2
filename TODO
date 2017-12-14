@@ -6,6 +6,7 @@ work [HI]
 
 purchase [HI]
 * buy tickets for event
+* Move payment to live credentials!!
 * increment budget
 * get roles
 
@@ -34,3 +35,9 @@ bonus [LOW]
 
 * view owned tickets
 * strings
+* Mobile CSS
+
+
+* manage points
+* buy points
+* trade in points for things

@@ -121,6 +121,10 @@ module.exports = (app) => {
     s('input.has_ssn.name', 'Har du ett Svenskt personnummer?');
 
 
+    s('payson.buy.tickets', 'Dina biljetter till Kodachicon!');
+    s('payson.buy.points', 'Dina Kodachicon-poäng!');
+
+
     s('input.email_or_ssn.name', "Ditt personnummer eller din mailadress!");
     s('input.email_or_ssn.desc', '');
 
