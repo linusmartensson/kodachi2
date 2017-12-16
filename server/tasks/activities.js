@@ -20,7 +20,7 @@ module.exports = async (app) => {
             var user = await app.userApi.userId(ctx);
 
             await app.roleApi.addRole(user, 'done_staff_test', 1000);
-            await app.roleApi.addAchievement(user, 'done_staff_test');
+            await app.roleApi.addAchievement(user, 'done_staff_test', 10, app.userApi.getActiveEvent(ctx));
 
             inst.next_tasks.push('join_staff');
             return 'OK';

@@ -27,13 +27,21 @@ module.exports = async (app) => {
         }
     }
 
-    api.addAchievement = async (user, achievement, points) => {
-        if(!points) points = 1;
-        await app.cypher(  'MATCH (u:User {id:{user}}), (r:Achievement {type:{achievement}}) ' + 
+    api.addAchievement = async (user, achievement, points, event) => {
+        if(!points) points = 0;
+        var e = await app.cypher('MATCH (u:User {id:{user}})-[e:ACHIEVEMENT_PROGRESS]-(r:Achievement {type:{achievement}}) RETURN e');
+
+        if(e.records && e.records.length > 0 && e.records[0].get('e').properties.achieved != false) return;
+
+        var status = await app.cypher(  'MATCH (u:User {id:{user}}), (r:Achievement {type:{achievement}}) ' + 
                                     'MERGE (u)-[e:ACHIEVEMENT_PROGRESS]->(r) '+
-                                    'ON MATCH SET   e.achieved = (toInt(e.points) + toInt({points}) > toInt(r.req)) , e.points = toInt(e.points) + toInt({points}) '+
-                                    'ON CREATE SET  e.achieved = (toInt({points}) > toInt(r.req)) , e.points = toInt({points})'
+                                    'ON MATCH SET   e.achieved = (toInt(e.points) + toInt({points}) >= toInt(r.req)) , e.points = toInt(e.points) + toInt({points}) '+
+                                    'ON CREATE SET  e.achieved = (toInt({points}) >= toInt(r.req)) , e.points = toInt({points}) RETURN e,r'
                          , {user, achievement, points});
+        await app.cypher('MATCH (u:User {id:{user}}) SET u.points = toInt(u.points) + toInt({points})', {user, points});
+        
+        if(status.records[0].get('e').properties.achieved)
+            await app.budgetApi.addBudget(event, 'point_cost', status.records[0].get('r').properties.value);
     }
     api.addRole = async (user, role, xp) => {
         await api.create_role(role);    //pre-generate any non-existant role dynamically.
