@@ -12,8 +12,6 @@ module.exports = app => {
         if(app.userApi.userId(ctx)){
             var user = await app.userApi.getUser(await app.userApi.userId(ctx));
             if(user){
-                user = user.get('u').properties;
-                delete user.password;
                 state.profile.user = user;
                 state.profile.mainRole = await app.roleApi.getBestRole(user.id);
 

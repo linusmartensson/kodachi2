@@ -31,7 +31,13 @@ module.exports = async (app) => {
 
     api.getUser = async (id) => {
         var user = await app.cypher('MATCH (u:User) WHERE u.id={id} RETURN u', {id:id});
-        return user.records.length>0?user.records[0]:undefined;
+        if(user.records.length > 0){
+            user = user.records[0].get('u').properties;
+            delete user.verifyCode;
+            delete user.password;
+            return user;
+        }
+        return undefined;
     }
     api.getRoles = async (id) => {
         if(!id) return ['anonymous'];
@@ -152,7 +158,12 @@ module.exports = async (app) => {
             q = await app.cypher('MATCH (u:User) WHERE u.nickname={nickname} RETURN u', p);
         }   
 
-        if(q && q.records && q.records.length > 0) return q.records[0].get('u').properties;
+        if(q && q.records && q.records.length > 0) {
+            var q = q.records[0].get('u').properties;
+            delete q.verifyCode;
+            delete q.password;
+            return q;
+        }
 
         return false;
     }

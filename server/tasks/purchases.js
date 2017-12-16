@@ -46,7 +46,7 @@ module.exports = async (app) => {
     }
     
     async function queryToken(ctx, trackId, sum, message){
-        var u = (await app.userApi.getUser(await app.userApi.userId(ctx))).get('u').properties;
+        var u = (await app.userApi.getUser(await app.userApi.userId(ctx)));
         console.dir(u);
         var data = {
             returnUrl:app.paysonkey.returnurl,
