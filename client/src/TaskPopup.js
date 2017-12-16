@@ -57,6 +57,8 @@ class TaskPopup extends Component{
         var pages = [];
         pages = pages.concat(_.cloneDeep(this.props.task.description));
         for(var v of this.props.task.type.inputs){
+
+            if(v.redirect) window.location = v.redirect;
            
             if(!v.field) continue; 
             if(v.type === 'button') continue;

@@ -128,16 +128,35 @@ module.exports = async (app) => {
 
                 var ipn = new URLSearchParams(inst.response.ipn);
 
-                if(ipn.get('status') != 'COMPLETED') return 'RETRY';
+                var s = ipn.get('PaymentStatus');
 
-                markPaid(inst.data.token, inst.origin, inst.data.numTickets, inst.data.numSleep, inst.data.points);
+                switch(s){
+                    case 'COMPLETED':
+                        await markPaid(inst.data.token, inst.origin, inst.data.numTickets, inst.data.numSleep, inst.data.points);
+                        inst.next_tasks.push('purchase_complete');
+                        return 'OK';
+                    case 'CREATED': 
+                    case 'PENDING':
+                    case 'PROCESSING':
+                        return 'RETRY';
+                    case 'REVERSALERROR':
+                    case 'ERROR':
+                    case 'CREDITED':
+                    case 'ABORTED':
+                    default:
+                        inst.next_tasks.push('purchase_failed');
+                        return 'OK';
 
-                inst.next_tasks.push('purchase_complete');
-
-                return 'OK';
+                }
             }, async(inst, ctx) => {
                 return 'OK'; 
             });
+    app.taskApi.create_task("purchase", "purchase_failed", [], [], [{field:'ok', type:'button'}],
+       async (inst, ctx) => {
+            return 'OK';
+       }, async(inst, ctx) => {
+            return 'OK';
+       });
     app.taskApi.create_task("purchase", "purchase_complete", [], [], [{field:'ok', type:'button'}],
        async (inst, ctx) => {
             return 'OK';
