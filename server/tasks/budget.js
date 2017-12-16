@@ -9,17 +9,19 @@ module.exports = async (app) => {
             {field:'image', type:'image'}, 
             {field:'total', type:'number'},
             {field:'group', type:'dropdown', prepare:async (v, ctx)=>{
-                var r = await app.cypher('MATCH (r:BudgetGroup) RETURN r');
+                var r = await app.cypher('MATCH (r:BudgetGroup)-->(e:Event {id:{event}}) RETURN r', {event:(await app.userApi.getActiveEvent(ctx)).id});
                 v.values = [];
                 for(var q of r.records){
                     var w = q.get('r').properties;
                     v.values.push(w.type);
                 }
-            }},
+            }}
         ),
-        async (inst) => {
+        async (inst, ctx) => {
             
             inst.response.image = app.utils.upload(inst.response.image);
+
+            inst.data.event = (await app.userApi.getActiveEvent(ctx)).id;
 
             inst.data.receipt = inst.response;
             inst.data.receipt.id = app.uuid();
@@ -32,7 +34,7 @@ module.exports = async (app) => {
         app.taskApi.yesno().concat(
             {field:'total', type:'number'},
             {event_task:true, field:'group', type:'dropdown', prepare:async (v, ctx)=>{
-                var r = await app.cypher('MATCH (r:BudgetGroup) RETURN r');
+                var r = await app.cypher('MATCH (r:BudgetGroup)-->(e:Event {id:{event}}) RETURN r', {event:(await app.userApi.getActiveEvent(ctx)).id});
                 v.values = [];
                 for(var q of r.records){
                     var w = q.get('r').properties;
@@ -48,7 +50,7 @@ module.exports = async (app) => {
             inst.data.receipt.group = inst.response.group;
             inst.data.receipt.total = inst.response.total;
 
-            app.cypher('MATCH (r:BudgetGroup {type:{group}}) CREATE (r)-[:CONTAINS]->(:Receipt {image:{image}, purchase:{purchase}, total:{total}, id:{id}})', inst.data.receipt);
+            await app.cypher('MATCH (r:BudgetGroup {type:{group}})-->(e:Event {id:{event}}) CREATE (r)-[:CONTAINS]->(:Receipt {image:{image}, purchase:{purchase}, total:{total}, id:{id}}) SET r.total = toInt(r.total) + toInt({total})', {...inst.data.receipt, event:inst.data.event});
 
             inst.next_tasks.push('accept_receipt');
             inst.next_tasks.push('pay_receipt');
@@ -56,9 +58,9 @@ module.exports = async (app) => {
         }, async(inst)=>{return 'OK'});
 
     app.taskApi.create_task('budget', 'pay_receipt', 
-        [], [], [{event_task:true, field:'ok', type:'button'}],
+        [], ['budget.'], [{event_task:true, field:'ok', type:'button'}],
         async (inst) => {
-            app.cypher('MATCH (r:Receipt id:{id}) SET r.paid=1', {id:inst.data.receipt.id});
+            await app.cypher('MATCH (r:Receipt id:{id}) SET r.paid=1', {id:inst.data.receipt.id});
             return 'OK';}, async(inst)=>{return 'OK'});
     app.taskApi.create_task('budget', 'accept_receipt', 
         [], [], [{event_task:true, field:'ok', type:'button'}],
@@ -67,9 +69,9 @@ module.exports = async (app) => {
         [], [], [{event_task:true, field:'ok', type:'button'}],
         async (inst) => {return 'OK';}, async(inst)=>{return 'OK'});
 
-    app.taskApi.create_task('budget', 'add_budgetgroup', [],['budget.', 'admin.'], [{field:'type',type:'simpletext'},{field:'limit', type:'number'}],
-        async(inst) => {
-            app.cypher('CREATE (:BudgetGroup {type:{type}, limit:{limit}})', inst.response);
+    app.taskApi.create_task('budget', 'add_budgetgroup', [],['budget.', 'admin.'], [{event_task:true, field:'type',type:'simpletext'},{field:'limit', type:'number'}],
+        async(inst, ctx) => {
+            await app.budgetApi.addGroup((await app.userApi.getActiveEvent(ctx)).id, inst.response.type, inst.response.limit);
             return 'OK';
         },
         async(inst) => {return 'OK'});

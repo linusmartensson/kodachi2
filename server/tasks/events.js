@@ -1,6 +1,9 @@
 
 module.exports = async (app) => {
 
+
+
+
     app.taskApi.create_task('event', 'create_event',
         ['admin'],[],
         app.taskApi.okcancel().concat(
@@ -17,6 +20,12 @@ module.exports = async (app) => {
             if(inst.response.cancel) return 'OK';
 
             await app.cypher('CREATE (:Event {name:{event_name}, tagline:{tagline}, description:{event_description}, id:{id}, starts:{starts}, ends:{ends}, location:{event_location}, publish:{publish}})', inst.response);
+
+            app.budgetApi.addGroup(inst.response.id, "banking_fees", 0);
+            app.budgetApi.addGroup(inst.response.id, "ticket_income", 0);
+            app.budgetApi.addGroup(inst.response.id, "sleep_income", 0);
+            app.budgetApi.addGroup(inst.response.id, "point_income", 0);
+            app.budgetApi.addGroup(inst.response.id, "point_cost", 0);
 
             return 'OK';
         }, (inst) => {
