@@ -121,16 +121,12 @@ module.exports = async (app) => {
                 console.dir(v.redirect);
             }, external:true}],
             async (inst, ctx) => {
-                console.dir(inst.response);
-                console.dir(ctx.request.body);
-                console.dir(ctx.params);
-                var response = await validate(inst.response.ipn);
-                console.dir(response);
+                var response = await validate(ctx.request.rawBody);
                 if(response != 'VERIFIED') return 'RETRY';
 
-                var ipn = new URLSearchParams(inst.response.ipn);
+                var ipn = inst.response.body;
 
-                var s = ipn.get('PaymentStatus');
+                var s = ipn.status;
 
                 switch(s){
                     case 'COMPLETED':
