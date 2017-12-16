@@ -432,7 +432,7 @@ module.exports = async (app) => {
             for(var v of task.inputs){
                 if(v.prepare) await v.prepare(v, ctx, inst);
             }
-            if(!app.externalTask(task)){
+            if(!api.externalTask(task)){
                 response = api.filterResponse(response, task.inputs);
             }
         } catch (e) {
