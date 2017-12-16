@@ -146,7 +146,7 @@ module.exports = async (app) => {
         if(!html) html = text;
         u = u[0].get('u').properties;
         var lang = app.userApi.getUserLanguage(u);
-        await app.utils.email(u.email, app.stringApi.translate(null, subject, lang), app.stringApi.translate(null, text, lang), app.stringApi.translate(null, html, lang));
+        await app.utils.email(u.email, app.stringApi.get_string(subject, lang), app.stringApi.get_string(text, lang), app.stringApi.translate(null, html, lang));
     }
     api.findAccount = async (p) => {
         var q = [];
