@@ -124,7 +124,7 @@ module.exports = async (app) => {
                 var response = await validate(ctx.request.rawBody);
                 if(response != 'VERIFIED') return 'RETRY';
 
-                var ipn = inst.response.body;
+                var ipn = inst.request.body;
 
                 var s = ipn.status;
 
