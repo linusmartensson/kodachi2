@@ -111,6 +111,7 @@ module.exports = async (app) => {
         p.password = await hash(p.password);
 
         p.userId = app.uuid();
+        p.code = app.uuid()+app.uuid();
 
         var firstUser = false;
         var users = (await app.cypher('MATCH (s:User) RETURN s'));
@@ -119,7 +120,7 @@ module.exports = async (app) => {
             firstUser = true;
         }
 
-        await app.cypher('CREATE (:User {id:{userId}, email:{email}, password:{password}, ssn:{ssn}, givenName:{givenName}, lastName:{lastName}, street:{street}, zipCode:{zipCode}, city:{city}, country:{country}, nickname:{nickname}})', p);
+        await app.cypher('CREATE (:User {verified:false, verifyCode:{code}, id:{userId}, email:{email}, password:{password}, ssn:{ssn}, givenName:{givenName}, lastName:{lastName}, street:{street}, zipCode:{zipCode}, city:{city}, country:{country}, nickname:{nickname}, points:0})', p);
 
         //Ensure new user and session are associated.
         await app.cypher('MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (:Role {type:"anonymous"})<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d', {userId:p.userId, sessionId: await api.session(ctx)});
@@ -129,11 +130,14 @@ module.exports = async (app) => {
         if(firstUser){
             await app.roleApi.addRole(p.userId, "admin", "50500");
         }
+
+        api.emailUser(p.userId, 'Verifiera ditt Kodachikonto!', 'Tryck på denna länken för att verifiera ditt Kodachikonto: https://kodachi.se/verifyEmail'+p.code);
         
     }
     api.emailUser = async(userId, subject, text, html) => {
         var u = await app.cypher('MATCH (u:User {id:{id}}) RETURN u', {id:userId}).records;
         if(u.length == 0) return false;
+        if(!html) html = text;
         u = u[0].get('u').properties;
         var lang = app.userApi.getUserLanguage(u);
         await app.utils.email(u.email, app.stringApi.translate(null, subject, lang), app.stringApi.translate(null, text, lang), app.stringApi.translate(null, html, lang));
