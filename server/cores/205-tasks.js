@@ -143,6 +143,8 @@ module.exports = async (app) => {
         }
         return false;
     }
+
+    //This is a dangerous flag. It bypasses all security and input filters to provide raw input from an external api.
     api.externalTask = (task) => {
         if(!task) return false;
         for(let i of task.inputs) {
@@ -430,7 +432,9 @@ module.exports = async (app) => {
             for(var v of task.inputs){
                 if(v.prepare) await v.prepare(v, ctx, inst);
             }
-            response = api.filterResponse(response, task.inputs);
+            if(!app.externalTask(task)){
+                response = api.filterResponse(response, task.inputs);
+            }
         } catch (e) {
             console.log("Task processing error:");
             console.dir(e);
