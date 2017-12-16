@@ -48,9 +48,6 @@ module.exports = (app) => {
         return await query(ssn);
     }
 
-    async function createAccount(inst){
-    }
-
     app.taskApi.create_task('account', 'logout',
             ['user'],[],
             app.taskApi.okcancel().concat({onSession:true,unique:true,autocancel:true}),
