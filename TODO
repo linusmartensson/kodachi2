@@ -1,21 +1,13 @@
-work [HI]
-
-* list members
-
-* email members
-
 purchase [HI]
-* buy tickets for event
 * Move payment to live credentials!!
-* increment budget
-* get roles
 
-budget [HI]
-* view whole budget
+
+work [HI]
+* list members
+* email members
 
 content [MED]
 * edit content
-* preview content
 
 users
 * verify user email [HI]
@@ -37,7 +29,10 @@ bonus [LOW]
 * strings
 * Mobile CSS
 
+budget [HI]
+* view whole budget
 
+points [LO]
 * manage points
-* buy points
 * trade in points for things
+
