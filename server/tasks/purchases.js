@@ -51,7 +51,7 @@ module.exports = async (app) => {
         var data = {
             returnUrl:app.paysonkey.returnurl,
             cancelUrl:app.paysonkey.returnurl,
-            ipnNotificationUrl:app.paysonkey.serverurl+"/respond_task/"+trackId,
+            ipnNotificationUrl:app.paysonkey.serverurl+"/task/respond_task/"+trackId,
             memo:message,
             senderEmail:u.email,
             senderFirstName:u.givenName,
