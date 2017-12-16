@@ -119,7 +119,7 @@ module.exports = async (app) => {
             [{prepare: async(v,ctx,inst) => {
                 v.redirect = app.paysonkey.ext + inst.data.token;
                 console.dir(v.redirect);
-            }}],
+            }, external:true}],
             async (inst, ctx) => {
                 console.dir(inst.response);
                 var response = await validate(inst.response.ipn);
