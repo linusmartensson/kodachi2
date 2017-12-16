@@ -68,15 +68,31 @@ module.exports = async (app) => {
         return await query('/1.0/Validate/', ipn);
     }
 
-    async function markPaid(token, user, numTickets, numSleep, points){
-        var toBudget = 0; //...
+    async function markPaid(paysonFee, token, user, numTickets, numSleep, points, event){
 
-        console.dir(token);
-        console.dir(user);
-        console.dir(numTickets);
-        console.dir(numSleep);
-        console.dir(points);
+        for(var v = 0; v < numSleep; ++v) {
+            await app.cypher('MATCH (u:User {id:{user}}), (e:Event {id:{event}}) CREATE (u)-[:TICKET {type:{type}, id:{ticket}}]->(e)', {user, event, type:'ticket', ticket:app.uuid()});
+        }
+        for(var v = 0; v < numTickets; ++v) {
+            await app.cypher('MATCH (u:User {id:{user}}), (e:Event {id:{event}}) CREATE (u)-[:TICKET {type:{type}, id:{ticket}}]->(e)', {user, event, type:'sleep', ticket:app.uuid()});
+        }
+        await app.budgetApi.addBudget(event, "ticket_income", 300*numTickets);
+        await app.budgetApi.addBudget(event, "sleep_income", 150*numSleep);
 
+        if(numTickets > 0){
+            await app.roleApi.addRole(user, 'visitor.'+event, 2000);
+        }
+        if(numSleep > 0){
+            await app.roleApi.addRole(user, 'sleeper.'+event, 1000);
+        }
+
+        if(points > 0){
+            await app.cypher('MATCH (u:User {id:{user}}) SET u.points = toInt(u.points) + {points}', {user, points});
+            await app.budgetApi.addBudget(event, "point_income", points*10);
+            await app.budgetApi.addBudget(event, "point_cost", points*10);
+        }
+
+        await app.budgetApi.addBudget(event, "banking_fees", -paysonFee);
     }
 
 
@@ -88,9 +104,12 @@ module.exports = async (app) => {
                 if(inst.response.cancel) return 'OK';
                 inst.data.numTickets = inst.response.tickets;
                 inst.data.numSleep = inst.response.sleep;
+                inst.data.points = 0;
+                inst.data.total = inst.data.numTickets*300 + inst.data.numSleep*150;
+                inst.data.event = (await app.userApi.getActiveEvent(ctx)).id;
                 var uuid = app.uuid();
                 console.dir("querying");
-                var result = await queryToken(ctx, uuid, inst.data.numTickets*300 + inst.data.numSleep*150, app.stringApi.get_string("payson.buy.tickets", await app.userApi.getLanguage(ctx)));
+                var result = await queryToken(ctx, uuid, inst.data.total, app.stringApi.get_string("payson.buy.tickets", await app.userApi.getLanguage(ctx)));
                 inst.data.token = result.get('TOKEN');
                 console.dir("got token");
                 console.dir(inst.data.token);
@@ -104,9 +123,13 @@ module.exports = async (app) => {
             app.taskApi.okcancel().concat({field:'points', type:'dropdown', values:[100, 500, 1500, 3000]}),
             async (inst, ctx) => {
                 if(inst.response.cancel) return 'OK';
+                inst.data.numTickets = 0;
+                inst.data.numSleep = 0;
+                inst.data.total = inst.data.points/10;
                 inst.data.points = inst.response.points;
+                inst.data.event = (await app.userApi.getActiveEvent(ctx)).id;
                 var uuid = app.uuid();
-                var result = await queryToken(ctx, uuid, inst.data.points/10, app.stringApi.get_string("payson.buy.points", await app.userApi.getLanguage(ctx)));
+                var result = await queryToken(ctx, uuid, inst.data.total, app.stringApi.get_string("payson.buy.points", await app.userApi.getLanguage(ctx)));
                 inst.data.token = result.get('TOKEN');
                 inst.next_tasks.push({task:'goto_payson', uuid:uuid});
                 return 'OK';
@@ -130,7 +153,7 @@ module.exports = async (app) => {
 
                 switch(s){
                     case 'COMPLETED':
-                        await markPaid(inst.data.token, inst.origin, inst.data.numTickets, inst.data.numSleep, inst.data.points);
+                        await markPaid(ipn.receiverFee, inst.data.token, inst.origin, inst.data.numTickets, inst.data.numSleep, inst.data.points, inst.data.event);
                         inst.next_tasks.push('purchase_complete');
                         return 'OK';
                     case 'CREATED': 
