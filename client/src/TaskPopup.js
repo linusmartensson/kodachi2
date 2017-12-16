@@ -56,6 +56,8 @@ class TaskPopup extends Component{
         }
         var pages = [];
         pages = pages.concat(_.cloneDeep(this.props.task.description));
+        console.dir("Render TaskPopup");
+        console.dir(this.props);
         for(var v of this.props.task.type.inputs){
 
             if(v.redirect) window.location = v.redirect;
