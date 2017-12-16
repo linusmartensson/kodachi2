@@ -122,6 +122,8 @@ module.exports = async (app) => {
             }, external:true}],
             async (inst, ctx) => {
                 console.dir(inst.response);
+                console.dir(ctx.request.body);
+                console.dir(ctx.params);
                 var response = await validate(inst.response.ipn);
                 console.dir(response);
                 if(response != 'VERIFIED') return 'RETRY';
