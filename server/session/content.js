@@ -8,7 +8,7 @@ module.exports = app => {
 
         var e = await app.userApi.getActiveEvent(ctx);
 
-        state.books.push({group:0,id:e.id, path:e.id, title:e.name, content:app.stringApi.bookParser(e.description, e.id)});
+        if(e) state.books.push({group:1,id:e.id, path:e.id, title:e.name, content:app.stringApi.bookParser(e.description, e.id)});
 
         for(var v of content.records){
             var w = v.get('c').properties;
