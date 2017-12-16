@@ -24,7 +24,6 @@ const store = createStore(reducer, applyMiddleware(store => next => action => {
     var isfun = (obj) => {
         return typeof obj === 'function';
     };
-    console.dir(action);
     return next(isfun(action.payload)?action.payload:action);
 },thunkMiddleware, promiseMiddleware));
 require('es6-promise').polyfill()

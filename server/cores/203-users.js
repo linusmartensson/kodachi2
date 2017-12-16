@@ -137,11 +137,11 @@ module.exports = async (app) => {
             await app.roleApi.addRole(p.userId, "admin", "50500");
         }
 
-        api.emailUser(p.userId, 'Verifiera ditt Kodachikonto!', 'Tryck på denna länken för att verifiera ditt Kodachikonto: https://kodachi.se/verifyEmail'+p.code);
+        await api.emailUser(p.userId, 'Verifiera ditt Kodachikonto!', 'Tryck på denna länken för att verifiera ditt Kodachikonto: https://kodachi.se/verifyEmail'+p.code);
         
     }
     api.emailUser = async(userId, subject, text, html) => {
-        var u = await app.cypher('MATCH (u:User {id:{id}}) RETURN u', {id:userId}).records;
+        var u = (await app.cypher('MATCH (u:User {id:{id}}) RETURN u', {id:userId})).records;
         if(u.length == 0) return false;
         if(!html) html = text;
         u = u[0].get('u').properties;
