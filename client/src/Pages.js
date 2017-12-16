@@ -25,7 +25,6 @@ class Pages extends Component {
     }
 
     q = q.map(v => <div key={v.group} className="Pages">{v.storedPages}</div>);
-    console.dir(q);
     return q.length>0?<div key="pagesWrapper" className="PagesWrapper">{q}</div>:null;
   }
 }
