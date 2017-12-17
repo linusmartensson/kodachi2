@@ -28,7 +28,7 @@ module.exports = async (app) => {
 
     app.taskApi.create_task('activity', 'join_staff', 
         ['done_staff_test'], [],
-        app.taskApi.okcancel().concat({event_task:true, unique:true}, [{translate:true, field:'work_type', type:'dropdown', values:['create_team', 'create_activity', 'create_shop', 'work']}]),
+        app.taskApi.okcancel().concat({event_task:true}, [{translate:true, field:'work_type', type:'dropdown', values:['create_team', 'create_activity', 'create_shop', 'work']}]),
         async (inst, ctx) => {
             if(inst.response.cancel){
                 return 'OK';
