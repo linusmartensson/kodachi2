@@ -30,7 +30,8 @@ module.exports = (app) => {
     s('task.buy_points.title', 'Köp poäng');
 
     s('task.staff_test.title', 'Jobba med Kodachicon!');
-    s('task.join_staff.title', 'Jobba med Kodachicon!');
+    s('task.join_staff.title', 'Påbörja en ny ansökan!');
+    s('task.join_staff.title.active', 'Din pågående ansökan');
     s('task.join_staff.desc', '!Välkommen!\nDet finns många olika sätt att bli en del av Kodachicon! Förhoppningsvis ska du kunna hitta något som passar dig extraspecielltmycket bra!\n|\nVissa är intresserade av att sälja saker på en av våra försäljningsytor, som till exempel i vår jättetuffa Artist Alley!\n#\nAndra är mer intresserade av att vara med och bygga upp eventet i sig och bli en helt egen magisk del av Kodachicon!\n#\nSen finns det hjältar också som driver sina egna aktiviteter, såsom föreläsningar, workshops eller tävlingar!\n_\nVad skulle just du vilja göra på Kodachicon?');
     s('input.work_type.name', "Jag skulle vilja...");
     s('input.work_type.desc', "");
