@@ -43,7 +43,7 @@ module.exports = (app) => {
         }
 
         setTimeout(() => {
-            emailTransport.sendMail(opts, (error, info) => {
+            app.emailTransport.sendMail(opts, (error, info) => {
                 if(error) return console.dir(error);
                 console.log("message %s sent: %s!", info.messageId, info.response);
             });
