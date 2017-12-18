@@ -86,8 +86,8 @@ var bookParser = (v, idbase) => {
         if(page.tiers.length > 0)
             pages.push(page);
 
-        for(var p of pages){
-            p.id = idbase + p.id;
+        for(var q of pages){
+           q.id = idbase + q.id;
         }
 
         return pages;
