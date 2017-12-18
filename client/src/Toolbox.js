@@ -1,27 +1,30 @@
 
+import Task from './Task'
 
 import React, { Component } from 'react';
 import './Toolbox.css'
 import Tool from './Tool'
 import {connect} from 'react-redux'
-
+import { withRouter } from 'react-router-dom'
 
 import {actions} from './reducers/root.js'
-function Task(props){
-    return (
-            <div className="Tool"> 
-            <input type="button" onClick={() => props.onTaskClick(props.task)} value={props.task.title} />
-            </div>);
-}
 
-const TaskContainer = connect(
-        state => {return {}},
-        dispatch => {
-            return {onTaskClick: (task)=>{
-                dispatch(actions.app.task.show(task.id))
-            }}
-        }
-        )(Task);
+var List = (props) => {
+    return (
+        <div className="Tool">
+            <input type="button" onClick={() => props.onListClick(props.list, props.history)} value={props.list.title} />
+            </div>
+    );
+}
+const ListContainer = connect(
+    state => {return {}},
+    dispatch => {
+        return {onListClick: (list, history) => {
+            dispatch(actions.app.list.show(list.id, history))
+        }}
+    }
+)(withRouter(List));
+
 
 class Toolbox extends Component {
   render() {
@@ -29,30 +32,36 @@ class Toolbox extends Component {
     const tools = this.props.tools.map((tool) => 
         <Tool key={tool.id} name={tool.title} task={tool.task} />
     );
-    var count = 0;
+    var tcount = 0, lcount = 0;
     const tasks = this.props.tasks.map((task) => {
 
         for(var v of task.type.inputs) {
             //Hide tasks that finish automatically, as long as they're showing.
            
             if(v.autocancel && this.props.currentTask && this.props.currentTask.task) return null;
+            if(v.hide) return null;
         }
         if(task.result !== 'WAIT_RESPONSE') return null;
 
-        count++;
+        tcount++;
 
-        return (<TaskContainer key={task.id} task={task} />)
+        return (<Task key={task.id} task={task} data={{}} />)
+    });
+    const lists = this.props.lists.map((list) => {
+        lcount++;
+        return (<ListContainer key={list.id} list={list} />)        
     });
 
-      var taskbox = count>0?<div className="Taskbox">{tasks}</div>:null;
+      var taskbox = tcount>0?<div className="Taskbox">{tasks}</div>:null;
+      var listbox = lcount>0?<div className="Listbox">{lists}</div>:null;
 
-    return (<div>{taskbox}<div className="Toolbox">{tools}</div></div>);
+    return (<div>{taskbox}{listbox}<div className="Toolbox">{tools}</div></div>);
   }
 }
 
 const ToolboxContainer = connect(
         state => {
-            return {tools: state.session.tools?state.session.tools:[], tasks: state.session.tasks?state.session.tasks:[], currentTask: state.currentTask}
+            return {tools: state.session.tools?state.session.tools:[], tasks: state.session.tasks?state.session.tasks:[], lists: state.session.lists?state.session.lists:[], currentTask: state.currentTask}
         },
         dispatch => {
             return {};

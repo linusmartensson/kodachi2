@@ -6,7 +6,7 @@ import SpeechBubble from './SpeechBubble';
 import './Panel.css'
 import {connect} from 'react-redux'
 import {actions} from './reducers/root.js'
-
+import Tool from './Tool'
 import bookParser from './bookParser';
 
 class Editor extends Component {
@@ -143,6 +143,7 @@ class Panel extends Component {
             case 'clear': return <div key={elem.id} style={{clear:'both'}}></div>
             case 'text': return <p className="PanelText" key={elem.id}>{elem.text}</p>;
             case 'speechbubble': return <SpeechBubble position={elem.position} key={elem.id} text={elem.text} speaker={elem.image} />;
+            case 'editbutton': return (<Tool key={elem.id} task={elem.tool} name={elem.text} data={elem.data} />)
             case 'button': return <input className="PanelButton" type="submit" onClick={(e)=>{e.target.clicked=true;}} key={elem.id} name={elem.id} value={elem.text} />
             case 'input_password': return <input className="PanelInput" type="password" key={elem.id} name={elem.id} value={elem.text} />
             case 'input_ssn': return <input placeholder='YYMMDD-NNNN' className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
@@ -187,4 +188,11 @@ class Panel extends Component {
   }
 }
 
-export default Panel;
+const PanelContainer = connect(
+    state => {return {tools:state.session?state.session.tools:{}}},
+    dispatch => {
+        return {}
+    }
+)(Panel);
+
+export default PanelContainer;

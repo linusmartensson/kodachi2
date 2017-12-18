@@ -12,7 +12,7 @@ var patcher = require('jsondiffpatch').create({
 });
 var host = 'https://'+window.location.hostname+':3001/';
 
-var initialState = {session:{}, ui:{selectors:{}, editors:{}}, currentTask:{}};
+var initialState = {session:{}, ui:{selectors:{}, editors:{}}, currentTask:{}, lists:{}};
 
 
 export const actions = createActions({
@@ -36,6 +36,22 @@ export const actions = createActions({
                 }
             }
         },
+        LIST: {
+            SHOW: (list, history) => {
+                return dispatch => {
+                    console.dir(list);
+                    dispatch(actions.app.task.start.request());
+                    fetch(host+'list/'+list,{credentials:'include'})
+                        .then(r=>{return r.json()})
+                        .then(r=>{
+                            console.dir(r);
+                        dispatch(actions.app.list.load(list, r));
+                        history.push('/list/'+list);
+                    });
+                }
+            },
+            LOAD: (list, data) => ({list, data})
+        },
         TASK: {
             START:{
                 REQUEST: () => {
@@ -43,12 +59,13 @@ export const actions = createActions({
                 },
                 SUCCESS: () => ({}),
                 FAILURE: () => ({}),
-                DO: (task, form) => {
+                DO: (task, data) => {
                     return dispatch => {
                         dispatch(actions.app.task.start.request());
-                        fetch(host+'task/start_task/'+task,{credentials:'include'}).then(()=>{
-                            dispatch(actions.app.task.start.success())   
-                        });
+                        fetch(host+'task/start_task/'+task,
+                            {credentials:'include', method:'POST', body:new URLSearchParams(data)}).then(()=>{
+                                dispatch(actions.app.task.start.success())   
+                            });
                     }
                 }
             },
@@ -107,6 +124,14 @@ export const reducer = handleActions({
             },
             STATE: (state, action) => {
                 return {...state, session:action.payload.state};
+            }
+        },
+        LIST: {
+            SHOW: (state, action) => {return state;},
+            LOAD: (state, action) => {
+                var l = _.cloneDeep(state.lists);
+                l[action.payload.list] = action.payload.data;
+                return {...state, lists:l, isFetching:false};
             }
         },
         TASK: {

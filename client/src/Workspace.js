@@ -11,6 +11,7 @@ import {Provider} from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import promiseMiddleware from 'redux-promise';
 
+import history from './history'
 
 import {createStore, applyMiddleware} from 'redux';
 import {actions, reducer} from './reducers/root.js'
@@ -41,11 +42,11 @@ class Workspace extends Component {
         return (
                 <Provider store={store}><div>
                     <Loader/>
-                    <Router>
+                    <Router history={history}>
                         <div className="Root"><div className="Workspace" style={backgroundConfig}>
                             <Drawer/>
                             <div className="Workspace-head"><img src={headerImage} alt=""/></div>
-                            <Route path="/:path" component={SurfaceRoute}/>
+                            <Route path="/:type/:path" component={SurfaceRoute}/>
                             <TaskPopup />
                         </div></div>
                     </Router>
@@ -56,11 +57,24 @@ class Workspace extends Component {
 
 
 const SurfaceRoute = ({match}) => {
-    const books = store.getState().session.books || [];
-    const matches = books.filter(b => (b.path === match.params.path));
 
-    if(matches.length > 0)
-        return <Surface pages={matches[0].content} />;
+    var matches = [];
+    
+    switch(match.params.type){
+        case 'book':
+            const books = store.getState().session.books || [];
+            matches = books.filter(b => (b.path === match.params.path));
+            if(matches.length > 0) matches = matches[0].content; else matches = false;
+            break;
+        case 'list':
+            const lists = store.getState().lists || [];
+            if(lists[match.params.path]) matches = lists[match.params.path].content; else matches = false;
+            console.dir(matches);
+            break;
+    }
+
+    if(matches)
+        return <Surface pages={matches} />;
     else
         return null;
 };

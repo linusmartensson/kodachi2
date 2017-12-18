@@ -20,7 +20,7 @@ class Pages extends Component {
     for(var b in books){
         var bs = books[b];
         var group = bs[0].group;
-        var storedPages = bs.map((book) => <StoredPage key={book.id} name={book.title} path={book.path} />);
+        var storedPages = bs.map((book) => <StoredPage key={book.id} name={book.title} path={"/book/"+book.path} />);
         q.push({group, storedPages});
     }
 
