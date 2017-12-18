@@ -3,7 +3,7 @@
  position:relative;
  padding:5px;
 }
-.Tool p{
+.Drawer .Tool p{
  display:inline-block;
  margin:0;padding:0;
 }
@@ -13,14 +13,36 @@
  vertical-align:middle;
 }
 
+.Drawer .Tool input {
+
+ font-size:0.8em;
+ margin-left:10px;
+}
+.Panel .Tool input {
+ font-size:1.2em;
+ background:#fcc;
+ padding:1.2em;
+ font-variant:small-caps;
+ letter-spacing:0.3em;
+ width:100%;
+}
+.Panel .Tool {
+ margin:-1em 0;
+ padding:0;
+ background:#fcc;
+ position:relative;
+ text-align:center;
+ background:#fee;
+}
+
+
 .Tool input {
  display:inline-block;
- margin-left:10px;
  background:none;
  border:0px;
  font-family:"Schoolbell";
- font-size:0.8em;
 }
+
 .Tool input:hover {
  color:red;
  cursor:pointer;

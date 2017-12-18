@@ -9,7 +9,7 @@ class Tool extends Component {
   render() {
     return (<div className="Tool">
                 <p>
-                    <input type="button" onClick={() => this.props.onTaskClick(this.props.task)} value={this.props.name} />
+                    <input type="button" onClick={() => this.props.onTaskClick(this.props.task, this.props.data)} value={this.props.name} />
                 </p>
             </div>);
   }
@@ -20,8 +20,8 @@ const ToolContainer = connect(
         },
         dispatch => {
             return {
-                onTaskClick: (t) => {
-                    dispatch(actions.app.task.start.do(t));
+                onTaskClick: (t, d) => {
+                    dispatch(actions.app.task.start.do(t, d));
                 }
             }
         }
