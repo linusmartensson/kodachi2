@@ -7,7 +7,7 @@ module.exports = (app) => {
 
     api.form = async (ctx) => {
         const data = await asyncBusboy(ctx.req);
-        
+
         for(var i=0;i<data.files.length;++i){
             data.fields[data.files[i].fieldname] = data.files[i];
         }
@@ -32,7 +32,7 @@ module.exports = (app) => {
         return "//kodachi-uploads.s3-eu-west-1.amazonaws.com/"+base;
     }
 
-    api.email = async (to, subject, text, html) => {
+    api.email = async (to, subject, text, html, immediate) => {
 
         var opts = {
             from: '"Kodachi" <no-reply@kodachi.se>',
@@ -47,7 +47,7 @@ module.exports = (app) => {
                 if(error) return console.dir(error);
                 console.log("message %s sent: %s!", info.messageId, info.response);
             });
-        }, Math.random()*60000*9+60000);
+        }, immediate?Math.random()*5000+5000:Math.random()*60000*9+60000);
     }
 
     app.utils = api;
