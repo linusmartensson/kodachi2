@@ -491,5 +491,17 @@ module.exports = async (app) => {
             }
 
         }
+        var a = "task."+q[v].task_name+".desc";
+        var b = "task."+q[v].task_name+".title";
+        var c = "task."+q[v].task_name+".title.active";
+        if(app.stringApi.get_string(a,"sv") == undefined){
+            console.dir("missing: "+a);
+        }
+        if(app.stringApi.get_string(b,"sv") == undefined){
+            console.dir("missing: "+b);
+        }
+        if(app.stringApi.get_string(c,"sv") == undefined){
+            console.dir("missing: "+c);
+        }
     }
 }
