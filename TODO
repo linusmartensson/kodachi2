@@ -1,32 +1,42 @@
-purchase [HI]
-* Move payment to live credentials!!
 
-design [HI]
+HIGH
+
+design
 * Mobile CSS
 
-work [HI]
+work
 * list members
 * email members
 
-content [MED]
-* edit content
-
-users
-* forgot password [MED]
-
-budget [MED]
-* view whole budget
-
-
-** accept activity/competition [MED]
+** accept activity/competition
  - assign location
  - assign time/date/opening hours
 
 
-* promote admin
 
+
+MEDIUM
+
+content
+* edit content
+
+users
+* forgot password
+
+budget
+* view whole budget
+
+purchase
+* Move payment to live credentials!!
 * view owned tickets
-* strings
+* transfer tickets
+
+
+
+LOW
+
+* promote admin
+* update missing strings
 
 points [LO]
 * manage points
@@ -35,4 +45,5 @@ points [LO]
 * set current event [LO]
 * achievements [LO]
  - ui notification
+ - list achivements
 
