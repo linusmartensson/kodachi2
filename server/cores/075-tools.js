@@ -1,6 +1,7 @@
 
 import asyncBusboy from 'async-busboy'
 import mail from 'nodemailer';
+var fs = require('fs');
 
 module.exports = (app) => {
     var api = {};
@@ -16,10 +17,10 @@ module.exports = (app) => {
 
     api.upload = async (file) => {
 
-        var suffix = '.'+file.filename.path.split(/\./).slice(-1)[0];
+        var suffix = '.'+file.file.split(/\./).slice(-1)[0];
         var base = app.uuid()+suffix;
 
-        var read = fs.createReadStream(file.filename.path);
+        var read = fs.createReadStream(file.file);
 
         var upload = new app.s3.upload({
             "Bucket": "kodachi-uploads",
@@ -28,7 +29,7 @@ module.exports = (app) => {
             "StorageClass": "REDUCED_REDUNDANCY",
             "ContentType": "binary/octet-stream"
         });
-        read.pipe.upload();
+        read.pipe(upload);
         return "//kodachi-uploads.s3-eu-west-1.amazonaws.com/"+base;
     }
 
