@@ -150,6 +150,8 @@ class Panel extends Component {
             case 'input_simpletext':
             case 'input_text': 
                 return <input placeholder="" className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
+            case 'input_phone': 
+                return <input placeholder="" className="PanelInput" type="tel" key={elem.id} name={elem.id} value={elem.text} />
             case 'input_email': return <input placeholder="you@kodachi.se" className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
             case 'input_editor': 
                 return <EditorContainer key={elem.id} data={elem} />

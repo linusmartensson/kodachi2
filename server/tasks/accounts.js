@@ -174,6 +174,8 @@ module.exports = (app) => {
     app.taskApi.create_task('account','fill_user_details',     //for email, avatar, nickname & password
             [],[],
             app.taskApi.okcancel().concat(  {field:'nickname', type:'simpletext'},
+                                            {field:'phone', type:'phone'},
+                                            {field:'emergencyphone', type:'phone'},
                                             {field:'email', type:'email'},
                                             {field:'email_verify', type:'email'},
                                             {field:'password', type:'password'},
@@ -189,6 +191,8 @@ module.exports = (app) => {
                 }
 
                 inst.data.nickname = inst.response.nickname;
+                inst.data.phone = inst.response.phone;
+                inst.data.emergencyphone = inst.response.emergencyphone;
                 inst.data.email = inst.response.email;
                 inst.data.password = inst.response.password;
 

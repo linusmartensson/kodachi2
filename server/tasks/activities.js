@@ -104,6 +104,7 @@ module.exports = async (app) => {
 
     app.taskApi.create_task('activity', 'self_application', [], [], [
             {event_task:true},
+            {field:'ok', type:'button'},
             {field:'sleep_at_event', type:'bool'},
             {field:'can_work_wednesday', type:'bool'},
             {field:'can_cleanup_sunday', type:'bool'},
@@ -314,8 +315,15 @@ module.exports = async (app) => {
         });
 
 
-    //For now, offline task?
-    app.taskApi.create_task('activity', 'schedule_activity', [], [], 
+    //For now, offline tasks?
+    app.taskApi.create_task('activity', 'assign_location', [], ['admin.', 'overseer.', 'team_admin.'], 
+        [{event_task:true}, {field:'ok', type:'button'}],
+        async (inst) => {
+            return 'OK';
+        }, async(inst) => {
+            return 'OK';
+        });
+    app.taskApi.create_task('activity', 'schedule_activity', [], ['admin.', 'overseer.', 'activity_admin.'], 
         [{event_task:true}, {field:'ok', type:'button'}],
         async (inst) => {
             return 'OK';
