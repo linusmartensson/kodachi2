@@ -19,9 +19,9 @@ module.exports = async (app) => {
         }
     }
     api.emailMembers = async (role) => {
-        var members = await app.cypher('MATCH (r:Role {type:{role}})->(u:User) RETURN u', {role}).records; 
-        for(var v of members){
-            var u = v.get('u').properties;
+        var members = (await app.cypher('MATCH (r:Role {type:{role}})-->(u:User) RETURN u', {role})).records; 
+        for(var v in members){
+            var u = members[v].get('u').properties;
             var lang = app.userApi.getUserLanguage(u);
             await app.utils.email(u.email, app.stringApi.translate(null, "{email.assignment.title}", lang), app.stringApi.translate(null, "{email.assignment.text}", lang), app.stringApi.translate(null, "{email.assignment.text.html}", lang));
         }
@@ -29,7 +29,7 @@ module.exports = async (app) => {
 
     api.addAchievement = async (user, achievement, points, event) => {
         if(!points) points = 0;
-        var e = await app.cypher('MATCH (u:User {id:{user}})-[e:ACHIEVEMENT_PROGRESS]-(r:Achievement {type:{achievement}}) RETURN e');
+        var e = await app.cypher('MATCH (u:User {id:{user}})-[e:ACHIEVEMENT_PROGRESS]-(r:Achievement {type:{achievement}}) RETURN e', {user, achievement});
 
         if(e.records && e.records.length > 0 && e.records[0].get('e').properties.achieved != false) return;
 
