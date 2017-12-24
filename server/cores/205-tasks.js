@@ -23,6 +23,10 @@ module.exports = async (app) => {
         if(/^[a-zA-Z0-9-_]*$/.test(d)) return d;
         throw 'Invalid Simpletext';
     });
+    api.add_filter("phone", (d)=>{
+        if(/^[0-9-+ ]*$/.test(d)) return d;
+        throw 'Invalid phone number';
+    });
     api.add_filter("select", (d)=>{
         var v = JSON.parse(d);
         if(!Array.isArray(v)) throw 'Invalid select data';
@@ -224,7 +228,13 @@ module.exports = async (app) => {
     async function addTaskToRoles(task, roles){
         console.dir(task);
         console.dir(roles);
-        await app.cypher("MATCH (r:Role) WHERE r.type IN {targets} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(r)", {targets:roles, id:task.id, data:JSON.stringify(task), type:task.task_name});
+        
+        await app.cypher("CREATE (t:Task {id:{id}, data:{data}, type:{type}})", {id:task.id, data:JSON.stringify(task), type:task.task_name});
+
+        for(var v in roles){
+            await app.roleApi.create_role(roles[v]);
+            await app.cypher("MATCH (r:Role {type:{role}}), (t:Task {id:{id}}) CREATE (t)-[:HANDLED_BY]->(r)", {role:roles[v], id:task.id});
+        }
         for(var role of roles)
             await app.roleApi.emailMembers(role);
     }
@@ -235,7 +245,7 @@ module.exports = async (app) => {
                 onSession = v.onSession;
             }
         }
-        if(task.handler_roles.length == 0 && !inst.handler_roles || inst.handler_roles.length == 0){
+        if(task.handler_roles.length == 0 && (!inst.handler_roles || inst.handler_roles.length == 0)){
             var user = await app.userApi.getUser(inst.origin);
             if(!onSession && user){
                 await addTaskToUser(inst);
@@ -391,9 +401,11 @@ module.exports = async (app) => {
                     tasktype = tasktype.task;
                 }
                 var child_task = api.getTask(tasktype);
+                console.dir(child_task);
                 if(api.eventTask(child_task)){
                     child_task = api.getTask(tasktype+"."+inst.data.start_data.event_id);
                 }
+                console.dir(child_task);
                 var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst.id, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
                 if(typeof inst.next_tasks[n] === 'object'){
                     if(tasktype.handlers) child_inst.handler_roles = tasktype.handlers;
