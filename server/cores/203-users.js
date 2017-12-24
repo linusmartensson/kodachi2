@@ -125,7 +125,7 @@ module.exports = async (app) => {
             firstUser = true;
         }
 
-        await app.cypher('CREATE (:User {verified:false, verifyCode:{code}, id:{userId}, email:{email}, password:{password}, ssn:{ssn}, givenName:{givenName}, lastName:{lastName}, street:{street}, zipCode:{zipCode}, city:{city}, country:{country}, nickname:{nickname}, points:0})', p);
+        await app.cypher('CREATE (:User {verified:false, verifyCode:{code}, id:{userId}, email:{email}, password:{password}, ssn:{ssn}, givenName:{givenName}, lastName:{lastName}, street:{street}, zipCode:{zipCode}, city:{city}, country:{country}, nickname:{nickname}, phone:{phone}, emergencyphone:{emergencyphone}, points:0})', p);
 
         //Ensure new user and session are associated.
         await app.cypher('MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (:Role {type:"anonymous"})<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d', {userId:p.userId, sessionId: await api.session(ctx)});
