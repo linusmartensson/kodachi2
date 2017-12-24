@@ -1,42 +1,32 @@
+Lists
+HI
+ - edit content
+MED
+ - view whole budget
+LOW
+ - list achivements
 
+
+
+Other
 HIGH
-
-design
 * Mobile CSS
-
-work
-* list members
-* email members
-
-** accept activity/competition
- - assign location
- - assign time/date/opening hours
-
-
-
-
-MEDIUM
-
-content
-* edit content
-
-users
-* forgot password
-
-budget
-* view whole budget
-
-purchase
+* email team members
+* update missing strings
 * Move payment to live credentials!!
 * view owned tickets
 * transfer tickets
 
 
 
+MEDIUM
+* forgot password
+
+
+
 LOW
 
 * promote admin
-* update missing strings
 
 points [LO]
 * manage points
@@ -45,5 +35,7 @@ points [LO]
 * set current event [LO]
 * achievements [LO]
  - ui notification
- - list achivements
 
+** accept activity/competition [OFFLINE TASKS FOR NOW]
+ - assign location
+ - assign time/date/opening hours
