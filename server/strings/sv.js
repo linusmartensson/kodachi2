@@ -155,4 +155,8 @@ module.exports = (app) => {
     s('stafftest.answer_team', 'Mitt team!');
 
 
+    s('list.list_team.title', 'Mitt team!');
+    s('list.tasks.title', 'TEST-lista TA BORT');
+    s('list.list_articles.title', "Artiklar");
+
 }
