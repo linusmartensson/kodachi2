@@ -56,8 +56,6 @@ class TaskPopup extends Component{
         }
         var pages = [];
         pages = pages.concat(_.cloneDeep(this.props.task.description));
-        console.dir("Render TaskPopup");
-        console.dir(this.props);
         for(var v of this.props.task.type.inputs){
 
             if(v.redirect) window.location = v.redirect;
@@ -78,7 +76,8 @@ class TaskPopup extends Component{
                         {   
                             id:v.field,
                             type:"input_"+v.type,
-                            content:v
+                            content:v,
+                            text:this.props.task.data[v.field]?this.props.task.data[v.field]:this.props.task.data.start_data[v.field]?this.props.task.data.start_data[v.field]:undefined
                         }
                     ]}
                 ]}
@@ -107,6 +106,7 @@ class TaskPopup extends Component{
 const TaskPopupContainer = connect(
         state => {
             var hasTask = !!state.currentTask && !!state.currentTask.task;
+
             return {
                 hasTask:hasTask,
                 task:hasTask?state.currentTask.task:null,

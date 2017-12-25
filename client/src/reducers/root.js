@@ -39,12 +39,10 @@ export const actions = createActions({
         LIST: {
             SHOW: (list, history) => {
                 return dispatch => {
-                    console.dir(list);
                     dispatch(actions.app.task.start.request());
                     fetch(host+'list/'+list,{credentials:'include'})
                         .then(r=>{return r.json()})
                         .then(r=>{
-                            console.dir(r);
                         dispatch(actions.app.list.load(list, r));
                         history.push('/list/'+list);
                     });

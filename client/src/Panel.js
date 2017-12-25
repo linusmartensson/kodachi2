@@ -104,9 +104,9 @@ class Selector extends Component {
         }
 
         if(elem.type === "input_select" || elem.type==='input_staticselect')
-            return <div><select className="PanelSelect" key={elem.id} name={elem.id} multiple onChange={this.handleChange}>{values}</select>{extra}</div>
+            return <div><select className="PanelSelect" defaultValue={elem.text.split(',')} key={elem.id} name={elem.id} multiple onChange={this.handleChange}>{values}</select>{extra}</div>
             else
-            return <div><select className="PanelSelect" key={elem.id} name={elem.id} onChange={this.handleChange}>{values}</select>{extra}</div>
+            return <div><select className="PanelSelect" defaultValue={elem.text} key={elem.id} name={elem.id} onChange={this.handleChange}>{values}</select>{extra}</div>
 
 
     }
@@ -145,27 +145,27 @@ class Panel extends Component {
             case 'speechbubble': return <SpeechBubble position={elem.position} key={elem.id} text={elem.text} speaker={elem.image} />;
             case 'editbutton': return (<Tool key={elem.id} task={elem.tool} name={elem.text} data={elem.data} />)
             case 'button': return <input className="PanelButton" type="submit" onClick={(e)=>{e.target.clicked=true;}} key={elem.id} name={elem.id} value={elem.text} />
-            case 'input_password': return <input className="PanelInput" type="password" key={elem.id} name={elem.id} value={elem.text} />
-            case 'input_ssn': return <input placeholder='YYMMDD-NNNN' className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
+            case 'input_password': return <input className="PanelInput" type="password" key={elem.id} name={elem.id} defaultValue={elem.text} />
+            case 'input_ssn': return <input placeholder='YYMMDD-NNNN' className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_simpletext':
             case 'input_text': 
-                return <input placeholder="" className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
+                return <input placeholder="" className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_phone': 
-                return <input placeholder="" className="PanelInput" type="tel" key={elem.id} name={elem.id} value={elem.text} />
-            case 'input_email': return <input placeholder="you@kodachi.se" className="PanelInput" type="text" key={elem.id} name={elem.id} value={elem.text} />
+                return <input placeholder="" className="PanelInput" type="tel" key={elem.id} name={elem.id} defaultValue={elem.text} />
+            case 'input_email': return <input placeholder="you@kodachi.se" className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_editor': 
                 return <EditorContainer key={elem.id} data={elem} />
             case 'input_time':
-                return <input className="PanelInput" type="time" key={elem.id} name={elem.id} value={elem.text} />
+                return <input className="PanelInput" type="time" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_date':
-                return <input className="PanelInput" type="date" key={elem.id} name={elem.id} value={elem.text} />
+                return <input className="PanelInput" type="date" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_number':
-                return <input className="PanelInput" type="number" key={elem.id} name={elem.id} value={elem.text} />
+                return <input className="PanelInput" type="number" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_bool':
-                return <input className="PanelCheckbox" type="checkbox" key={elem.id} name={elem.id} value={elem.text} />
+                return <input className="PanelCheckbox" type="checkbox" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_file':
             case 'input_image':
-                return <input className="PanelInput" type="file" key={elem.id} name={elem.id} value={elem.text} />
+                return <input className="PanelInput" type="file" key={elem.id} name={elem.id} defaultValue={elem.text} />
 
             case 'input_staticselect':
             case 'input_select':
