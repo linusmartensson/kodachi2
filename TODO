@@ -1,41 +1,30 @@
-Lists
-HI
- - edit content
-MED
- - view whole budget
-LOW
- - list achivements
-
-
-
-Other
 HIGH
-* Mobile CSS
-* email team members
-* update missing strings
 * Move payment to live credentials!!
-* view owned tickets
-* transfer tickets
+* Display teams/activities/vendors/artistalley
+* email team members
+* scrollable menu
 
 
 
 MEDIUM
+* Mobile CSS
+* transfer tickets
+* update missing strings
 * forgot password
+* view whole budget
 
 
 
 LOW
-
 * promote admin
-
-points [LO]
 * manage points
 * trade in points for things
+* set current event
+* achievement ui notification
+* list achivements
 
-* set current event [LO]
-* achievements [LO]
- - ui notification
 
-** accept activity/competition [OFFLINE TASKS FOR NOW]
- - assign location
- - assign time/date/opening hours
+
+LOWEST
+* assign activity location
+* assign activity time/date/opening hours
