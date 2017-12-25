@@ -9,7 +9,7 @@ module.exports = (app) => {
         //Email button
 
         //get team memberships
-        var teams = await app.cypher("MATCH (:User {id:{id}})-[:TEAM_MEMBER]-(w:WorkGroup) RETURN w", {id:await app.userApi.userId(ctx)});
+        var teams = await app.cypher("MATCH (:User {id:{id}})-[:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN w", {event:inst.start_data.event_id, id:await app.userApi.userId(ctx)});
         var content = [];
 
         //for teams
@@ -19,12 +19,12 @@ module.exports = (app) => {
             var members = await app.cypher("MATCH (w:WorkGroup {id:{id}})-[t:TEAM_MEMBER]-(u:User) RETURN t,u", {id:team.id});
 
             var teamdesc = {tiers:[{
-                id:content.length, panels:[
+                id:0, panels:[
                     {id:0, content:[{id:0, type:'text', text:team.name}]},
                     {id:1, content:[{id:0, type:'text', text:members.records.length+"/"+team.size}]},
                     {id:2, content:[{id:0, type:'editbutton', text:"Email team", task:'email_team', data:{team:team.id}}]}
                 ]
-            }], id:0};
+            }], id:content.length};
 
             content.push(teamdesc);
 
