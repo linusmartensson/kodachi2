@@ -26,6 +26,9 @@ module.exports = async (app) => {
             if(inst.response.event == true){
                 inst.response.event = (await app.userApi.getActiveEvent(ctx)).id;
             }
+            if(inst.data.start_data.edit){
+                await app.cypher("MATCH (c:Content {id:{id}}) DETACH DELETE c", {id:inst.data.start_data.id});
+            }
             await app.cypher('CREATE (:Content {id:{id}, content:{content}, title:{title}, event:{event}, lang:{lang}})', inst.response);
             for(var v of inst.response.access){
                 await app.cypher('MATCH (c:Content {id:{id}}), (r:Role {type:{type}}) CREATE (r)-[:HAS_ACCESS]->(c)', {type:v, id:inst.response.id});
