@@ -295,7 +295,6 @@ module.exports = async (app) => {
         var task = api.getTask(task_name);
         if(!task) return false;
 
-        
         //This user/session/whatever already has a unique task for this type.
         if(api.uniqueTask(task)){
             if((await findTaskByType(ctx, task_name)) != null) return false;

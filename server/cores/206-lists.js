@@ -49,7 +49,7 @@ module.exports = async (app) => {
 
         if(!start_data) start_data = {};
         if(list.start_data) Object.assign(start_data, list.start_data);
-               var user = await app.userApi.userId(ctx);
+        var user = await app.userApi.userId(ctx);
 
         var inst = {list, start_data:start_data}
         
