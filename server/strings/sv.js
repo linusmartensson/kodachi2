@@ -92,7 +92,7 @@ module.exports = (app) => {
     s('input.email.desc', "På denna adressen kontaktar vi dig till och från när det händer saker här på hemsidan, för att skicka ut biljetter, och annat viktigt som har med dig och Kodachikai att göra!");
     s('input.email_verify.desc', "Skriv in den en gång extra så att det säkert blir rätt!");
     s('input.password.name', "Ditt lösenord!");
-    s('input.password.desc', "");
+    s('input.password.desc', "Skriv in ditt helt egna jättecoola lösenord");
     s('input.password_verify.name', "En gång till!");
     s('input.password_verify.desc', "Skriv in ditt lösenord en gång till, så att det säkert blev rätt!");
     s('input.givenName.name', "Vad heter du?");
