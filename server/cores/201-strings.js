@@ -21,11 +21,16 @@ module.exports = async (app) => {
     }
 
     api.get_string = (name, t) => {
+        var orig = name;
+
         if(typeof t !== 'string'){
             if(t[name]) return t[name];
             name = name.split('.');
             while(name.length){
-                if(!t[name[0]]) return '';
+                if(!t[name[0]]) {
+                    console.log("missing string "+orig); 
+                    return '';
+                }
                 t = t[name[0]];
                 name = name.slice(1);
             }
@@ -36,19 +41,23 @@ module.exports = async (app) => {
                 if(!q) {
                     var j = name;
                     name = name.replace(/\.[^.]*$/, '');   
-                    if(j == name) return undefined;
+                    if(j == name){
+                        console.log("missing string "+orig); 
+                        return undefined;
+                    }
                     continue;
                 }
                 return app.strings[name][t];
             }
+            console.log("missing string "+orig); 
             return undefined;
         }
     }
     api.bookParser = (v, idbase) => {
         //We assume there's a localized string here, that may or may not be a book
-        if(typeof v !== 'string') return v;
-
-        v = v.split(/\r?\n/);
+        if(typeof v !== 'string') v = [];
+        else
+            v = v.split(/\r?\n/);
 
         var pages = [];
         var page = {id:0, tiers:[]};
@@ -143,7 +152,7 @@ module.exports = async (app) => {
         if(v.startsWith("{|")){
             var q = v.slice(2, -1);
             v = api.get_string(q, tokens);
-            return api.bookParser(v&&v.length>0?v:"", q);
+            return api.bookParser(v&&v.length>0?v:undefined, q);
         }
         var r = v.replace(/{[^}]+}/g, function(m){
             m = m.slice(1, -1);
