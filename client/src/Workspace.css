@@ -1,23 +1,50 @@
+@media (orientation:portrait) {
+
+    .Workspace{
+        /*Mobile*/
+        padding-bottom:2em;
+    }
+}
+@media (orientation:landscape) {
+
+    .Workspace{
+        /*PC*/
+        display:table;
+    }
+    .Workspace-inner{
+        /*PC*/
+        display:table-cell;
+    }
+}
+
 .Root{
-	position:fixed;
-	top:0;left:0;bottom:0;right:0;
 	background: linear-gradient(#211574 0%, #c3305d 100%);
+    background-attachment:fixed;
+    margin:0;
+    padding:0;
+    min-height:100%;
 }
 .Workspace{
-	position:fixed;
-	top:0;left:0;bottom:0;right:0;
-	overflow-y:scroll;
-	overflow-x:show;
 	background-color:transparent;
 	background-size:cover;
 	background-position:0 50%;
+    background-attachment:fixed;
+    min-height:100vh;
+    width:100%;
+    margin:0;padding:0;
 }
 .Workspace-head {
-    margin:50px auto; 
-    width:1200px;
+    margin:0px auto; 
+    width:95%;
+    max-width:1000px;
     text-align:center;
     transform:rotate(-3deg);
 }
 .Workspace-head img{
-    width:1000px;
+    width:100%;
+    padding-bottom:1em;
+
+}
+.Workspace-inner{
+    min-height:100%;
 }

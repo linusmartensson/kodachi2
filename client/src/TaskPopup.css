@@ -1,14 +1,27 @@
 
-.TaskPopup{
-position:fixed;
-left:0;
-top:0;
-right:0;
-bottom:0;
-background:rgba(0,0,0,0.75);
-display:block;
-overflow-y:scroll;
+@media (orientation:portrait){
+
+    .TaskPopup-item {
+        width:90% !important;
     }
+}
+@media (orientation:landscape){
+    .TaskPopup-item {
+        width:75% !important;
+    }
+
+}
+
+.TaskPopup{
+    position:fixed;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    background:rgba(0,0,0,0.75);
+    display:block;
+    overflow-y:scroll;
+}
 .TaskPopup-item{
     display:block;
     position:absolute;
@@ -17,14 +30,13 @@ overflow-y:scroll;
     margin:0 auto;
     left:0;
     right:0;
-    width:800px !important;
     padding:0px;
 
     top:10%;
     bottom:10%;
    font-family:Schoolbell;
-
 }
+
 
 .TaskPopup-item .Page{
     margin:0 auto;padding:1em;
@@ -32,6 +44,10 @@ overflow-y:scroll;
     background:transparent;
     box-shadow:none;
     border:0px;
-    width:800px;
+    width:100% !important;
+}
+.TaskPopup-item .Tier{
+    width:100% !important;
+    max-width:100% !important;
 
 }

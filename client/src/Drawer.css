@@ -1,26 +1,101 @@
+@media (orientation:portrait) {
+    .Drawer{
+        /*Mobile*/
+        display:block;
+        width:100%;
+        border:0;
+    }
+}
+@media (orientation:landscape) {
+    .Drawer{
+        /*PC*/
+        display:table-cell;
+        width:220px;
+        border-right:4px solid rgba(50,50,50,0.9);
+        padding:3px;
+    }
+}
+
 .Drawer{
-    position:fixed;
-    left:0;
-    top:0;bottom:0;
-    padding:3px;
-    border-right:4px solid rgba(50,50,50,0.9);
+    text-align:center;
     box-shadow: 10px 0 40px 0 rgba(0,0,0,0.5);
+    
     font-family:"Schoolbell";
-    font-size:1.2em;
     background:rgba(250,250,250,0.75);
     z-index:10000;
     //background:#6cbe45;
+    vertical-align:top;
+    min-height:100%;
+    margin:0;padding:0;
+    
 }
 .Drawer:after {
-
     pointer-events:none;
     content:"";
     background:rgba(200,200,200,0.95) url("/img/stripes.png") 0/100px;
-    position:absolute;
+    position:fixed;
     opacity:0.125;
     top:0;
     left:0;
     bottom:0;
     right:0;
+    padding:6px;
+    width:inherit;
+}
+
+.Tool {
+ white-space:nowrap;
+}
+.Drawer .Tool p{
+ display:inline-block;
+ margin:0;padding:0;
+}
+.Tool img{
+ height:32px;
+ display:inline-block;
+ vertical-align:middle;
+}
+
+.Panel .Tool input {
+ font-size:1.2em;
+ background:#fcc;
+ padding:1.2em;
+ border:0;
+ font-variant:small-caps;
+ letter-spacing:0.3em;
+ width:100%;
+}
+
+.Panel .Tool {
+ margin:-1em 0;
+ padding:0;
+ background:#fcc;
+ position:relative;
+ text-align:center;
+ background:#fee;
+ border:0px;
+ text-decoration:none;
+ display:block !important;
+ width:100%;
+}
+.Drawer .Tool input, .Pages a {
+ background:none;
+ border:0px;
+ margin:0;padding:0;
+ padding:5px;
+ font-family:"Schoolbell";
+ text-decoration:none;
+ font-size:18px;
+ color:black;
+}
+.Drawer .Tool *, .Drawer .Pages *{
+ display:block !important;
+ width:100%;
+}
+
+.Tool input:hover, .Pages a:hover {
+ color:red;
+ background:rgba(128,128,128,0.5);
+ cursor:pointer;
 }
 

@@ -72,21 +72,22 @@ font-size:1.5em;
 }
 .PanelInput, .PanelEditor, .PanelSelect{
     font-size:1.5em;
-    width:28.5em;
+    width:90%;
     margin:1em;
     padding:0.5em 1em;
+    padding-right:0;
     font-family:"Schoolbell";
     background:rgba(200,250,200,0.5);
     border:1px solid #aaa;
 }
 .PanelSelect {
-    width:735px;
+    width:90%;
 }
 .Panel .Surface{
     margin:0;padding:0;
 }
 .Panel .Tier{
-    width:750px;
+    width:100%;
     padding:0;
     margin:0;
 }

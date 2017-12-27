@@ -40,15 +40,17 @@ class Workspace extends Component {
 
 
         return (
-                <Provider store={store}><div>
+                <Provider store={store}><div className="Root">
                     <Loader/>
                     <Router history={history}>
-                        <div className="Root"><div className="Workspace" style={backgroundConfig}>
+                        <div className="Workspace" style={backgroundConfig}>
                             <Drawer/>
-                            <div className="Workspace-head"><img src={headerImage} alt=""/></div>
-                            <Route path="/:type/:path" component={SurfaceRoute}/>
+                            <div className="Workspace-inner">
+                                <div className="Workspace-head"><img src={headerImage} alt=""/></div>
+                                <Route path="/:type/:path" component={SurfaceRoute}/>
+                            </div>
                             <TaskPopup />
-                        </div></div>
+                        </div>
                     </Router>
                 </div></Provider>
                )

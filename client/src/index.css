@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Schoolbell');
 
-
-
 body {
-  margin: 0;
-  padding: 0;
   font-family: sans-serif;
+  margin:0;padding:0;
+  overflow-x:hidden;
+  overflow-y:show;
+  min-height:100vh;
+}
+#root{
+    min-height:100vh;
 }
