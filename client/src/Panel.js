@@ -104,7 +104,7 @@ class Selector extends Component {
         }
 
         if(elem.type === "input_select" || elem.type==='input_staticselect')
-            return <div><select className="PanelSelect" defaultValue={elem.text.split(',')} key={elem.id} name={elem.id} multiple onChange={this.handleChange}>{values}</select>{extra}</div>
+            return <div><select className="PanelSelect" defaultValue={elem.text?elem.text.split(','):null} key={elem.id} name={elem.id} multiple onChange={this.handleChange}>{values}</select>{extra}</div>
             else
             return <div><select className="PanelSelect" defaultValue={elem.text} key={elem.id} name={elem.id} onChange={this.handleChange}>{values}</select>{extra}</div>
 
