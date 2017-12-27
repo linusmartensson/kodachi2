@@ -18,7 +18,11 @@ module.exports = async (app) => {
             }}
         ),
         async (inst, ctx) => {
+            if(inst.response.cancel) return 'OK';
             
+            if(!inst.response.image.file) return 'RETRY';
+
+
             inst.response.image = app.utils.upload(inst.response.image);
 
             inst.data.event = (await app.userApi.getActiveEvent(ctx)).id;
