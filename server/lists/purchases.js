@@ -19,7 +19,7 @@ module.exports = (app) => {
             ticketTypes[ticket.type].push(ticket);
         }
         
-        content = content.concat(api.stringApi.translate(ctx, "{|list.purchases.ticketText}"));
+        content = content.concat(await app.stringApi.userParse(ctx, "{|list.purchases.ticketText}"));
         var rows = [];
         for(var v in ticketTypes.ticket){
             var ticket = ticketTypes.ticket[v];
@@ -33,7 +33,7 @@ module.exports = (app) => {
         }
         content.push({tiers:rows, id:content.length});
         
-        content = content.concat(api.stringApi.translate(ctx, "{|list.purchases.sleepText}"));
+        content = content.concat(await app.stringApi.userParse(ctx, "{|list.purchases.sleepText}"));
         var rows = [];
         for(var v in ticketTypes.sleep){
             var ticket = ticketTypes.sleep[v];
