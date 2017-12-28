@@ -1,6 +1,30 @@
 
 module.exports = async (app) => {
 
+    app.taskApi.create_task('activity', 'email_team', ['manager.', 'team_member.'], [],
+        app.taskApi.okcancel().concat({hidden:true}
+        ,{field:'email_topic', type:'text'}
+        ,{field:'email_text', type:'text'}
+        ),
+        async (inst, ctx) => {
+            if(inst.response.cancel) return 'OK';
+            
+            var team = await app.cypher('MATCH (:User {id:{user}})-[:TEAM_MEMBER]-(w:WorkGroup {id:{team}})-[:TEAM_MEMBER]-(u:User) RETURN w,u', {user: inst.origin, team:inst.data.start_data.id});
+            if(!team.records || team.records.length() < 1){
+                return 'FAIL';
+            }
+
+            for(var v in team.records){
+                var u = team.records[v].get('u').properties;
+
+                await app.userApi.emailUser(u.id, inst.response.email_topic, inst.response.email_text, inst.response.email_text);
+            }
+
+
+
+        }, async(inst, ctx) => {return 'OK'});
+
+
     app.taskApi.create_task('activity', 'staff_test', ['user', '!done_staff_test'], [],
         [{unique:true, field:'stafftest_q1', type:'dropdown', values:
             ['{stafftest.answer_them}','{stafftest.answer_he}','{stafftest.answer_she}','{stafftest.answer_the_person}']}, 
@@ -184,7 +208,7 @@ module.exports = async (app) => {
             q.size = inst.response.act_size;
             q.image = inst.response.act_image;
             q.image = await app.utils.upload(q.image);
-            q.avail_days = inst.response.act_available_days;
+            q.schedule = inst.response.act_available_days;
             q.avail_times = inst.response.act_available_times;
             q.length = inst.response.act_length;
             q.budget = inst.response.act_budget;
@@ -219,7 +243,7 @@ module.exports = async (app) => {
             q.image = inst.response.shop_image;
             q.image = await app.utils.upload(q.image);
             q.tables = inst.response.shop_tables;
-            q.avail_days = inst.response.shop_available_days;
+            q.schedule = inst.response.shop_available_days;
             inst.data.application = q;
             if(q.type == 'artist_alley')
                 inst.next_tasks.push('review_artist_alley');
@@ -273,7 +297,7 @@ module.exports = async (app) => {
             if(q.format === 'competition'){
                 await app.roleApi.addRole(inst.origin, 'competition_manager.'+q.event_id);
             }
-            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{activity}, name:{name}, format:{format}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, avail_times:{avail_times}, length:{length}, budget:{budget}, uniform:{uniform}, participants:{participants}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{activity}, name:{name}, format:{format}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, avail_times:{avail_times}, length:{length}, budget:{budget}, uniform:{uniform}, participants:{participants}})-[:PART_OF]->(e)", q);
 
 
             inst.next_tasks.push('accept_application');
@@ -347,7 +371,7 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id);
             await app.roleApi.addRole(inst.origin, q.shopRole);
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
-            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, tables:{tables}, type:{type}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, tables:{tables}, type:{type}})-[:PART_OF]->(e)", q);
 
             inst.next_tasks.push('accept_application');
             inst.next_tasks.push('self_application');
@@ -373,7 +397,7 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id);
             await app.roleApi.addRole(inst.origin, q.shopRole);
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
-            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, avail_days:{avail_days}, type:{type}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, type:{type}})-[:PART_OF]->(e)", q);
 
             inst.next_tasks.push('accept_application');
             inst.next_tasks.push('self_application');
