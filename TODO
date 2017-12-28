@@ -1,30 +1,30 @@
 HIGH
-* Move payment to live credentials!!
-* Display teams/activities/vendors/artistalley
-* email team members
-* list all tickets
-
-
+* update missing strings
+* view whole budget + team/act/vendor/aa purchase needs
+* join competitions
 
 MEDIUM
-* transfer tickets
-* update missing strings
 * forgot password
-* view whole budget
+* transfer tickets
 * pay+register on-site ui
 
 
 
 LOW
 * promote admin
-* manage points
-* trade in points for things
-* set current event
-* achievement ui notification
-* list achivements
-
 
 
 LOWEST
-* assign activity location
-* assign activity time/date/opening hours
+* achievement ui notification
+* list achivements
+
+AFTER NEW YEAR
+* manage points
+* trade in points for things
+* Update teams/activities/vendors/artistalley layout to make it more pretty
+
+DESCOPED 
+* set current event (reason: always use latest. Fuck history :v)
+* assign activity location (reason: leaving this as manual labor for schedulers 4 now)
+* assign activity time/date/opening hours (reason: leaving this as manual labor for schedulers 4 now)
+* multi-language (reason: supporting swedish, too much work for very few potential visitors)
