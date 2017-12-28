@@ -495,10 +495,10 @@ module.exports = async (app) => {
             var a = "input."+w.field+".desc";
             var b = "input."+w.field+".name";
             if(app.stringApi.get_string(a,"sv") == undefined){
-                console.dir("missing: "+a);
+                //cry
             }
             if(app.stringApi.get_string(b,"sv") == undefined){
-                console.dir("missing: "+b);
+                //cry
             }
 
         }
@@ -506,13 +506,13 @@ module.exports = async (app) => {
         var b = "task."+q[v].task_name+".title";
         var c = "task."+q[v].task_name+".title.active";
         if(app.stringApi.get_string(a,"sv") == undefined){
-            console.dir("missing: "+a);
+            //cry
         }
         if(app.stringApi.get_string(b,"sv") == undefined){
-            console.dir("missing: "+b);
+            //cry
         }
         if(app.stringApi.get_string(c,"sv") == undefined){
-            console.dir("missing: "+c);
+            //cry
         }
     }
 }

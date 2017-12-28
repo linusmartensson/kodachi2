@@ -61,13 +61,9 @@ module.exports = async (app) => {
 	await (require('../tools/core').loader("lists", app));
     var q = app.lists;
     for(var v in q){
-        var a = "list."+q[v].list_name+".desc";
         var b = "list."+q[v].list_name+".title";
-        if(app.stringApi.get_string(a,"sv") == undefined){
-            console.dir("missing: "+a);
-        }
         if(app.stringApi.get_string(b,"sv") == undefined){
-            console.dir("missing: "+b);
+                    console.log("s('"+b+"', '')"); 
         }
     }
 }

@@ -28,7 +28,7 @@ module.exports = async (app) => {
             name = name.split('.');
             while(name.length){
                 if(!t[name[0]]) {
-                    console.log("missing string "+orig); 
+                    console.log("s('"+orig+"', '')"); 
                     return '';
                 }
                 t = t[name[0]];
@@ -42,14 +42,14 @@ module.exports = async (app) => {
                     var j = name;
                     name = name.replace(/\.[^.]*$/, '');   
                     if(j == name){
-                        console.log("missing string "+orig); 
+                        console.log("s('"+orig+"', '')"); 
                         return undefined;
                     }
                     continue;
                 }
                 return app.strings[name][t];
             }
-            console.log("missing string "+orig); 
+            console.log("s('"+orig+"', '')"); 
             return undefined;
         }
     }
@@ -60,16 +60,16 @@ module.exports = async (app) => {
             v = v.split(/\r?\n/);
 
         var pages = [];
-        var page = {id:0, tiers:[]};
-        var tier = {id:0, panels:[]};
-        var panel = {id:0, content:[]};
+        var page = {id:0+idbase, tiers:[]};
+        var tier = {id:0+idbase, panels:[]};
+        var panel = {id:0+idbase, content:[]};
         var pos = 0;
 
         var parsers = {
             '!': function(s){
                 var c = s.search(/[^!]/);
                 if(c > 0) panel.content.push({
-                    id:pos++,
+                    id:pos++ + idbase,
                     type:'caption',
                     strength:c,
                     text:s.slice(c)
@@ -79,7 +79,7 @@ module.exports = async (app) => {
                 var c = s.search(/[^(]/);
                 var q = s.slice(c).split(')');
                 panel.content.push({
-                    id:pos++,
+                    id:pos++ + idbase,
                     type:'speechbubble',
                     position:c>1?'right':'left',
                     text:q[0],
@@ -88,39 +88,39 @@ module.exports = async (app) => {
             },
             '#': function(s){
                 tier.panels.push(panel);
-                panel = {id:pos++, content:[]};
+                panel = {id:pos++ + idbase, content:[]};
 
                 parsers['!']('!'+s.slice(1));
             },
             '_': function(s){
                 tier.panels.push(panel);
-                panel = {id:pos++, content:[]};
+                panel = {id:pos++ + idbase, content:[]};
 
                 page.tiers.push(tier);
-                tier = {id:pos++, panels:[]};
+                tier = {id:pos++ + idbase, panels:[]};
 
                 parsers['!']('!'+s.slice(1));
             },
             '|': function(s){
                 tier.panels.push(panel);
-                panel = {id:pos++, content:[]};
+                panel = {id:pos++ + idbase, content:[]};
 
                 page.tiers.push(tier);
-                tier = {id:pos++, panels:[]};
+                tier = {id:pos++ + idbase, panels:[]};
 
                 pages.push(page);
-                page = {id:pos++, tiers:[]};
+                page = {id:pos++ + idbase, tiers:[]};
             },
             '*': function(s){
                 if(s.length > 1) panel.content.push({
-                    id:pos++,
+                    id:pos++ + idbase,
                     type:'point',
                     text:s.slice(1)
                 });
             },
             '': function(s){
                 if(s.length > 0) panel.content.push({
-                    id:pos++,
+                    id:pos++ + idbase,
                     type:'text',
                     text:s
                 });
@@ -154,13 +154,16 @@ module.exports = async (app) => {
             v = api.get_string(q, tokens);
             return api.bookParser(v&&v.length>0?v:undefined, q);
         }
-        var r = v.replace(/{[^}]+}/g, function(m){
-            m = m.slice(1, -1);
-            var q = api.get_string(m, tokens);
-            if(q === undefined) return m;
-            return q;
-        });
-        return r;
+        if(v.startsWith("{")){
+            var r = v.replace(/{[^}]+}/g, function(m){
+                m = m.slice(1, -1);
+                var q = api.get_string(m, tokens);
+                if(q === undefined) return m;
+                return q;
+            });
+            return r;
+        }
+        return v;
     }
     api.userParse = async (ctx, v, lang) => {
         if(!lang)
