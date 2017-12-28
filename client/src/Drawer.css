@@ -4,6 +4,7 @@
         display:block;
         width:100%;
         border:0;
+        text-align:center;
     }
 }
 @media (orientation:landscape) {
@@ -12,12 +13,21 @@
         display:table-cell;
         width:220px;
         border-right:4px solid rgba(50,50,50,0.9);
-        padding:3px;
+        text-align:left;
+    }
+    .Drawer .Tool input, .Pages a {
+           text-align:left !important;
+           padding-left:20px !important;
+           margin:5px 0 !important;
+           margin-right:-15px !important;
+    }
+    
+    .Pages a{
+        width:215px !important;
     }
 }
 
 .Drawer{
-    text-align:center;
     box-shadow: 10px 0 40px 0 rgba(0,0,0,0.5);
     
     font-family:"Schoolbell";
@@ -39,7 +49,6 @@
     left:0;
     bottom:0;
     right:0;
-    padding:6px;
     width:inherit;
 }
 
@@ -78,17 +87,18 @@
  display:block !important;
  width:100%;
 }
-.Drawer .Tool input, .Pages a {
+.Drawer .Tool input, .Pages .StoredPage a {
  background:none;
  border:0px;
- margin:0;padding:0;
- padding:5px;
+ margin:0;
+ padding:5px 0 5px 5px;
+ margin:0;
  font-family:"Schoolbell";
  text-decoration:none;
  font-size:18px;
  color:black;
 }
-.Drawer .Tool *, .Drawer .Pages *{
+.Drawer .Tool *, .Drawer .Pages .StoredPage *{
  display:block !important;
  width:100%;
 }

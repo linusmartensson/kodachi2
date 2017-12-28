@@ -21,6 +21,7 @@
     background:rgba(0,0,0,0.75);
     display:block;
     overflow-y:scroll;
+    z-index:10;
 }
 .TaskPopup-item{
     display:block;
