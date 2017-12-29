@@ -76,7 +76,7 @@ module.exports = async (app) => {
     });
     api.add_filter("staticselect", (d,q)=>{ //Index of values-list.
         d = JSON.parse(d);
-        if(!Array.isArray(d) || d.length < 1) throw 'Invalid dropdown selection';
+        if(!Array.isArray(d)) throw 'Invalid dropdown selection';
         for(var v in d){
             if(~~d[v] >= q.values.length) throw 'Invalid dropdown selection';
             d[v] = q.values[~~d[v]];
@@ -157,6 +157,18 @@ module.exports = async (app) => {
         return false;
     }
 
+    api.emptyFields = (inst) => {
+        var task = api.getTask(inst.task_name); 
+
+        for(var v of task.inputs){
+            if(v.field && !(v.type=='bool') && !v.nocheck && (inst.response[v.field] === undefined || inst.response[v.field] === '')){
+                inst.error = '{task.error.emptyFields}';
+                return true;
+            }
+        }
+        return false;
+    }
+
     async function findTaskByType(ctx, type){
         var t = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.type={type} AND s.id={sessionId} RETURN t", {type:type, sessionId:ctx.session.localSession})).records;
         if(!t || t.length==0) return null;
@@ -226,9 +238,6 @@ module.exports = async (app) => {
         await app.cypher("MATCH (s:Session) WHERE s.id={target} CREATE (t:Task {id:{id}, data:{data}, type:{type}})-[:HANDLED_BY]->(s)", {target:task.origin, id:task.id, data:JSON.stringify(task), type:task.task_name});
     }
     async function addTaskToRoles(task, roles){
-        console.dir(task);
-        console.dir(roles);
-        
         await app.cypher("CREATE (t:Task {id:{id}, data:{data}, type:{type}})", {id:task.id, data:JSON.stringify(task), type:task.task_name});
 
         for(var v in roles){
@@ -400,11 +409,9 @@ module.exports = async (app) => {
                     tasktype = tasktype.task;
                 }
                 var child_task = api.getTask(tasktype);
-                console.dir(child_task);
                 if(api.eventTask(child_task)){
                     child_task = api.getTask(tasktype+"."+inst.data.start_data.event_id);
                 }
-                console.dir(child_task);
                 var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst.id, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
                 if(typeof inst.next_tasks[n] === 'object'){
                     if(tasktype.handlers) child_inst.handler_roles = tasktype.handlers;
@@ -448,8 +455,7 @@ module.exports = async (app) => {
             }
         } catch (e) {
             console.log("Task processing error:");
-            console.dir(e);
-            inst.error = "{tasks.filterFailure}";
+            inst.error = "{task.error.filterFailure}";
             inst.result = 'WAIT_RESPONSE';
             await updateTaskInstance(task_id, inst)
             return 'RETRY';
@@ -467,21 +473,19 @@ module.exports = async (app) => {
         switch(result){
             case 'OK': 
                 result = await nextTask(ctx, inst, task);
-                break;
+                return result;
             case 'RETRY':
                 inst.result = 'WAIT_RESPONSE';
                 await updateTaskInstance(task_id, inst);
                 notifyTask(task_id);
-                break;
+                return app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx));
             case 'FAIL':
             default:
                 inst.next_tasks = [];
                 await nextTask(ctx, inst, task);
-                return result;
+                return app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx));
         }
         
-
-        return result;
     }
 
     app.taskApi = api;
