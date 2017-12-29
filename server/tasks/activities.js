@@ -163,6 +163,7 @@ module.exports = async (app) => {
             if(inst.response.cancel){
                 return 'OK';
             }
+            if(app.taskApi.emptyFields(inst)) return 'RETRY';
             var q = {};
             q.type = 'team';
             q.name = inst.response.team_name;
@@ -200,6 +201,7 @@ module.exports = async (app) => {
             if(inst.response.cancel){
                 return 'OK';
             }
+            if(app.taskApi.emptyFields(inst)) return 'RETRY';
             var q = {};
             q.type = 'activity';
             q.name = inst.response.act_name;
@@ -235,6 +237,7 @@ module.exports = async (app) => {
             if(inst.response.cancel){
                 return 'OK';
             }
+            if(app.taskApi.emptyFields(inst)) return 'RETRY';
             var q = {};
             q.type = inst.response.shop_type;
             q.name = inst.response.shop_name;

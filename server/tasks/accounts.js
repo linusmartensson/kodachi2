@@ -151,10 +151,7 @@ module.exports = (app) => {
             async (inst) => {
                 if(inst.response.cancel) return 'OK';
 
-                if(inst.response.givenName == "" || inst.response.lastName == "" || inst.response.street == "" || inst.response.zipCode == "" || inst.response.city == "" || inst.response.country == ""){
-                    inst.error = '{tasks.account.emptyFields}';
-                    return 'RETRY';
-                }
+                if(app.taskApi.emptyFields(inst)) return 'RETRY';
                 inst.data.givenName = inst.response.givenName;
                 inst.data.lastName = inst.response.lastName;
                 inst.data.street = inst.response.street;
@@ -184,6 +181,8 @@ module.exports = (app) => {
                 if(inst.response.cancel) return 'OK';
                 if(inst.response.email != inst.response.email_verify) return 'RETRY';
                 if(inst.response.password != inst.response.password_verify) return 'RETRY';
+            
+                if(app.taskApi.emptyFields(inst)) return 'RETRY';
 
                 if((await app.userApi.findAccount({nickname:inst.response.nickname})) != false){
                     inst.error = "{tasks.account.nickNameTaken}";
