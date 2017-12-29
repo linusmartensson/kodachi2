@@ -326,4 +326,6 @@ module.exports = (app) => {
     s('task.upload_receipt.title', 'Ladda upp kvitto')
     s('thu', "Torsdag");
     s('wed', "Onsdag");
+
+    s('task.error.emptyFields', 'Du har glömt att fylla i några av fälten! Fixa det och testa igen!');
 }
