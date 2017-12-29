@@ -17,6 +17,7 @@ var initialState = {session:{}, ui:{selectors:{}, editors:{}}, currentTask:{}, l
 
 export const actions = createActions({
     APP: {
+        REFRESH: ()=>({}),
         SERVER: {
             UPDATE: diff => ({ diff }),
             STATE: state => ({ state }),
@@ -39,7 +40,7 @@ export const actions = createActions({
         LIST: {
             SHOW: (list, history) => {
                 return dispatch => {
-                    dispatch(actions.app.task.start.request());
+                    dispatch(actions.app.list.start.request(list));
                     fetch(host+'list/'+list,{credentials:'include'})
                         .then(r=>{return r.json()})
                         .then(r=>{
@@ -48,9 +49,16 @@ export const actions = createActions({
                     });
                 }
             },
-            LOAD: (list, data) => ({list, data})
+            LOAD: (list, data) => ({list, data}),
+            START: {
+                REQUEST: (list) => ({list})
+            }
         },
         TASK: {
+            ERROR:{
+                SHOW: (error)=>({error}),
+                HIDE: ()=>({})
+            },
             START:{
                 REQUEST: () => {
                     return {};
@@ -73,10 +81,14 @@ export const actions = createActions({
                 FAILURE: () => ({}),
                 DO: (task, form) => {
                     return dispatch => {
-                        dispatch(actions.app.task.close());
-                        dispatch(actions.app.task.respond.request());
+                        var q = setTimeout(()=>{dispatch(actions.app.task.respond.request())},200);
                         fetch(host+'task/respond_task/'+task.id,
-                            {credentials:'include', method:'POST', body:form}).then(()=>{
+                            {credentials:'include', method:'POST', body:form}).then(r=>{return r.text()}).then((data)=>{
+                                clearTimeout(q);
+                                if(data != 'OK'){
+                                    dispatch(actions.app.task.error.show(data));
+                                    setTimeout(()=>{dispatch(actions.app.task.error.hide())}, 10000);
+                                }
                                 dispatch(actions.app.task.respond.success());
                             });
                     }
@@ -106,6 +118,7 @@ function getTask(state, id){
 
 export const reducer = handleActions({
     APP: {
+        REFRESH: (state)=>({...state}),
         SERVER: {
             UPDATE: (state, action) => {
                 var v = _.cloneDeep(state);  
@@ -118,6 +131,16 @@ export const reducer = handleActions({
                         }
                     }
                 }
+                var found = false;
+                if(v.currentTask) for(var m of v.session.tasks) {
+                    if(m.result === 'WAIT_RESPONSE' && m.id == v.currentTask.task.id){
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found){
+                    v.currentTask = undefined;
+                }
                 return v;
             },
             STATE: (state, action) => {
@@ -128,11 +151,28 @@ export const reducer = handleActions({
             SHOW: (state, action) => {return state;},
             LOAD: (state, action) => {
                 var l = _.cloneDeep(state.lists);
-                l[action.payload.list] = action.payload.data;
+                if(action.payload.data)
+                    l[action.payload.list] = action.payload.data;
                 return {...state, lists:l, isFetching:false};
+            },
+            START:{
+                REQUEST: (state, action) => {
+                    var v = {...state, isFetching:true};
+                    v.lists = _.cloneDeep(state.lists);
+                    v.lists[action.payload.list] = {content:false};
+                    return v;
+                }
             }
         },
         TASK: {
+            ERROR:{
+                SHOW: (state,action)=>{
+                    return {...state, currentMessage:action.payload.error};
+                },
+                HIDE: (state,action)=>{
+                    return {...state, currentMessage:undefined};
+                }
+            },
             START:{
                 REQUEST: (state, action) => ({...state, isFetching:true}),
                 SUCCESS: (state, action) => ({...state, isFetching:false}),
