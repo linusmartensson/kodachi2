@@ -47,6 +47,7 @@ class TaskPopup extends Component{
         }
     }
     handleSubmit(event){
+        event.preventDefault();
         this.props.submit(this.props.task, this.formRef, false);
     }
 
