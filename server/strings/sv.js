@@ -1,147 +1,117 @@
 module.exports = (app) => {
     var s = app.stringApi.add_string.bind(null, 'sv');
+
+
     s('fri', "Fredag");
     s('input.access.desc', 'Markera alla användargrupper som ska ha tillgång till detta');
     s('input.access.name', 'Välj accessnivå');
-    s('input.act_available_days.desc', '')
-    s('input.act_available_days.name', '')
-    s('input.act_available_times.desc', '')
-    s('input.act_available_times.name', '')
-    s('input.act_budget.desc', '')
-    s('input.act_budget.name', '')
-    s('input.act_description.desc', '')
-    s('input.act_description.name', '')
-    s('input.act_format.desc', '')
-    s('input.act_format.name', '')
-    s('input.act_image.desc', '')
-    s('input.act_image.name', '')
-    s('input.act_length.desc', '')
-    s('input.act_length.name', '')
-    s('input.act_name.desc', '')
-    s('input.act_name.name', '')
-    s('input.act_needs_uniform.desc', '')
-    s('input.act_needs_uniform.name', '')
-    s('input.act_participants.desc', '')
-    s('input.act_participants.name', '')
-    s('input.act_size.desc', '')
-    s('input.act_size.name', '')
+    s('input.act_available_days.desc', 'Nästa steg är att beskriva vilka dagar din aktivitet har möjlighet att pågå, eller kommer att vara på plats under eventet. Detta blir input till schemaläggningen.')
+    s('input.act_available_days.name', 'Vilka dagar kommer du att ha möjlighet att arrangera aktiviteten?')
+    s('input.act_available_times.desc', 'Nu markerar du de tillfällen då du har möjlighet att vara på plats och driva din aktivitet. Detta blir input till schemaläggningen.')
+    s('input.act_available_times.name', 'Vilka tider kommer du ha möjlighet att arrangera aktiviteten?')
+    s('input.act_budget.desc', "Nu kommer då den kritiska frågan! För att vi ska kunna bestämma om vi har råd att arrangera just din aktivitet eller inte, så måste vi veta hur mycket pengar du behöver för att få dina planer att gå ihop! Här räknar du in allt utom personalkostnader! Inköp, reskostnader, gage och tävlingspriser och allt annat som du kan komma på (och som Kodachicon ska stå för!) slår du ihop och avrundar till närmaste tusenlapp!\nVissa behöver bara några människor på plats för att fungera och då skriver du 0, andra behöver hyra in en hel cirkustrupp, och då blir summan större!");
+    s('input.act_budget.name', 'Hur mycket pengar behövs?')
+    s('input.act_description.desc', 'Här beskriver du din aktivitet! Detta kommer att synas för både besökare och personal, och blir en del av underlaget för att vi ska kunna besluta om din aktivitet platsar på eventet eller inte!\nTänk dig att du ska få oss att tycka det skulle bli kul att delta eller besöka er så är du på rätt spår!')
+    s('input.act_description.name', 'Beskriv din aktivitet! Detta kommer att synas för besökare och i din ansökan!')
+    s('input.act_format.desc', 'Här väljer du om denna aktiviteten är en tävling, eller en annan typ av aktivitet. Om du är osäker på vad det är du arrangerar, så tänk såhär: Alla tävlingar utser en vinnare!')
+    s('input.act_format.name', 'Är detta en aktivitet eller en tävling?')
+    s('input.act_image.desc', "!Nu behöver vi en bild!\nDenna bilden kommer att synas för besökare som vill se vad ni håller på med! Se till att den är COOL, det är jätteviktigt!\nBilden kommer att vara lika bred som denna rutan, och tillräckligt hög för att inte bli skev, så skicka inte en för liten bild, och se gärna till att den är liggande, till exempel som en banner!");
+    s('input.act_image.name', 'Ladda upp en bild!')
+    s('input.act_length.desc', 'Sen är det då dags att bestämma sig för hur länge er aktivitet pågår. Vissa kör en hel dag, andra håller bara på en kvart!')
+    s('input.act_length.name', 'Hur lång är aktiviteten?')
+    s('input.act_name.desc', 'Det största och viktigaste steget när du skapar en aktivitet på våra evenemang är såklart att bestämma vad den ska heta! Välj något snappy och tufft!')
+    s('input.act_name.name', 'Vad heter din aktivitet?')
+    s('input.act_needs_uniform.desc', 'Ställ dig en viktig fråga! Behöver er aktivitet uniformer? För de flesta så kommer svaret att vara nej. Anordnar du exempelvis en föreläsning eller en tävling så tycker vi att det är bättre att du är klädd så att det passar vad du håller på med, men det finns såklart undantag!')
+    s('input.act_needs_uniform.name', 'Behöver ni kodachicon-tröjor?')
+    s('input.act_participants.desc', 'Bestäm dig för hur många som kommer att kunna delta i er aktivitet! Det här är en av de viktigaste sakerna vi måste fundera på när vi bestämmer oss för om en aktivitet passar hos oss eller inte, och om vi har råd att lägga pengarna på det, så fundera noga!')
+    s('input.act_participants.name', 'Hur många har möjlighet att delta?')
+    s('input.act_size.desc', 'Här fyller du i hur många som ska vara med och jobba med din aktivitet, inklusive dig själv såklart! Kortare och mindre aktiviteter har ofta färre i personal, storslagna tävlingar kan ibland vara lite fler, men det finns undantag åt båda hållen såklart!')
+    s('input.act_size.name', 'Hur många behövs i personalen?')
     s('input.app_description.desc', 'Här berättar du för oss varför vi ska välja just dig till teamet!');
     s('input.app_description.name', 'Din ansökan!');
-    s('input.cancel.desc', '');
-    s('input.cancel.name', 'Avbryt');
+    s('input.budget_type.desc', '', true);
+    s('input.budget_type.name', 'Namnge den nya budgetposten');
     s('input.can_cleanup_sunday.desc', 'På söndagen är det jätteviktigt att alla är med och städar så att lokalerna blir återställda efter evenemanget! Kan du vara med och hjälpa till med städningen?');
     s('input.can_cleanup_sunday.name', 'Kan du stanna till 1800 på söndag?');
     s('input.can_work_wednesday.desc', 'I vissa team är det jätteviktigt att du är med och hjälper till att förbereda konventet redan på onsdag! Då ses vi 17:00 och börjar ställa iordning allt inför öppningen på torsdag!');
     s('input.can_work_wednesday.name', 'Kan du vara med och ställa iordning på onsdag?');
-    s('input.category.desc', '')
-    s('input.category.name', '')
-    s('input.city.desc', "");
+    s('input.cancel.desc', '', true);
+    s('input.cancel.name', 'Avbryt');
+    s('input.category.desc', 'Ge ett namn på kategorin denna personen har vunnit i!')
+    s('input.category.name', 'Vilken kategori har du en vinnare i?')
     s('input.city.name', "Din hemstad?");
-    s('input.competition.desc', '')
-    s('input.competition.name', '')
-    s('input.content.desc', '')
-    s('input.content.name', '')
-    s('input.country.desc', "");
+    s('input.competition.desc', 'Först fyller du i vilken av dina tävlingar du rapporterar in resultat för, såklart. ^_^')
+    s('input.competition.name', 'Vilken tävling gäller det?')
+    s('input.content.name', 'Skriv din artikel! ^_^')
     s('input.country.name', "Vilket land bor du i?");
     s('input.email.desc', "På denna adressen kontaktar vi dig till och från när det händer saker här på hemsidan, för att skicka ut biljetter, och annat viktigt som har med dig och Kodachikai att göra!");
     s('input.email.name', "Din email!");
-    s('input.email_or_ssn.desc', '');
     s('input.email_or_ssn.name', "Ditt personnummer eller din mailadress!");
-    s('input.email_text.desc', '')
-    s('input.email_text.name', '')
-    s('input.email_topic.desc', '')
-    s('input.email_topic.name', '')
+    s('input.email_text.name', 'Författa ett awesome email')
+    s('input.email_topic.name', 'Ämne')
     s('input.email_verify.desc', "Skriv in den en gång extra så att det säkert blir rätt!");
     s('input.email_verify.name', "Din email, igen!");
-    s('input.emergencyphone.desc', '')
-    s('input.emergencyphone.name', '')
-    s('input.ends.desc', '');
+    s('input.emergencyphone.name', 'Telefonnummer till någon vi kan kontakta om det händer dig något')
     s('input.ends.name', 'När evenemanget slutar');
-    s('input.event.desc', '')
-    s('input.event_description.desc', '');
+    s('input.event.name', 'Är artikeln specifik för detta eventet?')
     s('input.event_description.name', 'Ge evenemanget en tuff beskrivning!');
-    s('input.event_location.desc', '');
     s('input.event_location.name', 'Var kommer evenemanget att pågå?');
-    s('input.event.name', '')
-    s('input.event_name.desc', '');
     s('input.event_name.name', 'Vad heter evenemanget?');
-    s('input.givenName.desc', "");
     s('input.givenName.name', "Vad heter du?");
-    s('input.group.desc', '')
-    s('input.group.desc', '')
-    s('input.group.name', '')
-    s('input.group.name', '')
+    s('input.group.name', 'Vilken budget ska kvittot in under?')
     s('input.has_ssn.name', 'Har du ett Svenskt personnummer?');
     s('input.id.desc', 'Ett ID är en kort och unik sträng utan specialtecken som utgör länken till sidan.');
     s('input.id.name', 'Välj ett ID för objektet');
-    s('input.image.desc', '')
-    s('input.image.name', '')
-    s('input.lang.desc', '');
+    s('input.image.name', 'Ladda upp en tydlig och läslig bild på hela ditt kvitto!')
     s('input.lang.name', 'Vilket språk är denna text på?');
-    s('input.lastName.desc', "");
     s('input.lastName.name', "Vilket är ditt efternamn?");
-    s('input.limit.desc', '')
-    s('input.limit.name', '')
-    s('input.nickname.desc', "Ditt namn, smeknamn, en cool titel, eller något helt annat som du känner passar dig bäst när vi ska prata med dig!");
+    s('input.limit.name', 'Vad är kostnadsgränsen för denna budgetpost?')
+    s('input.nickname.desc', "Ditt namn, smeknamn, eller något helt annat som du känner passar dig unikt bra när vi ska prata med dig! Detta namnet kommer vi använda överallt på sajten för att kommunicera med dig.");
     s('input.nickname.name', "Vad vill du att vi ska kalla dig? ^_^");
-    s('input.no.desc', '');
+    s('input.no.desc', '', true);
     s('input.no.name', 'Nej :(');
-    s('input.ok.desc', '');
+    s('input.ok.desc', '', true);
     s('input.ok.name', 'Ok!');
     s('input.password.desc', "Skriv in ditt helt egna jättecoola lösenord");
     s('input.password.name', "Ditt lösenord!");
     s('input.password_verify.desc', "Skriv in ditt lösenord en gång till, så att det säkert blev rätt!");
     s('input.password_verify.name', "En gång till!");
-    s('input.phone.desc', '')
-    s('input.phone.name', '')
-    s('input.points.desc', '')
-    s('input.points.name', '')
-    s('input.publish.desc', '');
+    s('input.phone.name', 'Ditt telefonnummer! ^_^')
+    s('input.points.name', 'Hur många poäng vill du köpa?')
     s('input.publish.name', 'När ska evenemanget publiceras för besökare?');
-    s('input.purchase.desc', '')
-    s('input.purchase.name', '')
-    s('input.shop_available_days.desc', '')
-    s('input.shop_available_days.name', '')
-    s('input.shop_description.desc', '')
-    s('input.shop_description.name', '')
-    s('input.shop_image.desc', '')
-    s('input.shop_image.name', '')
-    s('input.shop_name.desc', '')
-    s('input.shop_name.name', '')
-    s('input.shop_size.desc', '')
-    s('input.shop_size.name', '')
-    s('input.shop_tables.desc', '')
-    s('input.shop_tables.name', '')
-    s('input.shop_type.desc', '')
-    s('input.shop_type.name', '')
-    s('input.sleep_at_event.desc', '');
+    s('input.purchase.name', 'Vad var köpet för?')
+    s('input.shop_available_days.name', 'Vilka dagar har butiken möjlighet att vara öppen?')
+    s('input.shop_description.name', 'Beskriv din butik!')
+    s('input.shop_image.name', 'Ladda upp en butiksbild!')
+    s('input.shop_name.name', 'Vad heter butiken?')
+    s('input.shop_size.name', 'Hur många kommer att jobba på plats?')
+    s('input.shop_tables.name', 'Hur många bord behöver ni?')
+    s('input.shop_type.name', 'Planerar du stå i Artist Alley eller försäljningen?')
+    s('input.shop_type.desc', '', true)
+    s('input.sleep.name', 'Hur många sovplatser vill du köpa?')
     s('input.sleep_at_event.name', 'Planerar du sova på eventet?');
-    s('input.sleep.desc', '')
-    s('input.sleep.name', '')
     s('input.ssn.desc', 'Först behöver vi ditt personnummer!\nDet använder vi i föreningen för att söka bidrag när du besöker våra event, men också för att hämta ut dina kontaktuppgifter!');
     s('input.ssn.name', 'Ditt personnummer');
     s('input.stafftest_q1.desc', "!Fråga ett!\nNär du pratar om någon du inte känner med någon på en av våra evenemang, vilket pronomen ska du använda?");
-    s('input.stafftest_q1.name', "");
+    s('input.stafftest_q1.name', "", true);
     s('input.stafftest_q2.desc', "!Fråga två!\nDu upptäcker att det brinner på konventet! Vad är det första du ska göra?");
-    s('input.stafftest_q2.name', "");
+    s('input.stafftest_q2.name', "", true);
     s('input.stafftest_q3.desc', "!Fråga tre!\nOm någonting har hänt på konventet, vem är det du ska berätta detta för så att det blir löst så effektivt som möjligt?");
-    s('input.stafftest_q3.name', "");
-    s('input.starts.desc', '');
+    s('input.stafftest_q3.name', "", true);
     s('input.starts.name', 'När evenemanget börjar');
-    s('input.street.desc', "");
     s('input.street.name', "Din Hemadress?");
     s('input.tagline.desc', 'För kodachicon är "Sveriges mysigaste konvent!" standard ^_^');
     s('input.tagline.name', 'En cool tagline för eventet!');
+    s('input.team.desc', 'Alla är lika tuffa! ^_^');
+    s('input.team.name', 'Vilket team vill du ansöka till?');
     s('input.team_budget.desc', "Nu kommer då den kritiska frågan! För att vi ska kunna bestämma om vi har råd att arrangera just ditt superteam eller inte, så måste vi veta hur mycket pengar du behöver för att få just dina planer att gå ihop! Här räknar du in allt utom personalkostnader! Inköp, reskostnader, gage och tävlingspriser och allt annat som du kan komma på (och som Kodachicon ska stå för!) slår du ihop och avrundar till närmaste tusenlapp!\nVissa team behöver bara personal för att fungera och då skriver du 0, andra team behöver hyra in en hel cirkustrupp, och då blir summan större!");
     s('input.team_budget.name', "Hur mycket pengar behövs?");
-    s('input.team.desc', 'Alla är lika tuffa! ^_^');
     s('input.team_description.desc', "Nästa steg är att ge ditt team en beskrivning. Denna beskrivningen är underlag för om vi kommer att acceptera teamet eller inte, och kommer att synas både för besökare och i samband med att folk ska ansöka till ditt team.\nUndvik att gå in på detalj i vad som krävs för att vara med i teamet, fokusera istället på vad ni håller på med och varför ni är bäst! ^_^");
     s('input.team_description.name', "Beskriv teamet!");
     s('input.team_image.desc', "!Nu behöver vi en bild!\nDenna bilden kommer att synas för besökare som vill se vad ni håller på med! Se till att den är COOL, det är jätteviktigt!\nBilden kommer att vara lika bred som denna rutan, och tillräckligt hög för att inte bli skev, så skicka inte en för liten bild, och se gärna till att den är liggande!");
     s('input.team_image.name', "En tuff bild!");
     s('input.team_name.desc', "Ge ditt team ett namn! Gör det kort och snitsigt, alla kommer att se det!");
     s('input.team_name.name', "Vad ska teamet heta?");
-    s('input.team.name', 'Vilket team vill du ansöka till?');
     s('input.team_needs_uniform.desc', "Til sist då kommer frågan om ert team behöver Kodachicon-tröjor. Vissa team har en egen uniform eller känner av någon annan anledning inte att de ska ha på sig våra Kodachicon-tshirts, och för att budgeten ska gå ihop behöver vi också ta hänsyn till om ditt team behöver tröjor eller inte!");
     s('input.team_needs_uniform.name', "Behöver ni tröjor?");
     s('input.team_open.desc', "Det är inte alla team som jobbar alltid! Vissa är aktiva dagtid, andra på eftermiddagen. När planerar du för att ert team ska vara aktivt?");
@@ -150,21 +120,11 @@ module.exports = (app) => {
     s('input.team_schedule.name', "Vilka dagar jobbar teamet?");
     s('input.team_size.desc', "Vi behöver ha reda på hur många som kommer att vara med i ditt team, inklusive dig själv!\n#\nDetta påverkar vår budget, en extra team-medlem som närvarar alla fem dagar kostar mellan 650 och 1000kr!\n_\nFundera genom teamets behov, strama åt lite, och sätt en gräns du är nöjd med, så försöker vi lösa det!");
     s('input.team_size.name', "Hur många ska vara med i ditt team?");
-    s('input.tickets.desc', '')
-    s('input.tickets.name', '')
-    s('input.title.desc', '');
+    s('input.tickets.name', 'Hur många biljetter vill du köpa?')
     s('input.title.name', 'En titel för artikeln!');
-    s('input.total.desc', '')
-    s('input.total.desc', '')
-    s('input.total.name', '')
-    s('input.total.name', '')
-    s('input.tshirt.desc', '');
     s('input.tshirt.name', 'Vilken tshirt-storlek behöver du?');
-    s('input.type.desc', '')
-    s('input.type.desc', '')
-    s('input.type.name', '')
-    s('input.type.name', '')
-    s('input.user.desc', '');
+    s('input.type.desc', '', true)
+    s('input.type.name', 'Vilken typ av manager vill du lägga till?');
     s('input.user.name', 'Vilka användare berörs av detta?');
     s('input.value.afternoon', "På eftermiddagen, 14-18");
     s('input.value.create_activity', "Arrangera en häftig aktivitet eller tävling!");
@@ -182,14 +142,14 @@ module.exports = (app) => {
     s('input.value.until_sunrise', "Fram till soluppgången, 03-06");
     s('input.value.wed', "Onsdag");
     s('input.value.work', "Jobba någonstans!");
-    s('input.work_type.desc', "");
     s('input.work_type.name', "Jag skulle vilja...");
-    s('input.yes.desc', '');
+    s('input.yes.desc', '', true);
     s('input.yes.name', 'Ja!');
-    s('input.zipCode.desc', "");
     s('input.zipCode.name', "Ditt postnummer?");
     s('list.all_tickets.title', 'Köpta biljetter')
     s('list.list_articles.title', "Artiklar");
+    s('list.purchases.sleepText', 'Detta är dina sovsalsplatser! Du behöver normalt sett bara en plats, så flytta över resten till dina kompisar. ^_^')
+    s('list.purchases.ticketText', 'Detta är dina evenemangsbiljetter! En biljett används upp när du checkar in. Glöm inte att flytta över alla extra biljetter till de som ska ha dem!')
     s('list.show_activities.times', "Öppetdagar");
     s('list.show_activities.title', 'Aktiviteter!')
     s('list.show_team.title', 'Mitt team!');
@@ -215,117 +175,167 @@ module.exports = (app) => {
     s('stafftest.answer_save', 'Hjälpa personer i akut fara');
     s('stafftest.answer_she', 'Hon');
     s('stafftest.answer_team', 'Mitt team!');
-    s('stafftest.answer_them', 'De/dem');
     s('stafftest.answer_the_person', 'Personen');
+    s('stafftest.answer_them', 'De/dem');
     s('stafftest.answer_warn', 'Varna folk i omgivningen');
     s('sun', "Söndag");
-    s('task.accept_application.desc', '')
-    s('task.accept_application.title', '')
-    s('task.accept_receipt.desc', '')
-    s('task.accept_receipt.title', '')
-    s('task.add_budgetgroup.desc', '')
-    s('task.add_budgetgroup.title', '')
-    s('task.add_event_manager.desc', '')
+    s('task.accept_receipt.desc', 'Ditt kvitto för {receipt.purchase} på totalt {receipt.total} kr har godkänts och kommer att betalas ut!');
+    s('task.accept_receipt.title', 'Godkänt kvitto!')
     s('task.add_event_manager.title', 'Lägg till en event-admin');
-    s('task.assign_location.desc', '')
-    s('task.assign_location.title', '')
-    s('task.buy_points.desc', '')
-    s('task.buy_points.title', 'Köp poäng');
-    s('task.buy_tickets.desc', '')
-    s('task.buy_tickets.title', 'Köp biljetter');
-    s('task.check_ssn_details.desc', '!Eyy!\nNu ska vi se om dina uppgifter blivit rätt! Håller du med om att ditt namn är {ssnResult.basic.firstName} {ssnResult.basic.lastName} och att din adress är {ssnResult.basic.street}, {ssnResult.basic.zipCode} {ssnResult.basic.city}?');
-    s('task.check_ssn_details.title', '')
+    s('task.check_ssn_details.desc', '!Eyy!\nNu ska vi se om dina uppgifter blivit rätt! Stämmer det att namnet du är folkbokförd som är {ssnResult.basic.firstName} {ssnResult.basic.lastName} och att din adress är {ssnResult.basic.street}, {ssnResult.basic.zipCode} {ssnResult.basic.city}?');
     s('task.check_ssn_details.title.active', 'Fortsätt skapa konto!');
-    s('task.create_activity.desc', '')
     s('task.create_activity.title', 'Skapa en aktivitet!')
-    s('task.create_event.desc', '')
     s('task.create_event.title', 'Skapa ett konvent');
-    s('task.create_page.desc', '')
-    s('task.create_page.title', 'Skapa en sida');
-    s('task.create_shop.desc', '')
     s('task.create_shop.title', 'Skapa din butik!')
-    s('task.create_team.desc', '')
     s('task.create_team.title', 'Skapa ditt team!')
-    s('task.deny_application.desc', '')
     s('task.deny_application.title', 'Din ansökan har nekats. :c')
-    s('task.deny_receipt.desc', '')
     s('task.deny_receipt.title', 'Din kvittoutbetalning har nekats.')
-    s('task.email_team.desc', '')
-    s('task.email_team.title', 'Maila ditt team!')
+    s('task.error.emptyFields', 'Du har glömt att fylla i några av fälten! Fixa det och testa igen!');
     s('task.fill_user_details.desc', 'Nu ska du bara fylla i dina inloggningsuppgifter, sen är du en del av oss! :D');
-    s('task.fill_user_details.title', '')
     s('task.fill_user_details.title.active', 'Fortsätt skapa konto!');
-    s('task.forgot_account_details.desc', '')
-    s('task.forgot_account_details.title', '')
-    s('task.forgot_account_details.title.active', '')
-    s('task.goto_payson.desc', '')
-    s('task.goto_payson.title', '')
-    s('task.goto_payson.title.active', '')
+    s('task.forgot_account_details.title.active', 'Glömda kontouppgifter?')
     s('task.join_staff.desc', '!Välkommen!\nDet finns många olika sätt att bli en del av Kodachicon! Förhoppningsvis ska du kunna hitta något som passar dig extraspecielltmycket bra!\n|\nVissa är intresserade av att sälja saker på en av våra försäljningsytor, som till exempel i vår jättetuffa Artist Alley!\n#\nAndra är mer intresserade av att vara med och bygga upp eventet i sig och bli en helt egen magisk del av Kodachicon!\n#\nSen finns det hjältar också som driver sina egna aktiviteter, såsom föreläsningar, workshops eller tävlingar!\n_\nVad skulle just du vilja göra på Kodachicon?');
+    s('task.join_staff.title', 'Påbörja en ansökan!');
     s('task.join_staff.title.active', 'Din pågående ansökan');
-    s('task.join_staff.title', 'Påbörja en ny ansökan!');
-    s('task.join_work.desc', '')
-    s('task.join_work.title', '')
-    s('task.join_work.title.active', '')
     s('task.login.desc', 'Fyll i ditt konto och lösenord här så loggar vi in dig på direkten! ^_^');
     s('task.login.title.active','Fortsätt logga in!');
-    s('task.login.title','Logga in');
     s('task.logout.desc', 'Är du säker på att du vill logga ut?');
-    s('task.logout.title', 'Logga ut');
-    s('task.manual_ssn_details.desc','!Då gör vi det manuellt istället!\nAlrajt! Vi kunde inte hämta dina uppgifter automagiskt, så det betyder att vi måste fylla i dem för hand, men det löser vi!\n');
-    s('task.manual_ssn_details.title', '')
+    s('task.manual_ssn_details.desc','\nAlrajt! Vi kunde inte hämta dina uppgifter automagiskt, så det betyder att vi måste fylla i dem för hand, men det löser vi!\nNär du blir medlem i Kodachikai samlar vi in dehär uppgifterna för att kunna söka bidrag för våra evenemang och föreningsaktiviteter, så att det är rätt ifyllt är jätteviktigt för oss! För att allt ska bli bra så hoppas vi att ni är jättenoga!');
     s('task.manual_ssn_details.title.active','Fortsätt skapa konto!');
-    s('task.pay_receipt.desc', '')
-    s('task.pay_receipt.title', '')
-    s('task.pay_receipt.title.active', '')
-    s('task.purchase_complete.desc', '')
-    s('task.purchase_complete.title', '')
-    s('task.purchase_complete.title.active', '')
-    s('task.purchase_failed.desc', '')
-    s('task.purchase_failed.title', '')
-    s('task.purchase_failed.title.active', '')
+    s('task.new_competitor.desc', 'Wohoo! Det är en ny tävlande med i {competition.name}!')
+    s('task.new_competitor.title', 'Ny tävlande!')
     s('task.register_account.desc', '!Tjohej och välkommen!\n((Aww yeah!)\nVi vill att det ska vara superlätt att registrera sig på Kodachikai, och därför har vi gjort den här nya, lite coolare registreringen!\n_Första steget!\nInnan vi kan börja så måste vi veta om du är svensk medborgare! För att vi ska kunna driva Kodachikai och Kodachicon så söker vi bidrag på olika sätt, bland annat genom Sverok Skåne och Lunds kommun. För att kunna söka de bidragen så måste vi visa vem som är med på våra aktiviteter, och för att det ska bli rätt så behöver vi personnummer från alla som deltar!\n_\nÄr du svensk medborgare?');
-    s('task.register_account_ssn.desc','!Woot!\nSå trevligt! :D\nVälkommen till Kodachikai!');
-    s('task.register_account_ssn.title', '')
-    s('task.register_account_ssn.title.active','Fortsätt skapa konto!');
-    s('task.register_account.title.active','Fortsätt skapa konto!');
     s('task.register_account.title','Skapa ett konto!');
-    s('task.report_competition_result.desc', '')
-    s('task.report_competition_result.title', '')
-    s('task.report_competition_result.title.active', '')
-    s('task.review_activity.desc', '')
-    s('task.review_activity.title', '')
-    s('task.review_activity.title.active', '')
-    s('task.review_artist_alley.desc', '')
-    s('task.review_artist_alley.title', '')
-    s('task.review_artist_alley.title.active', '')
-    s('task.review_receipt.desc', '')
-    s('task.review_receipt.title', '')
-    s('task.review_receipt.title.active', '')
-    s('task.review_team_application.desc', '')
-    s('task.review_team_application.title', '')
-    s('task.review_team_application.title.active', '')
-    s('task.review_team.desc', '')
-    s('task.review_team.title', '')
+    s('task.register_account.title.active','Fortsätt skapa konto!');
+    s('task.register_account_ssn.desc','!Woot!\nSå trevligt! :D\nVälkommen till Kodachikai!');
+    s('task.register_account_ssn.title.active','Fortsätt skapa konto!');
+    s('task.report_competition_result.title.active', '', true)
     s('task.review_team.title.active', 'Reviewa teamförslag')
-    s('task.review_vendor.desc', '')
-    s('task.review_vendor.title', '')
-    s('task.review_vendor.title.active', '')
-    s('task.schedule_activity.desc', '')
-    s('task.schedule_activity.title', '')
-    s('task.schedule_activity.title.active', '')
-    s('task.self_application.desc', '')
-    s('task.self_application.title', '')
-    s('task.self_application.title.active', '')
+    s('task.review_team_application.title.active', '', true)
     s('task.ssn_exists_forgot_details.desc', '!Whoops!\nDet finns redan ett konto för detta personnumret! Testa att logga in istället!');
-    s('task.ssn_exists_forgot_details.title', '')
     s('task.ssn_exists_forgot_details.title.active', 'Fortsätt skapa konto!');
     s('task.staff_test.desc', "!Innan du börjar!\nTjohej och välkommen in i värmen! I Kodachikai är vi jättenoga med att allt ska vara trevligt och mysigt för alla som är med på våra aktiviteter. Därför har vi ett liiiiitet test som alla som vill arbeta på något av våra evenemang måste lösa innan de får delta!");
     s('task.staff_test.title', 'Jobba med Kodachicon!');
-    s('task.upload_receipt.desc', '')
     s('task.upload_receipt.title', 'Ladda upp kvitto')
     s('thu', "Torsdag");
     s('wed', "Onsdag");
+    s('input.lastName.desc', "", true);
+    s('input.account_no.name', 'Ditt kontonummer')
+    s('input.clearing_no.name', "Ditt clearingnummer");
+    s('input.account_no.desc', 'Här fyller du i ditt kontonummer för betalningen')
+    s('task.accept_application.desc', 'Så coolt! Din ansökan om {application.name} har godkänts! Nu har du en helt egen grej på eventet! I menyn till vänster har du eventuellt lite kvar att fylla i innan du är klar, men nu är vi på gång! Grattis!')
+    s('task.accept_application.title', 'Din ansökan godkändes!')
+    s('task.add_budgetgroup.desc', 'Här lägger du in nya budgetgrupper som kan användas för att betala kvitton på eventet')
+    s('task.add_budgetgroup.title', 'Lägg till budgetpost')
+    s('task.add_event_manager.desc', 'Lägg in nya eventarrangörer. Dessa får en massa extra powers på eventet, och kommer att kunna se mycket av vad som händer för alla arrangörer inom sitt specifika område.')
+    s('task.assign_location.desc', 'Detta är en påminnelse! Du har ett ansvar att tilldela en plats till {application.name}! Tryck *inte* på OK förrän detta är färdigt, då försvinner påminnelsen permanent!')
+    s('task.schedule_activity.desc', 'Detta är en påminnelse! Du har ett ansvar att tilldela plats och schema till {application.name}! Tryck *inte* på OK förrän detta är färdigt, då försvinner påminnelsen permanent!')
+    s('task.assign_location.title', 'Tilldela plats till team!')
+    s('task.fill_user_details.title', 'Fortsätt skapa konto')
+    s('task.forgot_account_details.title', 'Glömt kontouppgifter?')
+    s('task.goto_payson.title', 'Fortsätt betalning')
+    s('task.join_work.title', 'Fortsätt med din ansökan')
+    s('task.login.title','Logga in');
+    s('task.logout.title', 'Logga ut');
+    s('task.join_competition.title', 'Gå med i en tävling!')
+    s('task.buy_points.title', 'Köp poäng');
+    s('task.buy_tickets.title', 'Köp biljetter');
+    s('task.create_page.title', 'Skapa en sida');
+    s('task.check_ssn_details.title', 'Fortsätt skapa konto')
+    s('task.email_team.title', 'Maila ditt team!')
+    s('input.clearing_no.desc', "Och här fyller du i clearingnummer!");
+    s('task.buy_points.desc', 'Här kan du köpa poäng! Poäng är just nu helt oanvändbara, men kommer i framtiden att kunna användas för att köpa saker på våra evenemang!')
+    s('task.buy_tickets.desc', 'Här! Den viktigaste sidan på hela kodachi.se! Här köper du biljetter och blir en del av gemenskapen! Välkommen!')
+    s('task.error.filterFailure', 'Du har fyllt i ett av fälten konstigt! :o')
+    s('task.pay_receipt.title', 'Betala ut kvitto')
+    s('task.create_activity.desc', 'Nu gäller det! Sätt ihop världens bästa ansökan och bli en del av gemenskapen!')
+    s('task.create_team.desc', 'Nu gäller det! Sätt ihop världens bästa ansökan, skapa ett helt eget team, och gör något ingen gjort förr!')
+    s('task.create_shop.desc', 'Nu gäller det! Här sätter du ihop världens bästa presentation, så att alla blir superpigga på att besöka din häftiga butik!')
+    s('task.create_event.desc', 'Det är här admins skapar helt nya event. ^_^')
+    s('task.manual_ssn_details.title', 'Fortsätt skapa konto!')
+    s('task.purchase_complete.desc', 'Gratulerar! Ditt köp lyckades! :D')
+    s('task.purchase_complete.title', 'Ditt inköp lyckades!')
+    s('task.purchase_failed.desc', 'Tjo! Något hände på vägen och ditt köp kunde inte gå genom! Om det inte var meningen, så prova en gång till!')
+    s('task.purchase_failed.title', 'Ditt köp misslyckades :c')
+    s('input.city.desc', "", true);
+    s('input.content.desc', '', true)
+    s('input.email_or_ssn.desc', '', true);
+    s('input.email_text.desc', '', true)
+    s('input.email_topic.desc', '', true)
+    s('input.emergencyphone.desc', 'Ibland sker det olyckor, och då räcker det inte alltid med bara ditt eget telefonnummer för att vi ska kunna hjälpa till. Därför ber vi dig att skriva in ett extra nummer här till en familjemedlem eller annan närstående som vi kan kontakta om det skulle behövas.')
+    s('input.ends.desc', '', true);
+    s('input.event.desc', 'Bestäm dig för om denna texten är specifik för eventet, eller ska visas för alla!')
+    s('input.event_description.desc', 'Se till att beskrivningen är utförlig och kan användas som en första presentation när en ny besökare halkar in på kodachi.se');
+    s('input.event_location.desc', 'Här fyller du i platsen för evenemanget! Använd ett platsnamn, standard är "Polhemskolan, Lund" för Kodachicon ^_^');
+    s('input.event_name.desc', '', true);
+    s('input.givenName.desc', "Här behöver vi ditt namn, precis som det är registrerat i folkbokföringen om du är svensk medborgare! För vissa som registrerar sig är detta jobbigt, och då ska du veta att detta används bara till bidragssökningar, och på nästa sida kommer du att få möjlighet att fylla i en annan identitet som du vill att vi använder för att prata med dig. ^_^");
+    s('input.group.desc', 'Detta är den budgetpost som du tycker passar bäst in på ditt kvitto, välj noga!')
+    s('input.image.desc', '', true)
+    s('input.lang.desc', 'Här väljer du vilka språk denna sida ska synas för. Det är inte alltid allt innehåll är lika vettigt för alla språk.');
+    s('input.limit.desc', 'Kostnadsgränsen är brytpunkten för hur mycket vi vill lägga på denna budgetposten. Det är inte en hård gräns, men en riktlinje för när något arbete går över budget.')
+    s('input.phone.desc', '', true)
+    s('input.points.desc', '10 poäng motsvarar ungefär en krona, och den minsta mängden du kan köpa är 100 poäng. Det tillkommer även några kronor ovanpå beloppet i bankavgifter.', true)
+    s('input.publish.desc', 'Med vår framförhållning ska du förmodligen sätta nästa datum här ungefär ett halvår bakåt i tiden. :D', true);
+    s('input.purchase.desc', 'Här har du chans att motivera varför du gjort köpet, och att berätta för oss vilka delar av kvittot som ska betalas av oss (om inte alla!)')
+    s('input.sleep_at_event.desc', 'Viktigt här! Om du inte kryssar i denna rutan så får du inte sova på konventet! Detta är för att vi av brandskäl måste hålla reda på vem som sover på evenemanget.');
+    s('input.sleep.desc', 'Här fyller du i hur många sovplatser du vill ha till evenemanget. Att sova på konvent är helmysigt, och vi har en massa funktionärer på plats som kan hjälpa till om du saknar något, men tänk på att du måste själv ta med sovsäckar, kuddar, liggunderlag och mjukisdjur, det har vi inte åt dig!')
+    s('input.tickets.desc', 'Första beslutet är hur många biljetter du vill köpa! Det är såklart roligare om ni är flera som åker på en gång, och om du köper flera biljetter så kan du alltid flytta över dem till en kompis!')
+    s('input.total.name', 'Vad är totalsumman som vi ska betala på kvittot?')
+    s('input.total.desc', 'Här nedan fyller du i vad du vill få utbetalt för kvittot. Var noga!')
+    s('input.which_activity.name', 'Vilken tävling vill du gå med i?')
+    s('input.starts.desc', '', true);
+    s('input.street.desc', "", true);
+    s('input.title.desc', '', true);
+    s('input.tshirt.desc', 'Här fyller du i vilken Tshirt-storlek du behöver! Om du är anmäld till flera grupper kommer du ha fyllt i detta tidigare, och då är det den största storleken vi räknar med att du vill använda. Om du är i ett team som inte ska ha tröjor eller har annan specialuniform (till exempel en butik, eller ett scenevenemang!) så gör detta ingen skillnad.');
+    s('input.user.desc', '', true);
+    s('input.which_activity.desc', '', true)
+    s('input.work_type.desc', "", true);
+    s('input.zipCode.desc', "", true);
+    s('input.shop_tables.desc', 'När du sätter upp en större butik så behöver du ibland mer utrymme! För att vi ska kunna planera lite så önskar vi att du här fyller i hur mycket plats ni behöver specificerat i bordsyta, där ett bord är ungefär 2 meter långt.')
+    s('input.shop_size.desc', 'Nästa steg är att fylla i hur många som ska jobba i din butik under Kodachicon, inklusive dig själv. När din ansökan godkänts ska de som kommer att medverka på evenemanget anmäla sig under "Påbörja en ansökan"')
+    s('input.shop_description.desc', 'Nedan beskriver du din butik. Detta kommer att vara underlag för din ansökan, och sen även publiceras för användare här på hemsidan, så skriv en tuff beskrivning som får oss att vilja besöka just din butik!')
+    s('input.shop_image.desc', "!Nu behöver vi en bild!\nDenna bilden kommer att synas för besökare som vill se vad ni håller på med!\nBilden kommer att vara lika bred som denna rutan, och tillräckligt hög för att inte bli skev, så skicka inte en för liten bild, och se gärna till att den är liggande!");
+    s('input.shop_name.desc', 'Det första vi behöver är ditt butiksnamn, så att vi och alla besökare får reda på vem som kommer att sälja under evenemanget!')
+    s('task.register_account_ssn.title', 'Fortsätt skapa konto!')
+    s('task.report_competition_result.title', 'Rapportera tävlingsresultat')
+    s('task.review_activity.title', 'Utvärdera aktivitet')
+    s('task.review_artist_alley.title', 'Utvärdera artist alley')
+    s('task.review_receipt.title', 'Utvärdera kvitto')
+    s('task.review_team.title', 'Utvärdera team')
+    s('task.review_team_application.title', 'Utvärdera team-ansökan!')
+    s('task.review_vendor.title', 'Utvärdera försäljare')
+    s('task.schedule_activity.title', 'Schemalägg aktivitet!')
+    s('task.self_application.title', 'Fyll i dina teamuppgifter')
+    s('task.self_application.desc', 'Tjohej!\nDetta är nästan precis exakt samma text som alla som ansöker till ditt team kommer att få se! Här fyller du i alla uppgifter som vi behöver för att kunna se till att allt blir rätt när du kommer till evenemanget!')
+    s('task.ssn_exists_forgot_details.title', 'Glömt kontouppgifter?')
+    s('task.create_page.desc', 'Wooooh! Är det dags att skapa innehåll på hemsidan! Vi tror på dig, det kommer att bli fett!')
+    s('task.deny_application.desc', 'Hej! Tyvärr nekades din ansökan för {application.name}. Uppdatera din ansökan, skriv om saker och prova igen om du tycker att det blivit fel!')
+    s('task.upload_receipt.desc', 'Välkommen till vår häftiga kvittouppladdningstjänst! Här laddar du upp alla dina kvitton på utlägg under evenemanget, så slipper vi allihop tråkigt pappersarbete!')
+    s('task.deny_receipt.desc', 'Hej! Tyvärr nekades betalningen av ditt kvittoutlägg.\nOm du tycker att detta är felaktigt så ber vi dig kontakta ekonomi@kodachi.se och beskriva ditt problem.')
+    s('task.email_team.desc', 'Här mailar du ditt team! Det du skriver här kommer att skickas iväg som ett mail till alla i teamet, så använd det bara om du har något viktigt att säga! ^_^')
+    s('task.forgot_account_details.desc', 'Jaså, du har tappat bort ditt konto? Det löser vi!')
+    s('task.goto_payson.desc', '', true)
+    s('task.join_competition.desc', 'Jaså! Du är pigg på att tävla? Bara fyll i vilken tävling du vill anmäla dig till så kontaktar vi dig om vi behöver mer information, annars är det bara att dyka upp!')
+    s('task.join_work.desc', 'Jaså? Det är dags att jobba på event? Härligt! Välj vilket team du vill söka till och fyll i världens bästa ansökan, så kör vi!')
+    s('task.pay_receipt.desc', 'Detta är en påminnelse! Tryck *inte* OK förrän följande kvitto är utbetalt!\nKontonr:{receipt.account_no}\nClearingnr:{receipt.clearing_no}\nSumma:{receipt.total}\nMottagare:{user.givenName} {user.lastName}')
+    s('input.country.desc', '', true)
+    s('input.shop_available_days.desc', '', true)
+    s('task.report_competition_result.desc', 'Här rapporterar du in hur en tävling gick. Gör en rapport för varje vinnare som har fått pris!')
+    s('input.value.short', 'Kort (15-30min)')
+    s('input.value.medium', 'Mellan (30-60min)')
+    s('input.value.long', 'Lång (1-3timmar)')
+    s('input.value.half_day', 'Halvdag (3-6timmar)')
+    s('true', 'Ja')
+    s('false', 'Nej')
 
-    s('task.error.emptyFields', 'Du har glömt att fylla i några av fälten! Fixa det och testa igen!');
+    s('task.review_activity.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nAktivitet: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\nSchemadagar:{application.schedule}\nSchematider:{application.avail_times}\nLängd:{application.length}\nDeltagartal:{application.participants}\n{|application.desc}\n')
+    s('task.review_team.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nTeamnamn: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\nSchemadagar:{application.schedule}\nSchematider:{application.avail_times}\n{|application.desc}\n')
+
+
+    s('task.review_artist_alley.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nArtistAlley: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n{|application.desc}\n')
+    s('task.review_vendor.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nArtistAlley: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n{|application.desc}\n')
+    s('task.review_team_application.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nAktivitet: {application.team.label}\nStädar söndag:{application.can_cleanup_sunday}\nTillgänglig onsdag:{application.can_work_wednesday}\nSover på eventet:{{application.sleep_at_event}}\n{|application.app_description}\n')
+    
+    s('task.review_receipt.desc', 'Tjohej! Det har kommit in ett kvitto du behöver ta ställning till! \n@({receipt.image})\nSumma:{receipt.total}\nMottagare:{user.nickname}\nBudgetpost:{receipt.group}\nInköp:{receipt.purchase}')
+
 }
