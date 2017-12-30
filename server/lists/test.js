@@ -1,6 +1,7 @@
 
 
 module.exports = (app) => {
+    if(true) return;
 
     app.listApi.create_list("test", "tasks", ['anonymous', 'user'], {}, 
     (inst, ctx) => {
