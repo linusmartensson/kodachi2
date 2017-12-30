@@ -33,6 +33,8 @@ module.exports = async (app) => {
                 if(!/\.$/.test(list.starter_roles[v])) continue;
                 list.starter_roles[v] = list.starter_roles[v]+split[1];
             }
+        } else {
+            if(api.eventList(list)) return false;
         }
         return list;
 
