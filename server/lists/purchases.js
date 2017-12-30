@@ -55,7 +55,7 @@ module.exports = (app) => {
 
         //for tickets
         for(var v in tickets){
-            var ticket = tickets.records[v].get('t').properties;
+            var ticket = tickets[v].get('t').properties;
             ticketTypes[ticket.type].push(ticket);
         }
         
