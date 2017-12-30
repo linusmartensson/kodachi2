@@ -68,6 +68,7 @@ module.exports = async (app) => {
     api.add_filter("hours", (d)=>{return d;}); //TODO How2handle hours??
     api.add_filter("dropdown", (d,q)=>{ //Index of values-list.
         d = JSON.parse(d);
+        if(q.values.length == 0) return '';
         if(!Array.isArray(d) || d.length < 1) throw 'Invalid dropdown selection';
         d = d[0];
         if(~~d >= q.values.length) throw 'Invalid dropdown selection';
@@ -405,7 +406,7 @@ module.exports = async (app) => {
                 var uuid = app.uuid();
                 var tasktype = inst.next_tasks[n];
                 if(typeof inst.next_tasks[n] === 'object'){
-                    uuid = tasktype.uuid;
+                    uuid = tasktype.uuid || uuid;
                     tasktype = tasktype.task;
                 }
                 var child_task = api.getTask(tasktype);
@@ -414,7 +415,7 @@ module.exports = async (app) => {
                 }
                 var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst.id, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
                 if(typeof inst.next_tasks[n] === 'object'){
-                    if(tasktype.handlers) child_inst.handler_roles = tasktype.handlers;
+                    if(inst.next_tasks[n].handlers) child_inst.handler_roles = inst.next_tasks[n].handlers;
                 }
 
                 inst.childIds.push(uuid);
@@ -454,10 +455,10 @@ module.exports = async (app) => {
                 response = api.filterResponse(response, task.inputs);
             }
         } catch (e) {
-            console.log("Task processing error:");
             inst.error = "{task.error.filterFailure}";
             inst.result = 'WAIT_RESPONSE';
             await updateTaskInstance(task_id, inst)
+            console.log("Task processing error: "+inst.error);
             return 'RETRY';
         }
 
