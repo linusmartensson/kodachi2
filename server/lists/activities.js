@@ -22,7 +22,7 @@ module.exports = (app) => {
                     id:0, panels:[
                         {id:0, content:[{id:0, type:'text', text:team.name}]},
                         {id:1, content:[{id:0, type:'text', text:members.records.length+"/"+team.size}]},
-                        {id:2, content:[{id:0, type:'editbutton', text:"Email team", task:'email_team', data:{team:team.id}}]}
+                        {id:2, content:[{id:0, type:'editbutton', text:"Email team", task:'email_team.'+inst.start_data.event_id, data:{team:team.id}}]}
                     ]
                 }], id:content.length};
 
@@ -31,14 +31,11 @@ module.exports = (app) => {
 
                 //list team
                 var r = {tiers:[], id:content.length};
-                console.dir(members);
                 for(var w in members.records){
                     var member = members.records[w];
 
                     var t = member.get('t').properties;
                     var u = member.get('u').properties;
-                    console.dir(t);
-                    console.dir(u);
 
                     r.tiers.push({
                         id:r.tiers.length,
@@ -90,12 +87,12 @@ module.exports = (app) => {
                     id:0, panels:[
                         {id:0, content:[{id:0, type:'caption', text:team.name}, {id:1, type:'image', image:team.image}]},
                     ]
-                },{
+                }/*,{ -- This will not be viable to have here until we get the scheduling integrated in the website.
                     id:1, panels:[
                         {id:0, content:[{id:0, type:'text', text:app.stringApi.get_string('list.show_activities.times', lang)}]},
                         {id:1, content:[{id:0, type:'text', text:team.schedule.map(function(s){return app.stringApi.get_string(s, lang)}).join(", ")}]}
                     ]
-                }], id:content.length};
+                }*/], id:content.length};
                 var desc = app.stringApi.bookParser(team.desc, app.uuid());
 
                 teamdesc.tiers = teamdesc.tiers.concat(desc[0].tiers);
