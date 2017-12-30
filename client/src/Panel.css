@@ -84,6 +84,7 @@ font-size:1.5em;
     width:90%;
 }
 .Panel .Surface{
+    width:95% !important;
     margin:0;padding:0;
 }
 .Panel .Tier{

@@ -30,7 +30,7 @@ class Editor extends Component {
         if(this.props.editors[elem.id]){
             current = this.props.editors[elem.id];
             var book = bookParser(current, elem.id);
-            if(current.length > 0) extra = <Surface pages={book} />;
+            if(current.length > 0) extra = <Surface key="0" pages={book} />;
         }
         return <div><textarea onChange={this.handleChange} autoCapitalize="sentences" autoComplete="off" cols="60" rows="8" placeholder="Texttexttext!" className="PanelEditor" key={elem.id} name={elem.id} value={current} />{extra}</div>
     }
@@ -141,10 +141,14 @@ class Panel extends Component {
         switch(elem.type){
             case 'caption': return <Caption key={elem.id} content={elem.text} strength={elem.strength} />;
             case 'clear': return <div key={elem.id} style={{clear:'both'}}></div>
-            case 'text': return <p className="PanelText" key={elem.id}>{elem.text}</p>;
+            case 'text': 
+                if(typeof elem.text === 'object') {
+                    return <Surface key={elem.id} pages={elem.text} />
+                } else return <p className="PanelText" key={elem.id}>{elem.text}</p>;
             case 'speechbubble': return <SpeechBubble position={elem.position} key={elem.id} text={elem.text} speaker={elem.image} />;
             case 'image': return <img className="Image" key={elem.id} alt={elem.text} src={elem.image} />;
-            case 'editbutton': return (<Tool key={elem.id} task={elem.tool} name={elem.text} data={elem.data} />)
+            case 'editbutton': 
+                return (<Tool key={elem.id} task={elem.task} name={elem.text} data={elem.data} />)
             case 'button': return <input className="PanelButton" type="submit" onClick={(e)=>{e.target.clicked=true;}} key={elem.id} name={elem.id} value={elem.text} />
             case 'input_password': return <input className="PanelInput" type="password" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_ssn': return <input placeholder='YYMMDD-NNNN' className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
