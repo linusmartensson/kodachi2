@@ -11,9 +11,9 @@ module.exports = (app) => {
 
         var users = {};
         for(var v in all_tickets){
-            var user = all_tickets.get('u').properties;
+            var user = all_tickets[v].get('u').properties;
             if(!users[user.id]) users[user.id] = {user, tickets:[]};
-            users[user.id].tickets.push(all_tickets.get('t').properties);
+            users[user.id].tickets.push(all_tickets[v].get('t').properties);
         }
 
         var content = [];
