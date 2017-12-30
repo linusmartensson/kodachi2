@@ -171,7 +171,7 @@ module.exports = async (app) => {
     }
 
     async function findTaskByType(ctx, type){
-        var t = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.type={type} AND s.id={sessionId} RETURN t", {type:type, sessionId:ctx.session.localSession})).records;
+        var t = (await app.cypher("MATCH (t:Task {type:{type}}), (s:Session {id:{sessionId}}) WHERE (t)-[:HANDLED_BY]->(s) OR (t)-[:HANDLED_BY]->(:User)-[:HAS_SESSION]->(s) OR (t)-[:HANDLED_BY]->(:Role)<-[:HAS_ROLE]-(:User)-[:HAS_SESSION]->(s) RETURN t", {type:type, sessionId:ctx.session.localSession})).records;
         if(!t || t.length==0) return null;
         return t;
     }
@@ -189,7 +189,7 @@ module.exports = async (app) => {
         return undefined;
     }
     async function notifyTask(task_id){
-        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:task_id})).records;
+        var s = (await app.cypher("MATCH (t:Task {id:{target}}), (s:Session) WHERE (t)-[:HANDLED_BY]->(s) OR (t)-[:HANDLED_BY]->(:User)-[:HAS_SESSION]->(s) OR (t)-[:HANDLED_BY]->(:Role)<-[:HAS_ROLE]-(:User)-[:HAS_SESSION]->(s) RETURN s", {target:task_id})).records;
 
         var q = [];
         for(let m of s){
@@ -204,13 +204,13 @@ module.exports = async (app) => {
 
         if(api.externalTask(task)) return true;
 
-        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} AND s.id={sessionId} RETURN s", {target:task_id, sessionId:ctx.session.localSession})).records;
+        var s = (await app.cypher("MATCH (t:Task {id:{target}}), (s:Session {id:{sessionId}}) WHERE (t)-[:HANDLED_BY]->(s) OR (t)-[:HANDLED_BY]->(:User)-[:HAS_SESSION]->(s) OR (t)-[:HANDLED_BY]->(:Role)<-[:HAS_ROLE]-(:User)-[:HAS_SESSION]->(s) RETURN s", {target:task_id, sessionId:ctx.session.localSession})).records;
         if(!s || s.length==0) return false;
         return true;
     }
     async function finishTask(task_id){
         //Find sessions
-        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE t.id={target} RETURN s", {target:task_id})).records;
+        var s = (await app.cypher("MATCH (t:Task {id:{target}}), (s:Session) WHERE (t)-[:HANDLED_BY]->(s) OR (t)-[:HANDLED_BY]->(:User)-[:HAS_SESSION]->(s) OR (t)-[:HANDLED_BY]->(:Role)<-[:HAS_ROLE]-(:User)-[:HAS_SESSION]->(s) RETURN s", {target:task_id})).records;
         
         var q = [];
         for(let m of s){

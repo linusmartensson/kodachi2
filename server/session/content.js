@@ -3,7 +3,7 @@ module.exports = app => {
     app.sessionApi.register(async (ctx, state) => {
         state.books = [];
         
-        var content = await app.cypher('MATCH (c:Content), (s:Session) WHERE (c)<-[:HAS_ACCESS]-()-[*0..2]-(s) AND (c.lang={lang} OR NOT EXISTS(c.lang) OR c.lang="all") AND s.id={sessionId} RETURN c', {lang:await app.userApi.getLanguage(ctx), sessionId:ctx.session.localSession});
+        var content = await app.cypher('MATCH (c:Content), (s:Session) WHERE (c)<-[:HAS_ACCESS]-(:Role)<-[:HAS_ROLE]-(:User)-[:HAS_SESSION]->(s) AND (c.lang={lang} OR NOT EXISTS(c.lang) OR c.lang="all") AND s.id={sessionId} RETURN c', {lang:await app.userApi.getLanguage(ctx), sessionId:ctx.session.localSession});
         var activeEvent = await app.userApi.getActiveEvent(ctx);
 
         var e = await app.userApi.getActiveEvent(ctx);

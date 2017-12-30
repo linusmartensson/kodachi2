@@ -8,7 +8,7 @@ module.exports = (app) => {
         var roles = await app.userApi.getUserRoles(ctx);
         var activeEvent = (await app.userApi.getActiveEvent(ctx)).id;
         
-        var s = (await app.cypher("MATCH (t:Task)-[:HANDLED_BY]->()-[*0..2]-(s:Session) WHERE s.id={id} RETURN t", {id:ctx.session.localSession})).records;
+        var s = (await app.cypher("MATCH (t:Task), (s:Session {id:{sessionId}}) WHERE (t)-[:HANDLED_BY]->(s) OR (t)-[:HANDLED_BY]->(:User)-[:HAS_SESSION]->(s) OR (t)-[:HANDLED_BY]->(:Role)<-[:HAS_ROLE]-(:User)-[:HAS_SESSION]->(s) RETURN t", {sessionId:ctx.session.localSession})).records;
 
         var uniques = {};
 
