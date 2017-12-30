@@ -22,6 +22,14 @@ module.exports = (app) => {
             if(uniques[t]) {
                 continue;
             }
+            var hide = false;
+            for(var q of app.tasks[t].inputs){
+                if(q.hide) {
+                    hide = true;
+                    break;
+                }
+            }
+            if(hide) continue;
             var rs = app.tasks[t].starter_roles;
             var event_task = false;
             if(app.taskApi.eventTask(app.tasks[t])){

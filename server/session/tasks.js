@@ -39,6 +39,7 @@ module.exports = async (app) => {
         await app.stringApi.translate(ctx, tasks);
         for(var v of tasks){
             await app.stringApi.parseDeep(v.description, v.data); 
+            await app.stringApi.translate(ctx, v.description, await app.userApi.getLanguage(ctx)); 
         }
         state.tasks = tasks;
     });
