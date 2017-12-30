@@ -18,7 +18,7 @@ module.exports = (app) => {
     r.get('/__verifyEmail/:code', async (ctx, next) => {
         var code = ctx.params.code;
 
-        await app.cypher('MATCH (u:User {verifyCode:{code}} SET u.verified = true');
+        await app.cypher('MATCH (u:User {verifyCode:{code}}) SET u.verified = true');
 
         ctx.body = "Kontot har verifierats! ^_^";
 
