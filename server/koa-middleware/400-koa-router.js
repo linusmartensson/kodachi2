@@ -24,6 +24,7 @@ module.exports = (app) => {
 
     });
     
+    app.koa.use(mount('/img', require('koa-static')(__dirname + '/../../client/build/img', {maxage:1000*60*60})))
     app.koa.use(mount('/', require('koa-static')(__dirname + '/../../client/build/')))
 
 	app.koa.use(r.routes());
