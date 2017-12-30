@@ -7,9 +7,10 @@ module.exports = async (app) => {
     api.create_string = (name, string) => {
         app.strings[name] = string;
     }
-    api.add_string = (lang, name, string) => {
+    api.add_string = (lang, name, string, nolog) => {
         if(!app.strings[name]) app.strings[name] = {};
         app.strings[name][lang] = string;
+        if(string === '' && !nolog) console.log("Empty string: "+name);
     }
     api.add_strings = (nls) => {
         for(var v in nls){
@@ -29,7 +30,7 @@ module.exports = async (app) => {
             while(name.length){
                 if(!t[name[0]]) {
                     console.log("s('"+orig+"', '')"); 
-                    return '';
+                    return orig;
                 }
                 t = t[name[0]];
                 name = name.slice(1);
@@ -84,6 +85,15 @@ module.exports = async (app) => {
                     position:c>1?'right':'left',
                     text:q[0],
                     image:q.length>1?q[1]:undefined
+                });
+            },
+            '@': function(s){
+               var c = s.search(/[^(]/);
+               var q = s.slice(c).split(')');
+                panel.content.push({
+                    id:pos++ + idbase,
+                    type:'image',
+                    image:q[0]
                 });
             },
             '#': function(s){
@@ -154,16 +164,16 @@ module.exports = async (app) => {
             v = api.get_string(q, tokens);
             return api.bookParser(v&&v.length>0?v:undefined, q);
         }
-        if(v.startsWith("{")){
-            var r = v.replace(/{[^}]+}/g, function(m){
-                m = m.slice(1, -1);
-                var q = api.get_string(m, tokens);
-                if(q === undefined) return m;
-                return q;
-            });
-            return r;
-        }
-        return v;
+        var count = 1;
+        var total = 0;
+        var r = v.replace(/{[^{}]+}/g, function(m){
+            count++;
+            m = m.slice(1, -1);
+            var q = api.get_string(m, tokens);
+            if(q === undefined) return m;
+            return q;
+        });
+        return r;
     }
     api.userParse = async (ctx, v, lang) => {
         if(!lang)
