@@ -23,13 +23,15 @@ module.exports = (app) => {
         ctx.response.body = "Kontot har verifierats! ^_^";
 
     });
-    r.use('/*', async(ctx, next) => {
-        ctx.redirect('/');
-    });
     
     app.koa.use(mount('/', require('koa-static')(__dirname + '/../../client/build/')))
 
 	app.koa.use(r.routes());
 	app.koa.use(r.allowedMethods());
+
+    app.koa.use(async(ctx, next) => {
+        if(ctx.response.status == '404')
+            ctx.redirect('/');
+    });
 
 }
