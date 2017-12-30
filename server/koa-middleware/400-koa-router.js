@@ -23,6 +23,9 @@ module.exports = (app) => {
         ctx.response.body = "Kontot har verifierats! ^_^";
 
     });
+    r.use('/*', async(ctx, next) => {
+        ctx.redirect('/');
+    });
     
     app.koa.use(mount('/', require('koa-static')(__dirname + '/../../client/build/')))
 
