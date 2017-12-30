@@ -1,8 +1,6 @@
 HIGH
-* update missing strings
 * forgot password
 * transfer tickets
-* join competitions
 
 
 MEDIUM
@@ -11,17 +9,23 @@ MEDIUM
 
 LOW
 * promote admin
+* join specific activity timeslots
+* deltagarsidor för tävlingar & aktiviteter (Visa deltagarlista m.m.)
 
 
 LOWEST
 * achievement ui notification
 * list achivements
 
+
 AFTER NEW YEAR
 * manage points
 * trade in points for things
 * Update teams/activities/vendors/artistalley layout to make it more pretty
 * pay+register on-site ui
+
+* Remove team/activity/etc
+* add/remove managers for teams
 
 DESCOPED 
 * set current event (reason: always use latest. Fuck history :v)
