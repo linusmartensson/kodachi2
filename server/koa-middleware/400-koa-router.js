@@ -15,7 +15,7 @@ module.exports = (app) => {
     //Handle tasks
     r.use('/task', require('../router/task')(app).routes());
 
-    r.use('/verifyEmail/:code', async (ctx, next) => {
+    r.use('/__verifyEmail/:code', async (ctx, next) => {
         var code = ctx.params.code;
 
         await app.cypher('MATCH (u:User {verifyCode:{code}} SET u.verified = true');
