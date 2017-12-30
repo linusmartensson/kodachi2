@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom'
 
 import {actions} from './reducers/root.js'
 
+var _ = require('lodash');
 var List = (props) => {
     return (
         <div className="Tool">
@@ -29,17 +30,23 @@ const ListContainer = connect(
 class Toolbox extends Component {
   render() {
     
-    const tools = this.props.tools.map((tool) => 
+    var sortfn = (a,b) => {
+        var A = a.title || a.name || a.id;
+        var B = b.title || b.name || b.id;
+        return A<B?-1:A>B?1:0;
+    }
+
+
+    const tools = _.cloneDeep(this.props.tools).sort(sortfn).map((tool) => 
         <Tool key={tool.id} name={tool.title} task={tool.task} />
     );
     var tcount = 0, lcount = 0;
-    const tasks = this.props.tasks.map((task) => {
+    const tasks = _.cloneDeep(this.props.tasks).sort(sortfn).map((task) => {
 
         for(var v of task.type.inputs) {
             //Hide tasks that finish automatically, as long as they're showing.
            
             if(v.autocancel && this.props.currentTask && this.props.currentTask.task) return null;
-            if(v.hide) return null;
         }
         if(task.result !== 'WAIT_RESPONSE') return null;
 
@@ -47,15 +54,16 @@ class Toolbox extends Component {
 
         return (<Task key={task.id} task={task} data={{}} />)
     });
-    const lists = this.props.lists.map((list) => {
+    const lists = _.cloneDeep(this.props.lists).sort(sortfn).map((list) => {
         lcount++;
         return (<ListContainer key={list.id} list={list} />)        
     });
 
       var taskbox = tcount>0?<div className="Taskbox">{tasks}</div>:null;
       var listbox = lcount>0?<div className="Listbox">{lists}</div>:null;
+      var toolbox = tools.length>0?<div className="Toolbox">{tools}</div>:null;
 
-    return (<div>{taskbox}{listbox}<div className="Toolbox">{tools}</div></div>);
+    return (<div>{taskbox}{toolbox}{listbox}</div>);
   }
 }
 
