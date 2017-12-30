@@ -40,7 +40,7 @@ module.exports = async (app) => {
                 var w = q.get('u').properties;
                 v.values.push(w.email);
             }
-        }}, {field:'type', type:'dropdown', values:['admin', 'budget', 'schedule']}),
+        }}, {field:'type', type:'dropdown', values:['admin', 'budget', 'schedule', 'artist_alley_admin', 'vendor_admin', 'team_admin', 'activity_admin']}),
         async (inst, ctx) => {
             if(inst.response.cancel) return 'OK';
 

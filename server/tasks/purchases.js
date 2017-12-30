@@ -120,7 +120,7 @@ module.exports = async (app) => {
             });
     app.taskApi.create_task('purchases', 'buy_points',
             ['user'],[],
-            app.taskApi.okcancel().concat({field:'points', type:'dropdown', values:[100, 500, 1500, 3000]}),
+            app.taskApi.okcancel().concat({hide:true, field:'points', type:'dropdown', values:[100, 500, 1500, 3000]}),
             async (inst, ctx) => {
                 if(inst.response.cancel) return 'OK';
                 inst.data.numTickets = 0;

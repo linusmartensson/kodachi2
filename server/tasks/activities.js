@@ -2,7 +2,7 @@
 module.exports = async (app) => {
 
     app.taskApi.create_task('activity', 'email_team', ['manager.', 'team_member.'], [],
-        app.taskApi.okcancel().concat({hidden:true}
+        app.taskApi.okcancel().concat({event_task:true, hide:true}
         ,{field:'email_topic', type:'text'}
         ,{field:'email_text', type:'text'}
         ),
@@ -20,6 +20,7 @@ module.exports = async (app) => {
                 await app.userApi.emailUser(u.id, inst.response.email_topic, inst.response.email_text, inst.response.email_text);
             }
 
+            return 'OK';
 
 
         }, async(inst, ctx) => {return 'OK'});
@@ -96,6 +97,8 @@ module.exports = async (app) => {
         ), async(inst, ctx) => {
 
             inst.data.application = inst.response;
+            inst.data.user = await app.userApi.getUser(await app.userApi.userId(ctx));
+            delete inst.data.user.password;
 
             inst.next_tasks.push({'handlers': [
                 'manager.'+inst.response.team, 'admin.'+inst.data.start_data.event_id,
@@ -136,7 +139,7 @@ module.exports = async (app) => {
         ], async(inst, ctx) => {
             var q = inst.response;
             q.id = inst.origin;
-            q.team = inst.data.application.team;
+            q.team = inst.data.application.team || inst.data.application.activity || inst.data.application.shop;
 
             await app.cypher('MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}}]->(t)', q);
             
@@ -203,9 +206,8 @@ module.exports = async (app) => {
             }
             if(app.taskApi.emptyFields(inst)) return 'RETRY';
             var q = {};
-            q.type = 'activity';
+            q.type = inst.response.act_format;
             q.name = inst.response.act_name;
-            q.format = inst.response.act_format;
             q.desc = inst.response.act_description;
             q.size = inst.response.act_size;
             q.image = inst.response.act_image;
@@ -262,8 +264,10 @@ module.exports = async (app) => {
         async (inst, ctx) => {
             if(inst.response.no){
                 inst.next_tasks.push('deny_application');
+                app.userApi.emailUser(inst.origin, '{email.app_denied.subject}','{email.app_denied.text}','{email.app_denied.text.html}');
                 return 'OK';
             }
+            await app.userApi.emailUser(inst.origin, '{email.app_accepted.subject}','{email.app_accepted.text}','{email.app_accepted.text.html}');
             var q = inst.data.application;
             var team = app.uuid();
             q.team = team;
@@ -272,7 +276,7 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id);
             await app.roleApi.addRole(inst.origin, q.teamRole);
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
-            await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{team}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, open:{open}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{team}, type:{type} ,name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, open:{open}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
 
             inst.next_tasks.push('accept_application');
             inst.next_tasks.push('self_application');
@@ -287,8 +291,10 @@ module.exports = async (app) => {
         async (inst, ctx) => {
             if(inst.response.no){
                 inst.next_tasks.push('deny_application');
+                app.userApi.emailUser(inst.origin, '{email.app_denied.subject}','{email.app_denied.text}','{email.app_denied.text.html}');
                 return 'OK';
             }
+            await app.userApi.emailUser(inst.origin, '{email.app_accepted.subject}','{email.app_accepted.text}','{email.app_accepted.text.html}');
             var q = inst.data.application;
             var activity = app.uuid();
             q.event_id = inst.data.start_data.event_id;
@@ -297,10 +303,10 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id);
             await app.roleApi.addRole(inst.origin, q.activityRole);
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
-            if(q.format === 'competition'){
+            if(q.type === 'competition'){
                 await app.roleApi.addRole(inst.origin, 'competition_manager.'+q.event_id);
             }
-            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{activity}, name:{name}, format:{format}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, avail_times:{avail_times}, length:{length}, budget:{budget}, uniform:{uniform}, participants:{participants}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{activity}, name:{name}, type:{type}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, avail_times:{avail_times}, length:{length}, budget:{budget}, uniform:{uniform}, participants:{participants}})-[:PART_OF]->(e)", q);
 
 
             inst.next_tasks.push('accept_application');
@@ -312,30 +318,29 @@ module.exports = async (app) => {
         });
 
     app.taskApi.create_task('activity', 'report_competition_result', ['competition_manager.'], [], 
-        [
+        app.taskApi.okcancel().concat(
             {event_task:true}, 
-            {field:'ok', type:'button'}, 
-            {field:'category', type:'simpletext'}, 
             {field:'competition', type:'dropdown', prepare:async(v, ctx, task) => {
-                var w = (await app.cypher('MATCH (w:WorkGroup {type:"competition"})-[:MANAGED_BY]->(r:Role)<-[:HAS_ROLE]-(u:User {id:{id}}) RETURN w'), {id:app.userApi.userId(ctx)}).records;
+                var w = (await app.cypher('MATCH (:Event {id:{evt}})--(w:WorkGroup {type:"competition"})-[:MANAGED_BY]-(r:Role)-[:HAS_ROLE]-(u:User {id:{id}}) RETURN w', {evt:task.data.start_data.event_id,id:await app.userApi.userId(ctx)})).records;
                 v.values = [];
                 for(var r of w){
                     var team = r.get('w').properties;
                     v.values.push({label:team.name, id:team.id});
                 }
             }},
+            {field:'category', type:'text'}, 
             {field:'user', type:'dropdown', prepare:async(v, ctx, task) => {
                 var w = (await app.cypher('MATCH (u:User) RETURN u')).records;
                 v.values = [];
                 for(var r of w){
                     var team = r.get('u').properties;
-                    v.values.push({label:team.givenName+" \""+team.nickname+" \" "+team.familyName, id:team.id});
+                    v.values.push({label:team.nickname, id:team.id});
                 }
             }}
-        ],
+        ),
         async (inst) => {
             var q = inst.response;
-            await app.cypher("MATCH (w:WorkGroup {id:{competition}}), (u:User {id:{user}}) CREATE (w)<-[:WINNER {category:{category}}]-(u)", {competition:q.competition, category:q.category, user:q.user});
+            await app.cypher("MATCH (w:WorkGroup {id:{competition}}), (u:User {id:{user}}) CREATE (w)<-[:WINNER {category:{category}}]-(u)", {competition:q.competition.id, category:q.category, user:q.user.id});
             return 'OK';
         }, async(inst) => {
             return 'OK';
@@ -363,9 +368,10 @@ module.exports = async (app) => {
         async (inst, ctx) => {
             if(inst.response.no){
                 inst.next_tasks.push('deny_application');
+                app.userApi.emailUser(inst.origin, '{email.app_denied.subject}','{email.app_denied.text}','{email.app_denied.text.html}');
                 return 'OK';
             }
-
+            await app.userApi.emailUser(inst.origin, '{email.app_accepted.subject}','{email.app_accepted.text}','{email.app_accepted.text.html}');
             var q = inst.data.application;
             var shop = app.uuid();
             q.shop = shop;
@@ -389,8 +395,10 @@ module.exports = async (app) => {
         async (inst, ctx) => {
             if(inst.response.no){
                 inst.next_tasks.push('deny_application');
+                app.userApi.emailUser(inst.origin, '{email.app_denied.subject}','{email.app_denied.text}','{email.app_denied.text.html}');
                 return 'OK';
             }
+            await app.userApi.emailUser(inst.origin, '{email.app_accepted.subject}','{email.app_accepted.text}','{email.app_accepted.text.html}');
             
             var q = inst.data.application;
             var shop = app.uuid();
@@ -418,6 +426,50 @@ module.exports = async (app) => {
         });
 
     app.taskApi.create_task('activity', 'deny_application', [], [],
+        [{event_task:true}, {field:'ok', type:'button'}],
+        async (inst, ctx) => {
+            return 'OK';
+        }, async (inst) => {
+            return 'OK';
+        });
+
+    app.taskApi.create_task('activity', 'join_competition', ['visitor.', 'team_member.', 'admin.', 'overseer.'], [],
+        app.taskApi.okcancel().concat({event_task:true}, 
+            {field:'which_activity', type:'dropdown', prepare:async(v, ctx, task) => {
+                var w = (await app.cypher('MATCH (:Event {id:{event}})--(w:WorkGroup {type:"competition"}), (u:User {id:{id}}) WITH w,u,SIZE((w)<-[:COMPETING_IN]-(:User)) as competitors WHERE NOT (w)<-[:COMPETING_IN]-(u) AND toInt(competitors) < toInt(w.participants) RETURN w,competitors', {event:task.data.start_data.event_id, id:await app.userApi.userId(ctx)})).records;
+                v.values = [];
+                for(var r of w){
+                    var team = r.get('w').properties;
+                    v.values.push({label:team.name+" ("+r.get('competitors')+"/"+team.participants+")", id:team.id});
+                }
+            }},
+            ),
+        async (inst, ctx) => {
+            if(inst.response.cancel) return 'OK';
+            if(!inst.response.which_activity) return 'OK';
+
+            var w = inst.response.which_activity;
+
+            var role = await app.cypher('MATCH (r:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{activity}}), (u:User {id:{user}}) CREATE (w)<-[:COMPETING_IN]-(u) RETURN r,w', {activity:w.id, user:await app.userApi.userId(ctx)});
+            inst.data.competition = role.records[0].get('w').properties;
+
+
+            var role = role.records[0].get('r').properties.type;
+            
+            inst.next_tasks.push({handlers: [
+                role, 'overseer.'+inst.data.start_data.event_id
+            ], task:'new_competitor'});
+
+
+
+
+
+            return 'OK';
+        }, async (inst) => {
+            return 'OK';
+        });
+
+    app.taskApi.create_task('activity', 'new_competitor', [], [],
         [{event_task:true}, {field:'ok', type:'button'}],
         async (inst, ctx) => {
             return 'OK';

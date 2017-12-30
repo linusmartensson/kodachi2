@@ -8,6 +8,8 @@ module.exports = async (app) => {
             {field:'purchase', type:'text'}, 
             {field:'image', type:'image'}, 
             {field:'total', type:'number'},
+            {field:'account_no', type:'text'},
+            {field:'clearing_no', type:'simpletext'},
             {field:'group', type:'dropdown', prepare:async (v, ctx)=>{
                 var r = await app.cypher('MATCH (r:BudgetGroup)-->(e:Event {id:{event}}) RETURN r', {event:(await app.userApi.getActiveEvent(ctx)).id});
                 v.values = [];
@@ -28,6 +30,8 @@ module.exports = async (app) => {
             inst.data.event = (await app.userApi.getActiveEvent(ctx)).id;
 
             inst.data.receipt = inst.response;
+            inst.data.user = await app.userApi.getUser(await app.userApi.userId(ctx));
+            delete inst.data.user.password;
             inst.data.receipt.id = app.uuid();
             inst.next_tasks.push('review_receipt');
             return 'OK';
@@ -73,9 +77,12 @@ module.exports = async (app) => {
         [], [], [{event_task:true, field:'ok', type:'button'}],
         async (inst) => {return 'OK';}, async(inst)=>{return 'OK'});
 
-    app.taskApi.create_task('budget', 'add_budgetgroup', [],['budget.', 'admin.'], [{event_task:true, field:'type',type:'simpletext'},{field:'limit', type:'number'}],
+    app.taskApi.create_task('budget', 'add_budgetgroup', ['budget.', 'admin.','overseer.'],[], app.taskApi.okcancel().concat({event_task:true, field:'budget_type',type:'simpletext'},{field:'limit', type:'number'}),
         async(inst, ctx) => {
-            await app.budgetApi.addGroup((await app.userApi.getActiveEvent(ctx)).id, inst.response.type, inst.response.limit);
+            if(inst.response.cancel) return 'OK';
+            if(app.taskApi.emptyFields(inst)) return 'RETRY';
+
+            await app.budgetApi.addGroup(inst.data.start_data.event_id, inst.response.budget_type, inst.response.limit);
             return 'OK';
         },
         async(inst) => {return 'OK'});
