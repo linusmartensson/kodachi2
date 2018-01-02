@@ -48,7 +48,7 @@ module.exports = (app) => {
         return await query(ssn);
     }
 
-    app.taskApi.create_task('account', 'add_role',
+    app.taskApi.create_task('account', 'add_super_role',
             ['admin'],[],
             app.taskApi.okcancel().concat({hide:true,autocancel:true, field:'role', type:'simpletext'}),
             async (inst, ctx) => {

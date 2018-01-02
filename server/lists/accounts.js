@@ -19,7 +19,7 @@ module.exports = (app) => {
 
             rows.push({id:rows.length, panels:[
                 {id:0, content:[{id:0, type:'text', text:user.givenName +" \""+user.nickname+"\" "+user.lastName}]},
-                {id:1, content:[{id:0, type:'editbutton', text:"Add powers", task:"add_role", data:{id:user.id}}]}
+                {id:1, content:[{id:0, type:'editbutton', text:"Add powers", task:"add_super_role", data:{id:user.id}}]}
             ]});
         }
 
