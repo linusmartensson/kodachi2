@@ -1,8 +1,6 @@
 HIGH
 * forgot password
 * transfer tickets & update ticket page
-* switch default enter behavior in tasks to ok/yes or noOp
-* auto-redirect http -> https
 
 
 MEDIUM
@@ -11,7 +9,6 @@ MEDIUM
 
 
 LOW
-* promote admin
 * join specific activity timeslots
 * deltagarsidor för tävlingar & aktiviteter (Visa deltagarlista m.m.)
 

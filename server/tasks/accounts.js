@@ -48,6 +48,17 @@ module.exports = (app) => {
         return await query(ssn);
     }
 
+    app.taskApi.create_task('account', 'add_role',
+            ['admin'],[],
+            app.taskApi.okcancel().concat({hide:true,autocancel:true, field:'role', type:'simpletext'}),
+            async (inst, ctx) => {
+                if(inst.response.ok) return 'OK';
+                if(app.taskApi.emptyFields(inst)) return 'RETRY';
+
+                await app.roleApi.addRole(inst.data.start_data.id, inst.response.role, 2500);
+
+                return 'OK';
+            });
     app.taskApi.create_task('account', 'logout',
             ['user'],[],
             app.taskApi.okcancel().concat({onSession:true,unique:true,autocancel:true}),
