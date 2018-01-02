@@ -165,6 +165,10 @@ module.exports = (app) => {
     s('role.user', "Konventare");
     s('role.visitor', "Kodachiturist");
     s('sat', "Lördag");
+    s('stafftest.error.the_person', 'Njäääe! Det är helst inte så vi ska benämna folk vi inte känner på konvent!');
+    s('stafftest.error.save', 'Inte riktigt! Det finns en sak som är absolut viktigare än allt annat om det brinner!');
+    s('stafftest.error.the_boss', 'Faktiskt inte! Det är bara en person du ska prata med om något strular på våra evenemang!');
+
     s('stafftest.answer_boss', 'Min chef!');
     s('stafftest.answer_friends', 'Mina vänner!');
     s('stafftest.answer_he', 'Han');

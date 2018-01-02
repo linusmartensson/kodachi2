@@ -37,13 +37,23 @@ module.exports = async (app) => {
             if(inst.response.cancel) return 'OK';
 
 
-            if(inst.response.stafftest_q1 != '{stafftest.answer_the_person}') return 'RETRY';
-            if(inst.response.stafftest_q2 != '{stafftest.answer_save}') return 'RETRY';
-            if(inst.response.stafftest_q3 != '{stafftest.answer_boss}') return 'RETRY';
+            if(inst.response.stafftest_q1 != '{stafftest.answer_the_person}') {
+                inst.error = "{stafftest.error.the_person}";
+                return 'RETRY';
+            }
+            if(inst.response.stafftest_q2 != '{stafftest.answer_save}'){
+                inst.error = "{stafftest.error.save}";
+                return 'RETRY';
+            }
+            if(inst.response.stafftest_q3 != '{stafftest.answer_boss}') {
+                inst.error = "{stafftest.error.the_boss}";
+                return 'RETRY';
+            }
 
 
             var user = await app.userApi.userId(ctx);
 
+            await app.roleApi.addRole(user, 'user', 1500);
             await app.roleApi.addRole(user, 'done_staff_test', 1000);
             await app.roleApi.addAchievement(user, 'done_staff_test', 10, app.userApi.getActiveEvent(ctx));
 
