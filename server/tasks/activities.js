@@ -126,7 +126,7 @@ module.exports = async (app) => {
                 return 'OK';
             }
             await app.userApi.emailUser(inst.origin, '{email.app_accepted.subject}','{email.app_accepted.text}','{email.app_accepted.text.html}');
-            await app.roleApi.addRole('team_member.'+inst.data.start_data.event_id);
+            await app.roleApi.addRole('team_member.'+inst.data.start_data.event_id, 5000);
             await app.roleApi.addRole('team_member.'+inst.data.application.team);
 
             var q = inst.data.application;
@@ -283,7 +283,9 @@ module.exports = async (app) => {
             q.team = team;
             q.event_id = inst.data.start_data.event_id;
             q.teamRole = 'manager.'+team;
-            await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id);
+
+            await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id, 4500);
+            await app.roleApi.addRole(inst.origin, 'team_leader', 5500);
             await app.roleApi.addRole(inst.origin, q.teamRole);
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
             await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{team}, type:{type} ,name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, open:{open}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
@@ -310,7 +312,9 @@ module.exports = async (app) => {
             q.event_id = inst.data.start_data.event_id;
             q.activity = activity;
             q.activityRole = 'manager.'+activity;
-            await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id);
+            await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id, 3500);
+            await app.roleApi.addRole(inst.origin, 'activiteer', 5500);
+
             await app.roleApi.addRole(inst.origin, q.activityRole);
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
             if(q.type === 'competition'){
@@ -387,7 +391,8 @@ module.exports = async (app) => {
             q.shop = shop;
             q.event_id = inst.data.start_data.event_id;
             q.shopRole = 'manager.'+shop;
-            await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id);
+            await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id, 1500);
+            await app.roleApi.addRole(inst.origin, 'vendor', 5500);
             await app.roleApi.addRole(inst.origin, q.shopRole);
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
             await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, tables:{tables}, type:{type}})-[:PART_OF]->(e)", q);
@@ -415,7 +420,9 @@ module.exports = async (app) => {
             q.shop = shop;
             q.event_id = inst.data.start_data.event_id;
             q.shopRole = 'manager.'+shop;
-            await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id);
+            await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id, 1500);
+            await app.roleApi.addRole(inst.origin, 'artist', 5500);
+
             await app.roleApi.addRole(inst.origin, q.shopRole);
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
             await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, type:{type}})-[:PART_OF]->(e)", q);

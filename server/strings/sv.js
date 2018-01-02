@@ -161,9 +161,13 @@ module.exports = (app) => {
     s('role.base_admin', "Eventmagiker");
     s('role.base_budget', "Budgetkrånglare");
     s('role.editor', "Sajtfifflare");
-    s('role.staff', "Arbetsmyra");
-    s('role.user', "Konventare");
-    s('role.visitor', "Kodachiturist");
+    s('role.base_team_member', "Kodachicreware");
+    s('role.vendor', "Försäljare");
+    s('role.artist', "Konstnär");
+    s('role.base_team_leader', "Lagledare");
+    s('role.activiteer', "Lekmästare");
+    s('role.user', "Nyfiken");
+    s('role.visitor', "Konventare");
     s('sat', "Lördag");
     s('stafftest.error.the_person', 'Njäääe! Det är helst inte så vi ska benämna folk vi inte känner på konvent!');
     s('stafftest.error.save', 'Inte riktigt! Det finns en sak som är absolut viktigare än allt annat om det brinner!');

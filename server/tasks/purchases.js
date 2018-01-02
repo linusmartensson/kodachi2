@@ -85,6 +85,10 @@ module.exports = async (app) => {
         if(numSleep > 0){
             await app.roleApi.addRole(user, 'sleeper.'+event, 1000);
         }
+        if(numTickets > 0 && numSleep > 0){
+            await app.roleApi.addRole(user, 'visitor.'+event, 2100);
+        }
+        await app.roleApi.addRole(user, 'user', 500);
 
         if(points > 0){
             await app.cypher('MATCH (u:User {id:{user}}) SET u.points = toInt(u.points) + {points}', {user, points});
