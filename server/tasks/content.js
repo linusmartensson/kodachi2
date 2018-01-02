@@ -21,6 +21,9 @@ module.exports = async (app) => {
             {field:'content', type:'editor'} 
         ),
         async (inst, ctx) => {
+
+            await app.roleApi.addRole(await app.userApi.userId(ctx), 'editor', 500);
+
             if(inst.response.cancel || inst.response.id=="") return 'OK'; 
 
             if(inst.response.event == true){
