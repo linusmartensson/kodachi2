@@ -52,7 +52,7 @@ module.exports = (app) => {
             ['admin'],[],
             app.taskApi.okcancel().concat({hide:true,autocancel:true, field:'role', type:'simpletext'}),
             async (inst, ctx) => {
-                if(inst.response.ok) return 'OK';
+                if(inst.response.cancel) return 'OK';
                 if(app.taskApi.emptyFields(inst)) return 'RETRY';
 
                 await app.roleApi.addRole(inst.data.start_data.id, inst.response.role, 2500);
