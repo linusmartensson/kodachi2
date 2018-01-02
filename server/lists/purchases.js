@@ -24,7 +24,7 @@ module.exports = (app) => {
 
             var rows = [];
             rows.push({id:rows.length, panels:[
-                {id:0, content:[{id:0, type:'text', text:user.firstName +" "+user.lastName}]}
+                {id:0, content:[{id:0, type:'text', text:user.givenName +" \""+user.nickname+"\" "+user.lastName}]}
             ]});
             for(var v in tickets){
                 var ticket = tickets[v];
