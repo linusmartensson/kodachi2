@@ -438,6 +438,7 @@ module.exports = async (app) => {
         console.log("respond_task("+task_id+")");
 
         var inst = await updateTaskInstance(task_id);
+        inst.error = "no error message :(";
 
         if(!inst || inst.result != 'WAIT_RESPONSE' || !await secureTask(ctx, task_id, inst)) return 'NO_TASK_ID';  //There is no matching task instance.
         console.log("Found "+task_id+". Processing response!");
