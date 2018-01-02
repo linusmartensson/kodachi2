@@ -135,6 +135,9 @@ class Panel extends Component {
     var panelStyle = {
         width:this.props.width?"calc("+this.props.width+"% - 20px)":"",
     }
+    var ne = (e) => {
+        if(e.key == 'Enter') e.preventDefault();
+    }
 
     const content = this.props.content.map((elem) => {
         if(!elem.type) return null;
@@ -149,28 +152,28 @@ class Panel extends Component {
             case 'image': return <img className="Image" key={elem.id} alt={elem.text} src={elem.image} />;
             case 'editbutton': 
                 return (<Tool key={elem.id} task={elem.task} name={elem.text} data={elem.data} />)
-            case 'button': return <input className="PanelButton" type="submit" onClick={(e)=>{e.target.clicked=true;}} key={elem.id} name={elem.id} value={elem.text} />
-            case 'input_password': return <input className="PanelInput" type="password" key={elem.id} name={elem.id} defaultValue={elem.text} />
-            case 'input_ssn': return <input placeholder='YYMMDD-NNNN' className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
+            case 'button': return <input onKeyPress={ne} className="PanelButton" type="submit" onClick={(e)=>{e.target.clicked=true;}} key={elem.id} name={elem.id} value={elem.text} />
+            case 'input_password': return <input onKeyPress={ne} className="PanelInput" type="password" key={elem.id} name={elem.id} defaultValue={elem.text} />
+            case 'input_ssn': return <input onKeyPress={ne} placeholder='YYMMDD-NNNN' className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_simpletext':
             case 'input_text': 
-                return <input placeholder="" className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
+                return <input onKeyPress={ne} placeholder="" className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_phone': 
-                return <input placeholder="" className="PanelInput" type="tel" key={elem.id} name={elem.id} defaultValue={elem.text} />
-            case 'input_email': return <input placeholder="you@kodachi.se" className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
+                return <input  onKeyPress={ne} placeholder="" className="PanelInput" type="tel" key={elem.id} name={elem.id} defaultValue={elem.text} />
+            case 'input_email': return <input onKeyPress={ne} placeholder="you@kodachi.se" className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_editor': 
                 return <EditorContainer key={elem.id} data={elem} />
             case 'input_time':
-                return <input className="PanelInput" type="time" key={elem.id} name={elem.id} defaultValue={elem.text} />
+                return <input onKeyPress={ne} className="PanelInput" type="time" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_date':
-                return <input className="PanelInput" type="date" key={elem.id} name={elem.id} defaultValue={elem.text} />
+                return <input onKeyPress={ne} className="PanelInput" type="date" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_number':
-                return <input className="PanelInput" type="number" key={elem.id} name={elem.id} defaultValue={elem.text} />
+                return <input onKeyPress={ne} className="PanelInput" type="number" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_bool':
-                return <input className="PanelCheckbox" type="checkbox" key={elem.id} name={elem.id} defaultValue={elem.text} />
+                return <input onKeyPress={ne} className="PanelCheckbox" type="checkbox" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_file':
             case 'input_image':
-                return <input className="PanelInput" type="file" key={elem.id} name={elem.id} defaultValue={elem.text} />
+                return <input onKeyPress={ne} className="PanelInput" type="file" key={elem.id} name={elem.id} defaultValue={elem.text} />
 
             case 'input_staticselect':
             case 'input_select':
