@@ -28,7 +28,7 @@ module.exports = (app) => {
             var r = {tiers:[{
                 id:0, panels:[
                     {id:0, content:[{id:0, type:'text', text:page.title}]},
-                    {id:2, content:[{id:0, type:'editbutton', text:"Edit page", tool:'create_page', data:page}]}
+                    {id:2, content:[{id:0, type:'editbutton', text:"Edit page", task:'create_page', data:page}]}
                 ]
             }], id:0};
 
