@@ -8,8 +8,9 @@ module.exports = async (app) => {
         ),
         async (inst, ctx) => {
             if(inst.response.cancel) return 'OK';
+            if(app.taskApi.emptyFields(inst)) return 'RETRY';
             
-            var team = await app.cypher('MATCH (:User {id:{user}})-[:TEAM_MEMBER]-(w:WorkGroup {id:{team}})-[:TEAM_MEMBER]-(u:User) RETURN w,u', {user: inst.origin, team:inst.data.start_data.id});
+            var team = await app.cypher('MATCH (:User {id:{user}})-[:TEAM_MEMBER]-(w:WorkGroup {id:{team}})-[:TEAM_MEMBER]-(u:User) RETURN w,u', {user: inst.origin, team:inst.data.start_data.team});
             if(!team.records || team.records.length() < 1){
                 return 'FAIL';
             }
@@ -80,7 +81,12 @@ module.exports = async (app) => {
                     inst.next_tasks.push('create_shop');
                     return 'OK';
                 case 'work':
-                    inst.next_tasks.push('join_work');
+                    var teams = await app.cypher("MATCH (:Event {id:{eventId}})<-[:PART_OF]-(w:WorkGroup) RETURN w", {eventId:inst.data.start_data.event_id});
+                    if(teams.records.length > 0){
+                        inst.next_tasks.push('join_work');
+                    } else {
+                        inst.next_tasks.push('no_teams_available');
+                    }
                     return 'OK';
                 default:
                     return 'FAIL';
@@ -88,6 +94,12 @@ module.exports = async (app) => {
         }, async (inst) => {
             return 'OK';
         });
+
+    app.taskApi.create_task('activity', 'no_teams_available', [], [],
+        [{field:'ok', type:'button'}], async (inst, ctx) => {
+            return 'OK';
+        });
+
     app.taskApi.create_task('activity', 'join_work', [], [], 
         app.taskApi.okcancel().concat({event_task:true},
             {field:'team', type:'dropdown', prepare:async (v, ctx, task) => {
@@ -105,6 +117,8 @@ module.exports = async (app) => {
 
             {field:'tshirt', type:'dropdown', values:['S','M','L','XL','XXL']}
         ), async(inst, ctx) => {
+            if(inst.response.cancel) return 'OK';
+            if(app.taskApi.emptyFields(inst)) return 'RETRY';
 
             inst.data.application = inst.response;
             inst.data.user = await app.userApi.getUser(await app.userApi.userId(ctx));
@@ -147,6 +161,7 @@ module.exports = async (app) => {
             {field:'can_cleanup_sunday', type:'bool'},
             {field:'tshirt', type:'dropdown', values:['S','M','L','XL','XXL']}
         ], async(inst, ctx) => {
+            if(app.taskApi.emptyFields(inst)) return 'RETRY';
             var q = inst.response;
             q.id = inst.origin;
             q.team = inst.data.application.team || inst.data.application.activity || inst.data.application.shop;
@@ -394,7 +409,6 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id, 1500);
             await app.roleApi.addRole(inst.origin, 'vendor', 5500);
             await app.roleApi.addRole(inst.origin, q.shopRole);
-            await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
             await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, tables:{tables}, type:{type}})-[:PART_OF]->(e)", q);
 
             inst.next_tasks.push('accept_application');
@@ -424,7 +438,6 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, 'artist', 5500);
 
             await app.roleApi.addRole(inst.origin, q.shopRole);
-            await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
             await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, type:{type}})-[:PART_OF]->(e)", q);
 
             inst.next_tasks.push('accept_application');
