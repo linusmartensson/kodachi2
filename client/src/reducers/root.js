@@ -189,7 +189,7 @@ export const reducer = handleActions({
                 return {...state, currentTask: v}
             },
             CLOSE: (state, action) => ({
-                ...state, currentTask:undefined
+                ...state, currentTask:undefined, ui:{editors:[], selectors:[]}
             })
         },
         UI: {
