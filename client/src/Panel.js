@@ -133,7 +133,7 @@ class Panel extends Component {
     if(!this.props.border) panelConfig += " Panel-borderless"
 
     var panelStyle = {
-        width:this.props.width?"calc("+this.props.width+"% - 20px)":"",
+        //width:this.props.width?"calc("+this.props.width+"% - 20px)":"",
     }
     var ne = (e) => {
         if(e.key == 'Enter') e.preventDefault();

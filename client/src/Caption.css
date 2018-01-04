@@ -5,13 +5,14 @@
     color:#ed3093;
     border:4px solid #ed3093;
     background:#fff;
-    display:table;
+    display:inline;
     position:relative;
     z-index:2;
     overflow:show;
     white-space:normal;
     left:-20px;
-    top:10px;
+    top:12px;
+    margin:5px;
     max-width:75%;
     margin-bottom:10px;
     font-family:'Schoolbell';

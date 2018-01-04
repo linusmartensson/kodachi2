@@ -8,4 +8,13 @@
     padding:0;
     position:relative;
     overflow:show;
+    display:table;
+    border-spacing:10px;
+    border-collapse:separate;
+}
+@media (orientation:portrait) {
+    .Tier{
+        width:100%;
+        margin:0 5px;
+    }
 }
