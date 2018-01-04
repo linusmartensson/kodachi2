@@ -48,8 +48,9 @@
     width:5em;
     height:2em;
 font-size:1.5em;
-    margin:1em;
+    margin:1.5em 0.25em;
     padding:0.5em 1em;
+    display:block;
     font-family:"Schoolbell";
     background:rgba(200,250,200,0.5);
     border:1px solid #aaa;
@@ -78,6 +79,7 @@ font-size:1.5em;
     font-size:1.5em;
     width:90%;
     margin:1em;
+    margin:1.5em 1em;
     padding:0.5em 1em;
     padding-right:0;
     font-family:"Schoolbell";
