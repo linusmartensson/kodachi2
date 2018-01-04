@@ -178,14 +178,14 @@ module.exports = (app) => {
     s('stafftest.answer_he', 'Han');
     s('stafftest.answer_leave', 'Lämna platsen');
     s('stafftest.answer_linus', 'Linus!');
-    s('stafftest.answer_phone', 'Ringa 112');
-    s('stafftest.answer_put_out', 'Släcka elden!');
-    s('stafftest.answer_save', 'Hjälpa personer i akut fara');
+    s('stafftest.answer_phone', 'Ringa 112 när jag är i säkerhet utomhus');
+    s('stafftest.answer_put_out', 'Släcka elden om det känns säkert!');
+    s('stafftest.answer_save', 'Hjälpa personer i akut fara, men utan att utsätta mig för risk!');
     s('stafftest.answer_she', 'Hon');
     s('stafftest.answer_team', 'Mitt team!');
     s('stafftest.answer_the_person', 'Personen');
     s('stafftest.answer_them', 'De/dem');
-    s('stafftest.answer_warn', 'Varna folk i omgivningen');
+    s('stafftest.answer_warn', 'Varna folk i omgivningen, sen lämna platsen');
     s('sun', "Söndag");
     s('task.accept_receipt.desc', 'Ditt kvitto för {receipt.purchase} på totalt {receipt.total} kr har godkänts och kommer att betalas ut!');
     s('task.accept_receipt.title', 'Godkänt kvitto!')
@@ -357,5 +357,6 @@ s('input.role.desc', '')
     s('task.demote_manager.title', 'Bekräfta ta bort gruppledare')
     s('task.no_teams_available.desc', 'Det finns inte några tillgängliga team att ansöka till just nu!')
     s('task.no_teams_available.title', 'Inga tillgängliga team')
+    s('list.all_users.title', "Lista alla användare");
 
 }
