@@ -25,11 +25,10 @@ module.exports = async (app) => {
         var orig = name;
 
         if(typeof t !== 'string'){
-            if(t[name]) return t[name];
+            if(typeof t[name] !== 'undefined') return t[name];
             name = name.split('.');
             while(name.length){
-                if(!t[name[0]]) {
-                    console.log("s('"+orig+"', '')"); 
+                if(typeof t[name[0]] == 'undefined') {
                     return orig;
                 }
                 t = t[name[0]];
