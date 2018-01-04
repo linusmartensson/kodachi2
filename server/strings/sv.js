@@ -342,7 +342,7 @@ module.exports = (app) => {
 
     s('task.review_artist_alley.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nArtistAlley: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n{|application.desc}\n')
     s('task.review_vendor.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nArtistAlley: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n{|application.desc}\n')
-    s('task.review_team_application.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nAktivitet: {application.team.label}\nStädar söndag: {{application.can_cleanup_sunday}}\nTillgänglig onsdag: {{application.can_work_wednesday}}\nSover på eventet: {{application.sleep_at_event}}\n{|application.app_description}\n')
+    s('task.review_team_application.desc', 'Tjohej! Det har kommit in en ansökan från {user.nickname} som du behöver ta ställning till!\nAktivitet: {application.team.label}\nStädar söndag: {{application.can_cleanup_sunday}}\nTillgänglig onsdag: {{application.can_work_wednesday}}\nSover på eventet: {{application.sleep_at_event}}\n{|application.app_description}\n')
     
     s('task.review_receipt.desc', 'Tjohej! Det har kommit in ett kvitto du behöver ta ställning till! \n@({receipt.image})\nSumma:{receipt.total}\nMottagare:{user.nickname}\nBudgetpost:{receipt.group}\nInköp:{receipt.purchase}')
 s('input.role.desc', '')
