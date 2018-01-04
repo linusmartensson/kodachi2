@@ -30,7 +30,7 @@ module.exports = (app) => {
                     {id:0, content:[{id:0, type:'text', text:page.title}]},
                     {id:2, content:[{id:0, type:'editbutton', text:"Edit page", task:'create_page', data:page}]}
                 ]
-            }], id:0};
+            }], id:content.length};
 
             content.push(r);
         }

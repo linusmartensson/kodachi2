@@ -120,6 +120,8 @@ module.exports = async (app) => {
 
                 pages.push(page);
                 page = {id:pos++ + idbase, tiers:[]};
+                
+                parsers['!']('!'+s.slice(1));
             },
             '*': function(s){
                 if(s.length > 1) panel.content.push({
