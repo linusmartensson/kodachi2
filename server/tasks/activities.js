@@ -361,7 +361,7 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, 'team_leader', 5500);
             await app.roleApi.addRole(inst.origin, q.teamRole);
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
-            await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{team}, type:{type} ,name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, open:{open}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{team}, type:{type} ,name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, avail_times:{avail_times}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
 
             inst.next_tasks.push('accept_application');
             inst.next_tasks.push('self_application');
