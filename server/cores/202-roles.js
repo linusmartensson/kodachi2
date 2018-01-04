@@ -43,6 +43,18 @@ module.exports = async (app) => {
         if(status.records[0].get('e').properties.achieved)
             await app.budgetApi.addBudget(event, 'point_cost', status.records[0].get('r').properties.value);
     }
+    api.removeRole = async (user, role, xp) => {
+        await api.create_role(role);    //pre-generate any non-existant role dynamically.
+        if(!xp) xp = 1000;
+        if(role.match(/\./) != null){
+            //When adding .-roles such as for events, add the xp to a role named base_[rolename] instead of [rolename].[eventname].
+            await api.addRole(user, "base_"+role.replace(/\.[^.]*/, ''), -xp);
+            xp = 0;
+        }
+        await app.cypher(   'MATCH (u:User {id:{user}})-[e:HAS_ROLE]->(r:Role {type:{role}}) ' + 
+                            ' (u)-[e:HAS_ROLE]->(r) DETACH DELETE e;'
+                         , {user, role, xp});
+    }
     api.addRole = async (user, role, xp) => {
         await api.create_role(role);    //pre-generate any non-existant role dynamically.
         if(!xp) xp = 1000;
