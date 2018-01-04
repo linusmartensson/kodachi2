@@ -219,7 +219,7 @@ module.exports = (app) => {
     s('task.register_account_ssn.title.active','Fortsätt skapa konto!');
     s('task.report_competition_result.title.active', '', true)
     s('task.review_team.title.active', 'Reviewa teamförslag')
-    s('task.review_team_application.title.active', '', true)
+    s('task.review_team_application.title.active', 'Reviewa gruppansökan')
     s('task.ssn_exists_forgot_details.desc', '!Whoops!\nDet finns redan ett konto för detta personnumret! Testa att logga in istället!');
     s('task.ssn_exists_forgot_details.title.active', 'Fortsätt skapa konto!');
     s('task.staff_test.desc', "!Innan du börjar!\nTjohej och välkommen in i värmen! I Kodachikai är vi jättenoga med att allt ska vara trevligt och mysigt för alla som är med på våra aktiviteter. Därför har vi ett liiiiitet test som alla som vill arbeta på något av våra evenemang måste lösa innan de får delta!");
@@ -342,8 +342,26 @@ module.exports = (app) => {
 
     s('task.review_artist_alley.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nArtistAlley: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n{|application.desc}\n')
     s('task.review_vendor.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nArtistAlley: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n{|application.desc}\n')
-    s('task.review_team_application.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nAktivitet: {application.team.label}\nStädar söndag:{application.can_cleanup_sunday}\nTillgänglig onsdag:{application.can_work_wednesday}\nSover på eventet:{{application.sleep_at_event}}\n{|application.app_description}\n')
+    s('task.review_team_application.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nAktivitet: {application.team.label}\nStädar söndag: {{application.can_cleanup_sunday}}\nTillgänglig onsdag: {{application.can_work_wednesday}}\nSover på eventet: {{application.sleep_at_event}}\n{|application.app_description}\n')
     
     s('task.review_receipt.desc', 'Tjohej! Det har kommit in ett kvitto du behöver ta ställning till! \n@({receipt.image})\nSumma:{receipt.total}\nMottagare:{user.nickname}\nBudgetpost:{receipt.group}\nInköp:{receipt.purchase}')
+s('input.role.desc', '')
+    s('input.role.name', 'Rollnamn')
+    s('task.add_super_role.desc', 'Här lägger du till en administratör')
+    s('task.add_super_role.title', 'Lägg till admin')
+    s('task.add_super_role.title.active', '')
+    s('task.remove_team_member.desc', 'Är du säker på att du vill ta bort personen från ditt team?')
+    s('task.remove_team_member.title', 'Ta bort team-medlem')
+    s('task.remove_team_member.title.active', '')
+    s('task.promote_manager.desc', 'Är du säker på att du vill lägga till personen som gruppledare?')
+    s('task.promote_manager.title', 'Bekräfta gruppledare')
+    s('task.promote_manager.title.active', '')
+    s('task.demote_manager.desc', 'Är du säker på att du vill ta bort personen som gruppledare?')
+    s('task.demote_manager.title', 'Bekräfta ta bort gruppledare')
+    s('task.demote_manager.title.active', '')
+    s('task.no_teams_available.desc', 'Det finns inte några tillgängliga team at ansöka till just nu!')
+    s('task.no_teams_available.title', 'Inga tillgängliga team')
+    s('task.no_teams_available.title.active', '')
 
+    s('application.avail_times', 'Vilka tider är tillgängliga?');
 }
