@@ -128,7 +128,7 @@ module.exports = async (app) => {
             if(inst.response.cancel){
                 return 'OK';
             }
-            inst.data.submitter = await app.userApi.userId(ctx);
+            inst.data.user = await app.userApi.getUser(await app.userApi.userId(ctx));
             switch(inst.response.work_type){
                 case 'create_team':
                     inst.next_tasks.push('create_team');
@@ -180,7 +180,6 @@ module.exports = async (app) => {
             if(app.taskApi.emptyFields(inst)) return 'RETRY';
 
             inst.data.application = inst.response;
-            inst.data.user = await app.userApi.getUser(await app.userApi.userId(ctx));
             delete inst.data.user.password;
 
             inst.next_tasks.push({'handlers': [

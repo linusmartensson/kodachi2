@@ -337,7 +337,7 @@ module.exports = (app) => {
     s('false', 'Nej')
 
     s('task.review_activity.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nAktivitet: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\nSchemadagar:{application.schedule}\nSchematider:{application.avail_times}\nLängd:{application.length}\nDeltagartal:{application.participants}\n{|application.desc}\n')
-    s('task.review_team.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nTeamnamn: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\nSchemadagar:{application.schedule}\nSchematider:{application.avail_times}\n{|application.desc}\n')
+    s('task.review_team.desc', 'Tjohej! Det har kommit in en ansökan från {user.nickname} som du behöver ta ställning till!\nTeamnamn: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\nSchemadagar:{application.schedule}\nSchematider:{application.avail_times}\n{|application.desc}\n')
 
 
     s('task.review_artist_alley.desc', 'Tjohej! Det har kommit in en ansökan som du behöver ta ställning till!\nArtistAlley: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n{|application.desc}\n')
