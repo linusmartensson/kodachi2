@@ -9,23 +9,47 @@ MEDIUM
 
 
 LOW
-* join specific activity timeslots
 * deltagarsidor för tävlingar & aktiviteter (Visa deltagarlista m.m.)
+* join specific activity timeslots (spökrundan, t.ex.)
+* Remove team members
+* add/remove managers for teams
 
 
 LOWEST
+
+* pay+register on-site ui
+
+* Remove team/activity/etc
+
 * achievement ui notification
 * list achivements
-* pay+register on-site ui
-* Remove team/activity/etc
-* add/remove managers for teams
-* Remove team members
+
+
+
 
 
 AFTER NEW YEAR
+* add point cost to point price
 * manage points
 * trade in points for things
 * Update teams/activities/vendors/artistalley layout to make it more pretty
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 DESCOPED 
