@@ -7,9 +7,6 @@ module.exports = async (app) => {
         var tasks = [];
         var s = (await app.cypher("MATCH (t:Task), (s:Session {id:{id}}) WHERE (t)-[:HANDLED_BY]->(s) OR (t)-[:HANDLED_BY]->(:User)-[:HAS_SESSION]->(s) OR (t)-[:HANDLED_BY]->(:Role)<-[:HAS_ROLE]-(:User)-[:HAS_SESSION]->(s) RETURN t", {id:ctx.session.localSession})).records;
 
-        console.dir("session token:");
-        console.dir(ctx.session.localSession);
-
         for(let q of s){
             var task = JSON.parse(q.get('t').properties.data);
             delete task.data.private;
