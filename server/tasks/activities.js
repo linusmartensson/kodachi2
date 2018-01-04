@@ -354,7 +354,7 @@ module.exports = async (app) => {
             var q = inst.data.application;
             var team = app.uuid();
             q.team = team;
-            q.event_id = inst.data.start_data.event_id;
+            q.event_id = inst.data.start_data.event_id || (await app.userApi.getActiveEvent(ctx)).id;
             q.teamRole = 'manager.'+team;
 
             await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id, 4500);
@@ -382,7 +382,7 @@ module.exports = async (app) => {
             await app.userApi.emailUser(inst.origin, '{email.app_accepted.subject}','{email.app_accepted.text}','{email.app_accepted.text.html}');
             var q = inst.data.application;
             var activity = app.uuid();
-            q.event_id = inst.data.start_data.event_id;
+            q.event_id = inst.data.start_data.event_id || (await app.userApi.getActiveEvent(ctx)).id;
             q.activity = activity;
             q.activityRole = 'manager.'+activity;
             await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id, 3500);
@@ -462,7 +462,7 @@ module.exports = async (app) => {
             var q = inst.data.application;
             var shop = app.uuid();
             q.shop = shop;
-            q.event_id = inst.data.start_data.event_id;
+            q.event_id = inst.data.start_data.event_id || (await app.userApi.getActiveEvent(ctx)).id;
             q.shopRole = 'manager.'+shop;
             await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id, 1500);
             await app.roleApi.addRole(inst.origin, 'vendor', 5500);
@@ -490,7 +490,7 @@ module.exports = async (app) => {
             var q = inst.data.application;
             var shop = app.uuid();
             q.shop = shop;
-            q.event_id = inst.data.start_data.event_id;
+            q.event_id = inst.data.start_data.event_id || (await app.userApi.getActiveEvent(ctx)).id;
             q.shopRole = 'manager.'+shop;
             await app.roleApi.addRole(inst.origin, 'manager.'+q.event_id, 1500);
             await app.roleApi.addRole(inst.origin, 'artist', 5500);
