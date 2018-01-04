@@ -87,7 +87,7 @@ module.exports = async (app) => {
 
 
     app.taskApi.create_task('activity', 'staff_test', ['user', '!done_staff_test'], [],
-        [{unique:true, field:'stafftest_q1', type:'dropdown', values:
+        [{event_task:true, unique:true, field:'stafftest_q1', type:'dropdown', values:
             ['{stafftest.answer_them}','{stafftest.answer_he}','{stafftest.answer_she}','{stafftest.answer_the_person}']}, 
             {field:'stafftest_q2', type:'dropdown', values:
                 ['{stafftest.answer_save}', '{stafftest.answer_warn}', '{stafftest.answer_phone}', '{stafftest.answer_leave}', '{stafftest.answer_put_out}']}, 
