@@ -12,10 +12,23 @@ module.exports = (app) => {
             var teams = await app.cypher("MATCH (:User {id:{id}})-[:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN w", {event:inst.start_data.event_id, id:await app.userApi.userId(ctx)});
             var content = [];
 
+
             //for teams
             for(var v in teams.records){
 
                 var team = teams.records[v].get('w').properties;
+                var managers = await app.cypher("MATCH (u:User)-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN u", {team:team.id});
+                managers = managers.records;
+
+                var tls = {};
+
+                for(var q of managers){
+                    var u = q.get('u').properties;
+                    tls[u.id] = u;
+                }
+                var manager = !!tls[await app.userApi.userId(ctx)];
+
+
                 var members = await app.cypher("MATCH (w:WorkGroup {id:{id}})-[t:TEAM_MEMBER]-(u:User) RETURN t,u", {id:team.id});
 
                 var teamdesc = {tiers:[{
@@ -26,24 +39,34 @@ module.exports = (app) => {
                     ]
                 }], id:content.length};
 
-                content.push(teamdesc);
+                //content.push(teamdesc);
 
 
                 //list team
-                var r = {tiers:[], id:content.length};
+                var r = {tiers:teamdesc.tiers, id:content.length};
                 for(var w in members.records){
                     var member = members.records[w];
 
                     var t = member.get('t').properties;
                     var u = member.get('u').properties;
-
-                    r.tiers.push({
+                    let tier = {
                         id:r.tiers.length,
                         panels:[
                             {id:0, content:[{id:0, type:'text', hover:t.description, text:u.givenName+" \""+u.nickname+"\" "+u.lastName}]},
                             {id:1, content:[{id:0, type:'text', hover:t.description, text:u.email}]},
                         ]
-                    });
+                    }
+
+                    if(manager){
+                        tier.panels.push({id:2, content:[{id:0, type:'editbutton', text:'Remove user', task:'remove_team_member.'+inst.start_data.event_id, data:{team:team.id, user:u.id}}]});
+                        if(!tls[u.id]) 
+                            tier.panels.push({id:3, content:[{id:0, type:'editbutton', text:'Promote user', task:'promote_manager.'+inst.start_data.event_id, data:{team:team.id, user:u.id}}]});
+                        else 
+                            tier.panels.push({id:3, content:[{id:0, type:'editbutton', text:'Demote user', task:'demote_manager.'+inst.start_data.event_id, data:{team:team.id, user:u.id}}]});
+                    }
+
+                    r.tiers.push(tier);
+                            
                 }
                 content.push(r);
             }

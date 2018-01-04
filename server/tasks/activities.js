@@ -1,5 +1,64 @@
 
 module.exports = async (app) => {
+    app.taskApi.create_task('activity', 'remove_team_member', ['manager.'], [],
+        app.taskApi.okcancel().concat({event_task:true, hide:true}
+        ),
+        async (inst, ctx) => {
+            if(inst.response.cancel) return 'OK';
+            
+            var team = await app.cypher('MATCH (:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u', {user: inst.origin, team:inst.data.start_data.team});
+            if(!team.records || team.records.length() < 1){
+                return 'FAIL';
+            }
+
+            await app.roleApi.removeRole(inst.data.start_data.user, "team_member."+inst.data.start_data.team, 3000);
+            await app.cypher("MATCH (:User {id:{user}})-[t:TEAM_MEMBER]-(:WorkGroup {id:{team}}) DETACH DELETE t;", {user: inst.data.start_data.user, team:inst.data.start_data.team});
+
+            return 'OK';
+
+
+        }, async(inst, ctx) => {return 'OK'});
+
+
+    app.taskApi.create_task('activity', 'promote_manager', ['manager.'], [],
+        app.taskApi.okcancel().concat({event_task:true, hide:true}
+        ),
+        async (inst, ctx) => {
+            if(inst.response.cancel) return 'OK';
+            
+            var team = await app.cypher('MATCH (:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u', {user: inst.origin, team:inst.data.start_data.team});
+            if(!team.records || team.records.length() < 1){
+                return 'FAIL';
+            }
+
+            var u = inst.data.start_data.user;
+            await app.roleApi.addRole(inst.data.start_data.user, "manager."+inst.data.start_data.team, 1000);
+            //Only the original manager gets extra points for now
+
+            return 'OK';
+
+
+        }, async(inst, ctx) => {return 'OK'});
+
+
+    app.taskApi.create_task('activity', 'demote_manager', ['manager.'], [],
+        app.taskApi.okcancel().concat({event_task:true, hide:true}
+        ),
+        async (inst, ctx) => {
+            if(inst.response.cancel) return 'OK';
+            
+            var team = await app.cypher('MATCH (:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u', {user: inst.origin, team:inst.data.start_data.team});
+            if(!team.records || team.records.length() < 1){
+                return 'FAIL';
+            }
+
+            await app.roleApi.removeRole(inst.data.start_data.user, "manager."+inst.data.start_data.team, 1000);
+
+            return 'OK';
+
+
+        }, async(inst, ctx) => {return 'OK'});
+
 
     app.taskApi.create_task('activity', 'email_team', ['manager.', 'team_member.'], [],
         app.taskApi.okcancel().concat({event_task:true, hide:true}
@@ -140,7 +199,7 @@ module.exports = async (app) => {
                 return 'OK';
             }
             await app.userApi.emailUser(inst.origin, '{email.app_accepted.subject}','{email.app_accepted.text}','{email.app_accepted.text.html}');
-            await app.roleApi.addRole('team_member.'+inst.data.start_data.event_id, 5000);
+            await app.roleApi.addRole('team_member.'+inst.data.start_data.event_id, 3000);
             await app.roleApi.addRole('team_member.'+inst.data.application.team);
 
             var q = inst.data.application;
@@ -200,7 +259,7 @@ module.exports = async (app) => {
             q.image = inst.response.team_image;
             q.image = await app.utils.upload(q.image);
             q.schedule = inst.response.team_schedule;
-            q.open = inst.response.team_open;
+            q.avail_times = inst.response.team_open;
             q.budget = inst.response.team_budget;
             q.uniform = inst.response.team_needs_uniform;
             inst.data.application = q;
