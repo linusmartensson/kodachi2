@@ -2,19 +2,8 @@
 ! <- add a caption
 * <- add list item
 (text)avatar_name) <- speech bubble
+@(url) <- image
 _ <- start new tier
+| <- start new page
 newline starts text element in current panel
 
-
-
-#
-!panel caption
-asd 
-asd
-a da
-s da
-fds
-#panel
-#panel
-_
-#

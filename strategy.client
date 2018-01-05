@@ -58,5 +58,3 @@ Visiting a path is equivalent to viewing an item in the workspace:
 /news/article-on-pizza/editor
 /users/timmeh
 
-All state mutation is done through socket.io and does not have fixed paths.
-
