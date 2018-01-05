@@ -24,6 +24,7 @@ module.exports = async (app) => {
 
 
             if(inst.response.cancel || inst.response.id=="") return 'OK'; 
+            if(app.taskApi.emptyFields(inst)) return 'RETRY';
 
             if(inst.response.event == true){
                 inst.response.event = (await app.userApi.getActiveEvent(ctx)).id;

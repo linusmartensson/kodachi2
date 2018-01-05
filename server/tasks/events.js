@@ -15,6 +15,7 @@ module.exports = async (app) => {
         ),
         async (inst, ctx) => {
             if(inst.response.cancel) return 'OK';
+            if(app.taskApi.emptyFields(inst)) return 'RETRY';
 
             await app.cypher('CREATE (:Event {name:{event_name}, tagline:{tagline}, description:{event_description}, id:{id}, starts:{starts}, ends:{ends}, location:{event_location}, publish:{publish}})', inst.response);
 
@@ -40,6 +41,7 @@ module.exports = async (app) => {
         }}, {field:'type', type:'dropdown', values:['admin', 'budget', 'schedule', 'artist_alley_admin', 'vendor_admin', 'team_admin', 'activity_admin']}),
         async (inst, ctx) => {
             if(inst.response.cancel) return 'OK';
+            if(app.taskApi.emptyFields(inst)) return 'RETRY';
 
             var u = await app.userApi.findAccount({email:inst.response.user});
             if(!u) return 'RETRY';
