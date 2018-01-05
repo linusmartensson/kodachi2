@@ -11,8 +11,14 @@ module.exports = async (app) => {
                 return 'FAIL';
             }
 
-            await app.roleApi.removeRole(inst.data.start_data.user, "team_member."+inst.data.start_data.team, 3000);
+            await app.roleApi.removeRole(inst.data.start_data.user, "team_member."+inst.data.start_data.team, 3900);
             await app.cypher("MATCH (:User {id:{user}})-[t:TEAM_MEMBER]-(:WorkGroup {id:{team}}) DETACH DELETE t;", {user: inst.data.start_data.user, team:inst.data.start_data.team});
+
+            var q = await app.cypher("MATCH (:User {id:{user}})-[t:TEAM_MEMBER]-(:WorkGroup)--(:Event {id:{event}}) RETURN t;", {user: inst.data.start_data.user, event:inst.data.start_data.event_id});
+
+            if(!q.records || q.records.length == 0){
+                await app.roleApi.removeRole(inst.data.start_data.user, "team_member."+inst.data.start_data.event_id, 1);
+            }
 
             return 'OK';
 
