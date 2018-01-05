@@ -78,22 +78,27 @@ module.exports = async (app) => {
         }
         await app.budgetApi.addBudget(event, "ticket_income", 300*numTickets);
         await app.budgetApi.addBudget(event, "sleep_income", 150*numSleep);
+            
+        await app.roleApi.addAchievement(user, 'i_saved_the_convention', numTickets*300+150*numSleep+points/10, event, 10000, 100);
 
         if(numTickets > 0){
             await app.roleApi.addRole(user, 'visitor.'+event, 2000);
+            await app.roleApi.addAchievement(user, 'i_bought_a_thing', 1, event, 1, 10);
         }
         if(numSleep > 0){
             await app.roleApi.addRole(user, 'sleeper.'+event, 1000);
+            await app.roleApi.addAchievement(user, 'my_nap_spot', 1, event, 1, 10);
         }
         if(numTickets > 0 && numSleep > 0){
             await app.roleApi.addRole(user, 'visitor.'+event, 2100);
+            await app.roleApi.addAchievement(user, 'i_bought_all_the_things', 1, event, 1, 10);
         }
         await app.roleApi.addRole(user, 'user', 500);
 
         if(points > 0){
             await app.cypher('MATCH (u:User {id:{user}}) SET u.points = toInt(u.points) + {points}', {user, points});
-            await app.budgetApi.addBudget(event, "point_income", points*10);
-            await app.budgetApi.addBudget(event, "point_cost", points*10);
+            await app.budgetApi.addBudget(event, "point_income", points/10);
+            await app.budgetApi.addBudget(event, "point_cost", points/10);
         }
 
         await app.budgetApi.addBudget(event, "banking_fees", -paysonFee);

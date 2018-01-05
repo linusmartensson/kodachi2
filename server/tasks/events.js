@@ -1,9 +1,6 @@
 
 module.exports = async (app) => {
 
-
-
-
     app.taskApi.create_task('event', 'create_event',
         ['admin'],[],
         app.taskApi.okcancel().concat(

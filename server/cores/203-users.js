@@ -137,6 +137,8 @@ module.exports = async (app) => {
         }
 
         await api.emailUser(p.userId, 'Verifiera ditt Kodachikonto!', 'Tryck på denna länken för att verifiera ditt Kodachikonto: https://kodachi.se/__verifyEmail/'+p.code);
+                
+        await app.roleApi.addAchievement(p.userId, 'welcome_home', 1, api.getActiveEvent(ctx), 1, 0);
         
     }
     api.emailUser = async(userId, subject, text, html) => {

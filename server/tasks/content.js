@@ -22,13 +22,15 @@ module.exports = async (app) => {
         ),
         async (inst, ctx) => {
 
-            await app.roleApi.addRole(await app.userApi.userId(ctx), 'editor', 500);
 
             if(inst.response.cancel || inst.response.id=="") return 'OK'; 
 
             if(inst.response.event == true){
                 inst.response.event = (await app.userApi.getActiveEvent(ctx)).id;
             }
+            await app.roleApi.addAchievement(inst.origin, 'write_stuff', 1, app.userApi.getActiveEvent(ctx), 10, 10);
+            await app.roleApi.addAchievement(inst.origin, 'write_so_much_stuff', 1, app.userApi.getActiveEvent(ctx), 50, 100);
+            await app.roleApi.addRole(await app.userApi.userId(ctx), 'editor', 500);
             if(inst.data.start_data.edit){
                 await app.cypher("MATCH (c:Content {id:{id}}) DETACH DELETE c", {id:inst.data.start_data.id});
             }

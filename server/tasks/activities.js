@@ -47,10 +47,14 @@ module.exports = async (app) => {
         async (inst, ctx) => {
             if(inst.response.cancel) return 'OK';
             
+
             var team = await app.cypher('MATCH (:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u', {user: inst.origin, team:inst.data.start_data.team});
             if(!team.records || team.records.length() < 1){
                 return 'FAIL';
             }
+            
+            if(inst.data.start_data.user == inst.origin)
+                await app.roleApi.addAchievement(inst.origin, 'escaping_manager', 1, app.userApi.getActiveEvent(ctx), 1, 0);
 
             await app.roleApi.removeRole(inst.data.start_data.user, "manager."+inst.data.start_data.team, 1000);
 
@@ -115,7 +119,7 @@ module.exports = async (app) => {
 
             await app.roleApi.addRole(user, 'user', 1500);
             await app.roleApi.addRole(user, 'done_staff_test', 1000);
-            await app.roleApi.addAchievement(user, 'done_staff_test', 10, app.userApi.getActiveEvent(ctx));
+            await app.roleApi.addAchievement(user, 'done_staff_test', 1, app.userApi.getActiveEvent(ctx), 1, 20);
 
             inst.next_tasks.push('join_staff');
             return 'OK';
@@ -182,6 +186,8 @@ module.exports = async (app) => {
             inst.data.application = inst.response;
             delete inst.data.user.password;
 
+            await app.roleApi.addAchievement(inst.origin, 'i_wanna_work', 1, app.userApi.getActiveEvent(ctx), 1, 10);
+            await app.roleApi.addAchievement(inst.origin, 'i_wanna_work_everywhere', 1, app.userApi.getActiveEvent(ctx), 10, 10);
             inst.next_tasks.push({'handlers': [
                 'manager.'+inst.response.team, 'admin.'+inst.data.start_data.event_id,
             ], task:'review_team_application'});
@@ -204,6 +210,7 @@ module.exports = async (app) => {
             var q = inst.data.application;
             q.id = inst.origin;
             q.team = inst.data.team;
+            await app.roleApi.addAchievement(q.id, 'joined_a_team', 1, app.userApi.getActiveEvent(ctx), 1, 10);
 
             await app.cypher('MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}, description:{app_description}}]->(t)', q);
             return 'OK';
@@ -225,6 +232,9 @@ module.exports = async (app) => {
             q.team = inst.data.application.team || inst.data.application.activity || inst.data.application.shop;
 
             await app.cypher('MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}}]->(t)', q);
+            await app.roleApi.addRole('team_member.'+inst.data.start_data.event_id, 3000);
+            await app.roleApi.addRole('team_member.'+q.team);
+            await app.roleApi.addAchievement(q.id, 'joined_a_team', 1, app.userApi.getActiveEvent(ctx), 1, 10);
             
             return 'OK';
         }, async(inst) => {
@@ -261,6 +271,7 @@ module.exports = async (app) => {
             q.avail_times = inst.response.team_open;
             q.budget = inst.response.team_budget;
             q.uniform = inst.response.team_needs_uniform;
+            await app.roleApi.addAchievement(inst.origin, 'i_made_the_best_application', 1, app.userApi.getActiveEvent(ctx), 1, 10);
             inst.data.application = q;
             inst.next_tasks.push('review_team');
             return 'OK';
@@ -301,6 +312,7 @@ module.exports = async (app) => {
             q.budget = inst.response.act_budget;
             q.participants = inst.response.act_participants;
             q.uniform = inst.response.act_needs_uniform;
+            await app.roleApi.addAchievement(inst.origin, 'i_made_the_best_application', 1, app.userApi.getActiveEvent(ctx), 1, 10);
             inst.data.application = q;
             inst.next_tasks.push('review_activity');
             return 'OK';
@@ -332,6 +344,7 @@ module.exports = async (app) => {
             q.image = await app.utils.upload(q.image);
             q.tables = inst.response.shop_tables;
             q.schedule = inst.response.shop_available_days;
+            await app.roleApi.addAchievement(inst.origin, 'i_made_the_best_application', 1, app.userApi.getActiveEvent(ctx), 1, 10);
             inst.data.application = q;
             if(q.type == 'artist_alley')
                 inst.next_tasks.push('review_artist_alley');
@@ -362,7 +375,9 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, q.teamRole);
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
             await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{team}, type:{type} ,name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, avail_times:{avail_times}, budget:{budget}, uniform:{uniform}})-[:PART_OF]->(e)", q);
+            
 
+            await app.roleApi.addAchievement(inst.origin, 'my_very_own_team', 1, app.userApi.getActiveEvent(ctx), 1, 100);
             inst.next_tasks.push('accept_application');
             inst.next_tasks.push('self_application');
             inst.next_tasks.push('assign_location');
@@ -392,6 +407,10 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, 'receipt_submitter.'+q.event_id);
             if(q.type === 'competition'){
                 await app.roleApi.addRole(inst.origin, 'competition_manager.'+q.event_id);
+                await app.roleApi.addAchievement(inst.origin, 'judge_jury_exe', 1, app.userApi.getActiveEvent(ctx), 1, 100);
+            } else {
+                await app.roleApi.addAchievement(inst.origin, 'my_activity_best_activity', 1, app.userApi.getActiveEvent(ctx), 1, 100);
+
             }
             await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{activity}, name:{name}, type:{type}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, avail_times:{avail_times}, length:{length}, budget:{budget}, uniform:{uniform}, participants:{participants}})-[:PART_OF]->(e)", q);
 
@@ -425,9 +444,10 @@ module.exports = async (app) => {
                 }
             }}
         ),
-        async (inst) => {
+        async (inst, ctx) => {
             var q = inst.response;
             await app.cypher("MATCH (w:WorkGroup {id:{competition}}), (u:User {id:{user}}) CREATE (w)<-[:WINNER {category:{category}}]-(u)", {competition:q.competition.id, category:q.category, user:q.user.id});
+            await app.roleApi.addAchievement(inst.origin, 'great_competition_manager', 1, app.userApi.getActiveEvent(ctx), 1, 10);
             return 'OK';
         }, async(inst) => {
             return 'OK';
@@ -468,6 +488,7 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, 'vendor', 5500);
             await app.roleApi.addRole(inst.origin, q.shopRole);
             await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, tables:{tables}, type:{type}})-[:PART_OF]->(e)", q);
+            await app.roleApi.addAchievement(inst.origin, 'let_them_buy_cake', 1, app.userApi.getActiveEvent(ctx), 1, 100);
 
             inst.next_tasks.push('accept_application');
             inst.next_tasks.push('self_application');
@@ -497,6 +518,7 @@ module.exports = async (app) => {
 
             await app.roleApi.addRole(inst.origin, q.shopRole);
             await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, type:{type}})-[:PART_OF]->(e)", q);
+            await app.roleApi.addAchievement(inst.origin, 'i_am_an_artist', 1, app.userApi.getActiveEvent(ctx), 1, 100);
 
             inst.next_tasks.push('accept_application');
             inst.next_tasks.push('self_application');
@@ -540,6 +562,7 @@ module.exports = async (app) => {
 
             var role = await app.cypher('MATCH (r:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{activity}}), (u:User {id:{user}}) CREATE (w)<-[:COMPETING_IN]-(u) RETURN r,w', {activity:w.id, user:await app.userApi.userId(ctx)});
             inst.data.competition = role.records[0].get('w').properties;
+            await app.roleApi.addAchievement(inst.origin, 'for_glory', 1, app.userApi.getActiveEvent(ctx), 1, 10);
 
 
             var role = role.records[0].get('r').properties.type;

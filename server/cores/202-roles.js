@@ -7,6 +7,8 @@ module.exports = async (app) => {
     await app.cypher('CREATE CONSTRAINT ON (r:Achievement) ASSERT r.type IS UNIQUE');
 
     api.create_achievement = async (name, req, value) => {
+        if(!req) req = 1;
+        if(!value) value = 0;
         var role = await app.cypher('MATCH (r:Achievement {type:{name}}) RETURN r', {name});
         if(role.records.length==0){
             await app.cypher('CREATE (r:Achievement {type:{name}, req:{req}, value:{value}})', {name, req, value});
@@ -27,7 +29,8 @@ module.exports = async (app) => {
         }
     }
 
-    api.addAchievement = async (user, achievement, points, event) => {
+    api.addAchievement = async (user, achievement, points, event, req, value) => {
+        await api.create_achievement(achievement, req, value);    //pre-generate any non-existant role dynamically.
         if(!points) points = 0;
         var e = await app.cypher('MATCH (u:User {id:{user}})-[e:ACHIEVEMENT_PROGRESS]-(r:Achievement {type:{achievement}}) RETURN e', {user, achievement});
 
@@ -90,5 +93,4 @@ module.exports = async (app) => {
     }
 	
     app.roleApi = api;
-    await require('../tools/core').loader("achievements", app);
 }

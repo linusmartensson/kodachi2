@@ -24,6 +24,7 @@ module.exports = async (app) => {
             
             if(!inst.response.image.file) return 'RETRY';
 
+            await app.roleApi.addAchievement(inst.origin, 'gimme_my_money', 1, app.userApi.getActiveEvent(ctx), 1, 0);
 
             inst.response.image = app.utils.upload(inst.response.image);
 
