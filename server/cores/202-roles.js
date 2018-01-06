@@ -53,10 +53,10 @@ module.exports = async (app) => {
                                     "ON CREATE SET  e.achieved = (toInt({points}) >= toInt(r.req)) , e.points = toInt({points}) RETURN e,r"
             , {user, achievement, points}
         );
-        await app.cypher("MATCH (u:User {id:{user}}) SET u.points = toInt(u.points) + toInt({points})", {user, points});
 
         if (status.records[0].get("e").properties.achieved) {
-            await app.budgetApi.addBudget(event, "point_cost", status.records[0].get("r").properties.value);
+            await app.cypher("MATCH (u:User {id:{user}}) SET u.points = toInt(u.points) + toInt({points})", {user, value});
+            await app.budgetApi.addBudget(event, "point_cost", value);
         }
     };
     api.removeRole = async (user, role, xp) => {
