@@ -4,9 +4,6 @@ module.exports = async (app) => {
         "activity", "remove_team_member", ["manager."], [],
         app.taskApi.okcancel().concat({event_task: true, hide: true}),
         async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
 
             const team = await app.cypher("MATCH (:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: inst.origin, team: inst.data.start_data.team});
             if (!team.records || team.records.length() < 1) {
@@ -33,9 +30,6 @@ module.exports = async (app) => {
         "activity", "promote_manager", ["manager."], [],
         app.taskApi.okcancel().concat({event_task: true, hide: true}),
         async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
 
             const team = await app.cypher("MATCH (:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: inst.origin, team: inst.data.start_data.team});
             if (!team.records || team.records.length() < 1) {
@@ -57,10 +51,6 @@ module.exports = async (app) => {
         "activity", "demote_manager", ["manager."], [],
         app.taskApi.okcancel().concat({event_task: true, hide: true}),
         async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
-
 
             const team = await app.cypher("MATCH (:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: inst.origin, team: inst.data.start_data.team});
             if (!team.records || team.records.length() < 1) {
@@ -88,12 +78,6 @@ module.exports = async (app) => {
             , {field: "email_text", type: "text"}
         ),
         async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
-            if (app.taskApi.emptyFields(inst)) {
-                return "RETRY";
-            }
 
             const team = await app.cypher("MATCH (:User {id:{user}})-[:TEAM_MEMBER]-(w:WorkGroup {id:{team}})-[:TEAM_MEMBER]-(u:User) RETURN w,u", {user: inst.origin, team: inst.data.start_data.team});
             if (!team.records || team.records.length() < 1) {
@@ -122,9 +106,6 @@ module.exports = async (app) => {
         {field: "stafftest_q3", type: "dropdown", values:
                 ["{stafftest.answer_friends}", "{stafftest.answer_boss}", "{stafftest.answer_linus}", "{stafftest.answer_team}"]}].concat(app.taskApi.okcancel()),
         async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
 
 
             if (inst.response.stafftest_q1 !== "{stafftest.answer_the_person}") {
@@ -155,11 +136,8 @@ module.exports = async (app) => {
     app.taskApi.create_task(
         "activity", "join_staff",
         ["done_staff_test"], [],
-        app.taskApi.okcancel().concat({event_task: true}, [{translate: true, field: "work_type", type: "dropdown", values: ["create_team", "create_activity", "create_shop", "work"]}]),
+        app.taskApi.okcancel().concat({autocancel: true, event_task: true}, [{translate: true, field: "work_type", type: "dropdown", values: ["create_team", "create_activity", "create_shop", "work"]}]),
         async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
             inst.data.user = await app.userApi.getUser(await app.userApi.userId(ctx));
             const teams = await app.cypher("MATCH (:Event {id:{eventId}})<-[:PART_OF]-(w:WorkGroup) RETURN w", {eventId: inst.data.start_data.event_id});
             switch (inst.response.work_type) {
@@ -209,9 +187,6 @@ module.exports = async (app) => {
 
             {field: "tshirt", type: "dropdown", values: ["S", "M", "L", "XL", "XXL"]}
         ), async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
             if (app.taskApi.emptyFields(inst)) {
                 return "RETRY";
             }
@@ -290,12 +265,6 @@ module.exports = async (app) => {
             {field: "team_needs_uniform", type: "bool"}
         ),
         async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
-            if (app.taskApi.emptyFields(inst)) {
-                return "RETRY";
-            }
             const q = {};
             q.type = "team";
             q.name = inst.response.team_name;
@@ -332,12 +301,6 @@ module.exports = async (app) => {
             {field: "act_needs_uniform", type: "bool"}
         ),
         async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
-            if (app.taskApi.emptyFields(inst)) {
-                return "RETRY";
-            }
             const q = {};
             q.type = inst.response.act_format;
             q.name = inst.response.act_name;
@@ -371,12 +334,6 @@ module.exports = async (app) => {
             {field: "shop_available_days", type: "staticselect", translate: true, values: ["thu", "fri", "sat", "sun"]}
         ),
         async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
-            if (app.taskApi.emptyFields(inst)) {
-                return "RETRY";
-            }
             const q = {};
             q.type = inst.response.shop_type;
             q.name = inst.response.shop_name;
@@ -488,6 +445,7 @@ module.exports = async (app) => {
             }}
         ),
         async (inst, ctx) => {
+
             const q = inst.response;
             await app.cypher("MATCH (w:WorkGroup {id:{competition}}), (u:User {id:{user}}) CREATE (w)<-[:WINNER {category:{category}}]-(u)", {competition: q.competition.id, category: q.category, user: q.user.id});
             await app.roleApi.addAchievement(inst.origin, "great_competition_manager", 1, app.userApi.getActiveEvent(ctx), 1, 10);
@@ -580,7 +538,7 @@ module.exports = async (app) => {
     app.taskApi.create_task(
         "activity", "join_competition", ["visitor.", "team_member.", "admin.", "overseer."], [],
         app.taskApi.okcancel().concat(
-            {event_task: true},
+            {event_task: true, autocancel: true},
             {field: "which_activity", type: "dropdown", prepare: async (v, ctx, task) => {
                 const w = (await app.cypher("MATCH (:Event {id:{event}})--(w:WorkGroup {type:\"competition\"}), (u:User {id:{id}}) WITH w,u,SIZE((w)<-[:COMPETING_IN]-(:User)) as competitors WHERE NOT (w)<-[:COMPETING_IN]-(u) AND toInt(competitors) < toInt(w.participants) RETURN w,competitors", {event: task.data.start_data.event_id, id: await app.userApi.userId(ctx)})).records;
                 v.values = [];
@@ -591,9 +549,6 @@ module.exports = async (app) => {
             }},
         ),
         async (inst, ctx) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
             if (!inst.response.which_activity) {
                 return "OK";
             }

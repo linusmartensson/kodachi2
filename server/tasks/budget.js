@@ -5,7 +5,7 @@ module.exports = async (app) => {
         "budget", "upload_receipt",
         ["receipt_submitter."], [],
         app.taskApi.okcancel().concat(
-            {event_task: true},
+            {event_task: true, autocancel: true},
             {field: "purchase", type: "text"},
             {field: "image", type: "image"},
             {field: "total", type: "number"},
@@ -87,17 +87,17 @@ module.exports = async (app) => {
     );
     app.taskApi.create_task(
         "budget", "accept_receipt",
-        [], [], [{event_task: true, field: "ok", type: "button"}],
+        [], [], [{event_task: true, autocancel: true, field: "ok", type: "button"}],
         async (inst) => "OK", async (inst) => "OK"
     );
     app.taskApi.create_task(
         "budget", "deny_receipt",
-        [], [], [{event_task: true, field: "ok", type: "button"}],
+        [], [], [{event_task: true, autocancel: true, field: "ok", type: "button"}],
         async (inst) => "OK", async (inst) => "OK"
     );
 
     app.taskApi.create_task(
-        "budget", "add_budgetgroup", ["budget.", "admin.", "overseer."], [], app.taskApi.okcancel().concat({event_task: true, field: "budget_type", type: "simpletext"}, {field: "limit", type: "number"}),
+        "budget", "add_budgetgroup", ["budget.", "admin.", "overseer."], [], app.taskApi.okcancel().concat({event_task: true, autocancel: true, field: "budget_type", type: "simpletext"}, {field: "limit", type: "number"}),
         async (inst, ctx) => {
             if (inst.response.cancel) {
                 return "OK";

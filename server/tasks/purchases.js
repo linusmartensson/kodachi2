@@ -96,7 +96,7 @@ module.exports = async (app) => {
         await app.roleApi.addRole(user, "user", 500);
 
         if (points > 0) {
-            await app.cypher("MATCH (u:User {id:{user}}) SET u.points = toInt(u.points) + {points}", {user, points});
+            await app.cypher("MATCH (u:User {id:{user}}) SET u.points = toInt(u.points) + toInt({points})", {user, points});
             await app.budgetApi.addBudget(event, "point_income", points / 10);
             await app.budgetApi.addBudget(event, "point_cost", points / 10);
         }
@@ -109,7 +109,7 @@ module.exports = async (app) => {
     app.taskApi.create_task(
         "purchases", "buy_tickets",
         ["user"], [],
-        app.taskApi.okcancel().concat({field: "tickets", type: "amount"}, {field: "sleep", type: "amount"}),
+        app.taskApi.okcancel().concat({event_task: true, autocancel: true, field: "tickets", type: "amount"}, {field: "sleep", type: "amount"}),
         async (inst, ctx) => {
             if (inst.response.cancel) {
                 return "OK";
@@ -132,7 +132,7 @@ module.exports = async (app) => {
     app.taskApi.create_task(
         "purchases", "buy_points",
         ["user"], [],
-        app.taskApi.okcancel().concat({hide: true, field: "points", type: "dropdown", values: [100, 500, 1500, 3000]}),
+        app.taskApi.okcancel().concat({hide: true, event_task: true, autocancel: true, field: "points", type: "dropdown", values: [100, 500, 1500, 3000]}),
         async (inst, ctx) => {
             if (inst.response.cancel) {
                 return "OK";
@@ -188,11 +188,11 @@ module.exports = async (app) => {
         }, async (inst, ctx) => "OK"
     );
     app.taskApi.create_task(
-        "purchase", "purchase_failed", [], [], [{field: "ok", type: "button"}],
+        "purchase", "purchase_failed", [], [], [{field: "ok", autocancel: true, type: "button"}],
         async (inst, ctx) => "OK", async (inst, ctx) => "OK"
     );
     app.taskApi.create_task(
-        "purchase", "purchase_complete", [], [], [{field: "ok", type: "button"}],
+        "purchase", "purchase_complete", [], [], [{field: "ok", autocancel: true, type: "button"}],
         async (inst, ctx) => "OK", async (inst, ctx) => "OK"
     );
 };

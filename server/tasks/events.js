@@ -35,7 +35,7 @@ module.exports = async (app) => {
     );
     app.taskApi.create_task(
         "event", "add_event_manager", ["admin", "admin."], [], app.taskApi.okcancel().concat(
-            {event_task: true},
+            {autocancel: true, event_task: true},
             {field: "user", type: "select", prepare: async (v, ctx) => {
                 const u = await app.cypher("MATCH (u:User) RETURN u");
                 v.values = [];

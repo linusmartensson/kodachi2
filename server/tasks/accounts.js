@@ -105,7 +105,7 @@ module.exports = (app) => {
     app.taskApi.create_task(
         "account", "register_account",
         ["anonymous"], [],
-        [{field: "cancel", type: "button"}, {unique: true}].concat(app.taskApi.yesno()),
+        [{field: "cancel", type: "button"}, {autocancel: true, unique: true}].concat(app.taskApi.yesno()),
         async (inst, ctx) => {
             if (inst.response.cancel) {
                 return "OK";
