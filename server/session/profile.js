@@ -10,7 +10,7 @@ module.exports = app => {
 
         };
         if(app.userApi.userId(ctx)){
-            var user = await app.userApi.getUser(await app.userApi.userId(ctx));
+            const user = await app.userApi.getUser(await app.userApi.userId(ctx));
             if(user){
                 delete user.password;
                 state.profile.user = user;

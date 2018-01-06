@@ -1,9 +1,8 @@
 
 
 module.exports = (app) => {
-    if(true) return;
-
-    app.listApi.create_list("test", "tasks", ["anonymous", "user"], {}, 
+/*
+    app.listApi.create_list("test", "tasks", ["anonymous", "user"], {},
     (inst, ctx) => {
 
 
@@ -20,5 +19,5 @@ module.exports = (app) => {
         }
 
         return {content:[r], id:0};
-    });
+    }); */
 };

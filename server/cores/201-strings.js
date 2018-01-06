@@ -1,7 +1,7 @@
 
 
 module.exports = async (app) => {
-    var api = {};
+    const api = {};
     app.strings = {};
 
     api.create_string = (name, string) => {
@@ -13,16 +13,16 @@ module.exports = async (app) => {
         if(string === "" && !nolog) console.log("Empty string: "+name);
     };
     api.add_strings = (nls) => {
-        for(var v in nls){
+        for(const v in nls){
             if(!app.strings[v]) app.strings[v] = {};
-            for(var q in nls[v]){
+            for(const q in nls[v]){
                 app.strings[v][q] = nls[v][q];
             }
         }
     };
 
     api.get_string = (name, t) => {
-        var orig = name;
+        const orig = name;
 
         if(typeof t !== "string"){
             if(typeof t[name] !== "undefined") return t[name];
@@ -37,19 +37,19 @@ module.exports = async (app) => {
             return t;
         } else {
             while(name.length > 0){
-                var q = app.strings[name];
+                const q = app.strings[name];
                 if(!q) {
-                    var j = name;
-                    name = name.replace(/\.[^.]*$/, "");   
+                    const j = name;
+                    name = name.replace(/\.[^.]*$/, "");
                     if(j == name){
-                        console.log("s('"+orig+"', '')"); 
+                        console.log("s('"+orig+"', '')");
                         return undefined;
                     }
                     continue;
                 }
                 return app.strings[name][t];
             }
-            console.log("s('"+orig+"', '')"); 
+            console.log("s('"+orig+"', '')");
             return undefined;
         }
     };
@@ -59,89 +59,89 @@ module.exports = async (app) => {
         else
             v = v.split(/\r?\n/);
 
-        var pages = [];
-        var page = {id:0+idbase, tiers:[]};
-        var tier = {id:0+idbase, panels:[]};
-        var panel = {id:0+idbase, content:[]};
-        var pos = 0;
+        const pages = [];
+        let page = {id: 0+idbase, tiers: []};
+        let tier = {id: 0+idbase, panels: []};
+        let panel = {id: 0+idbase, content: []};
+        let pos = 0;
 
-        var parsers = {
-            "!": function(s){
-                var c = s.search(/[^!]/);
+        const parsers = {
+            "!": function (s){
+                const c = s.search(/[^!]/);
                 if(c > 0) panel.content.push({
-                    id:pos++ + idbase,
-                    type:"caption",
-                    strength:c,
-                    text:s.slice(c)
+                    id: pos++ + idbase,
+                    type: "caption",
+                    strength: c,
+                    text: s.slice(c)
                 });
             },
-            "(": function(s){
-                var c = s.search(/[^(]/);
-                var q = s.slice(c).split(")");
+            "(": function (s){
+                const c = s.search(/[^(]/);
+                const q = s.slice(c).split(")");
                 panel.content.push({
-                    id:pos++ + idbase,
-                    type:"speechbubble",
-                    position:c>1?"right":"left",
-                    text:q[0],
-                    image:q.length>1?q[1]:undefined
+                    id: pos++ + idbase,
+                    type: "speechbubble",
+                    position: c>1?"right":"left",
+                    text: q[0],
+                    image: q.length>1?q[1]:undefined
                 });
             },
-            "@": function(s){
-               var c = s.search(/[^(]/);
-               var q = s.slice(c).split(")");
+            "@": function (s){
+                const c = s.search(/[^(]/);
+                const q = s.slice(c).split(")");
                 panel.content.push({
-                    id:pos++ + idbase,
-                    type:"image",
-                    image:q[0]
+                    id: pos++ + idbase,
+                    type: "image",
+                    image: q[0]
                 });
             },
-            "#": function(s){
+            "#": function (s){
                 tier.panels.push(panel);
-                panel = {id:pos++ + idbase, content:[]};
+                panel = {id: pos++ + idbase, content: []};
 
                 parsers["!"]("!"+s.slice(1));
             },
-            "_": function(s){
+            "_": function (s){
                 tier.panels.push(panel);
-                panel = {id:pos++ + idbase, content:[]};
+                panel = {id: pos++ + idbase, content: []};
 
                 page.tiers.push(tier);
-                tier = {id:pos++ + idbase, panels:[]};
+                tier = {id: pos++ + idbase, panels: []};
 
                 parsers["!"]("!"+s.slice(1));
             },
-            "|": function(s){
+            "|": function (s){
                 tier.panels.push(panel);
-                panel = {id:pos++ + idbase, content:[]};
+                panel = {id: pos++ + idbase, content: []};
 
                 page.tiers.push(tier);
-                tier = {id:pos++ + idbase, panels:[]};
+                tier = {id: pos++ + idbase, panels: []};
 
                 pages.push(page);
-                page = {id:pos++ + idbase, tiers:[]};
-                
+                page = {id: pos++ + idbase, tiers: []};
+
                 parsers["!"]("!"+s.slice(1));
             },
-            "*": function(s){
+            "*": function (s){
                 if(s.length > 1) panel.content.push({
-                    id:pos++ + idbase,
-                    type:"point",
-                    text:s.slice(1)
+                    id: pos++ + idbase,
+                    type: "point",
+                    text: s.slice(1)
                 });
             },
-            "": function(s){
+            "": function (s){
                 if(s.length > 0) panel.content.push({
-                    id:pos++ + idbase,
-                    type:"text",
-                    text:s
+                    id: pos++ + idbase,
+                    type: "text",
+                    text: s
                 });
             }
         };
 
 
-        for(var w of v){
+        for(const w of v){
 
-            var p = parsers[w[0]];
+            const p = parsers[w[0]];
             if(p) p(w); else parsers[""](w);
         }
 
@@ -152,7 +152,7 @@ module.exports = async (app) => {
         if(page.tiers.length > 0)
             pages.push(page);
 
-        for(var p of pages){
+        for(const p of pages){
             p.id = idbase + p.id;
         }
 
@@ -161,16 +161,16 @@ module.exports = async (app) => {
     };
     api.parse = (v, tokens) => {
         if(v.startsWith("{|")){
-            var q = v.slice(2, -1);
+            const q = v.slice(2, -1);
             v = api.get_string(q, tokens);
             return api.bookParser(v&&v.length>0?v:undefined, q);
         }
-        var count = 1;
-        var total = 0;
-        var r = v.replace(/{[^{}]+}/g, function(m){
+        let count = 1;
+        const total = 0;
+        const r = v.replace(/{[^{}]+}/g, function (m){
             count++;
             m = m.slice(1, -1);
-            var q = api.get_string(m, tokens);
+            const q = api.get_string(m, tokens);
             if(q === undefined) return m;
             return q;
         });
@@ -179,20 +179,20 @@ module.exports = async (app) => {
     api.userParse = async (ctx, v, lang) => {
         if(!lang)
             lang = await app.userApi.getLanguage(ctx);
-        var w = api.parse(v, lang);
+        const w = api.parse(v, lang);
         return w;
     };
 
     api.translate = async (ctx, v, lang) => {
         if(!lang) lang = await app.userApi.getLanguage(ctx);
-        if(v) for(var w in v) {
+        if(v) for(const w in v) {
             if(typeof v[w] === "object") await api.translate(ctx, v[w], lang);
             if(typeof v[w] === "string") v[w] = await api.userParse(ctx, v[w], lang);
         }
     };
-    
+
     api.parseDeep = (v, tokens) => {
-        if(v) for(var w in v) {
+        if(v) for(const w in v) {
             if(typeof v[w] === "object") api.parseDeep(v[w], tokens);
             if(typeof v[w] === "string") v[w] = api.parse(v[w], tokens);
         }
@@ -200,6 +200,6 @@ module.exports = async (app) => {
 
 
     app.stringApi = api;
-	
+
     await require("../tools/core").loader("strings", app);
 };

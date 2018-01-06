@@ -1,15 +1,15 @@
 
 import asyncBusboy from "async-busboy";
 import mail from "nodemailer";
-var fs = require("fs");
+const fs = require("fs");
 
 module.exports = (app) => {
-    var api = {};
+    const api = {};
 
     api.form = async (ctx) => {
         const data = await asyncBusboy(ctx.req);
 
-        for(var i=0;i<data.files.length;++i){
+        for(let i=0;i<data.files.length;++i){
             data.fields[data.files[i].fieldname] = data.files[i];
         }
         return data.fields;
@@ -17,12 +17,12 @@ module.exports = (app) => {
 
     api.upload = async (file) => {
 
-        var suffix = "."+file.file.split(/\./).slice(-1)[0];
-        var base = app.uuid()+suffix;
+        const suffix = "."+file.file.split(/\./).slice(-1)[0];
+        const base = app.uuid()+suffix;
 
-        var read = fs.createReadStream(file.file);
+        const read = fs.createReadStream(file.file);
 
-        var upload = new app.s3.upload({
+        const upload = new app.s3.upload({
             "Bucket": "kodachi-uploads",
             "Key": base,
             "ACL": "public-read",
@@ -35,7 +35,7 @@ module.exports = (app) => {
 
     api.email = async (to, subject, text, html, immediate) => {
 
-        var opts = {
+        const opts = {
             from: "\"Kodachi\" <no-reply@kodachi.se>",
             to,
             subject,

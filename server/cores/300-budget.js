@@ -1,8 +1,7 @@
 
 
-
 module.exports = async (app) => {
-    var api = {};
+    const api = {};
 
     api.addGroup = async (event, type, limit) => {
         await app.cypher("MATCH (e:Event {id:{event}}) CREATE (:BudgetGroup {type:{type}, limit:{limit}, total:0})-[:FOR_EVENT]->(e)", {event, type, limit});

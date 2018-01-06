@@ -1,9 +1,9 @@
 
-var u = require("uuid/v4");
+const u = require("uuid/v4");
 
 module.exports = (app) => {
 
-    app.uuid = function(){
+    app.uuid = function (){
         return u();
     };
 

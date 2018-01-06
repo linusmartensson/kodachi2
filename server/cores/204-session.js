@@ -1,16 +1,14 @@
 
-var _ = require("lodash");
+const _ = require("lodash");
 
 module.exports = async (app) => {
 
     //app.cypher('MATCH (s:Session) DETACH DELETE s'); //On server boot, delete all sessions.
 
-    var patcher = require("jsondiffpatch").create({
-        objectHash: (obj) => {
-            return obj.id || obj._id;
-        }
+    const patcher = require("jsondiffpatch").create({
+        objectHash: (obj) => obj.id || obj._id
     });
-    var api = {};
+    const api = {};
     app.sessionComponents = [];
 
     //Core function for registering session components.
@@ -21,12 +19,12 @@ module.exports = async (app) => {
     //Core function for updating live clients.
     api.notifySessions = async (ss) => {
         try{
-            for(var s of ss){
+            for(const s of ss){
                 if(app.clients[s]){
-                    for(var id in app.clients[s]){
-                        var ctx = app.clients[s][id];
-                        var current = await api.buildSession(ctx);
-                        var patch = patcher.diff(ctx.session.state, current);
+                    for(const id in app.clients[s]){
+                        const ctx = app.clients[s][id];
+                        const current = await api.buildSession(ctx);
+                        const patch = patcher.diff(ctx.session.state, current);
                         ctx.socket.emit("update", patch);
                         ctx.session.state = current;
                     }
@@ -39,10 +37,10 @@ module.exports = async (app) => {
 
     //Build a complete session state -> The data we send to the client.
     api.buildSession = async (ctx) => {
-        var state = {};
+        const state = {};
         try{
 
-            for(var v of app.sessionComponents){
+            for(const v of app.sessionComponents){
                 await v(ctx, state);
             }
 
