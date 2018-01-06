@@ -1,15 +1,16 @@
 
 import React, { Component } from 'react';
 import './ShortProfile.css'
+import {Link} from 'react-router-dom';
 
 import {connect} from 'react-redux'
 
 class ShortProfile extends Component {
   render() {
     return (<div className="ShortProfile">
-                <img src="/img/fyrklover.png" alt="" />
+                <Link to="/profile/me"><img src="/img/fyrklover.png" alt="" />
                 <p>Tjenare {this.props.nickname}!</p>
-                <p>Level {this.props.level} {this.props.rolename}</p>
+                <p>Level {this.props.level} {this.props.rolename}</p></Link>
             </div>);
   }
 }

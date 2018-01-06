@@ -91,6 +91,8 @@ var SurfaceRouteBase = (props) => {
                 setTimeout(()=>{props.tryFetch(match.params.path)},0);
             }
             break;
+        case 'profile':
+            matches = props.profile ? props.profile.content : false;
     }
 
     if(matches)
@@ -100,9 +102,12 @@ var SurfaceRouteBase = (props) => {
 }
 
 const SurfaceRoute = connect(
-    state => {return {
+    state => {
+        console.dir(state.session.profile);
+        return {
         books:state.session.books,
-        lists:state.lists
+        lists:state.lists,
+        profile:state.session.profile
     }},
     dispatch => {return {
         tryFetch: (q) => {dispatch(actions.app.list.show(q, history))}

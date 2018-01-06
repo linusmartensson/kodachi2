@@ -12,3 +12,7 @@
     padding:5px 0;
     margin:0;
 }
+.ShortProfile a {
+    text-decoration:none !important;
+    color:black;
+}
