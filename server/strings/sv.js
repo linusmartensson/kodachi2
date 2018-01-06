@@ -217,7 +217,6 @@ module.exports = (app) => {
     s("task.register_account.title.active", "Fortsätt skapa konto!");
     s("task.register_account_ssn.desc", "!Woot!\nSå trevligt! :D\nVälkommen till Kodachikai!");
     s("task.register_account_ssn.title.active", "Fortsätt skapa konto!");
-    s("task.report_competition_result.title.active", "", true);
     s("task.review_team.title.active", "Reviewa teamförslag");
     s("task.review_team_application.title.active", "Reviewa gruppansökan");
     s("task.ssn_exists_forgot_details.desc", "!Whoops!\nDet finns redan ett konto för detta personnumret! Testa att logga in istället!");
@@ -248,8 +247,9 @@ module.exports = (app) => {
     s("task.join_competition.title", "Gå med i en tävling!");
     s("task.buy_points.title", "Köp poäng");
     s("task.buy_tickets.title", "Köp biljetter");
-    s("task.create_page.title", "Skapa en sida");
     s("task.check_ssn_details.title", "Fortsätt skapa konto");
+    s("task.create_page.title", "Skapa en sida");
+    s("task.create_page.title.active", "Fortsätt skapa en sida");
     s("task.email_team.title", "Maila ditt team!");
     s("input.clearing_no.desc", "Och här fyller du i clearingnummer!");
     s("task.buy_points.desc", "Här kan du köpa poäng! Poäng är just nu helt oanvändbara, men kommer i framtiden att kunna användas för att köpa saker på våra evenemang!");
@@ -358,5 +358,20 @@ module.exports = (app) => {
     s("task.no_teams_available.desc", "Det finns inte några tillgängliga team att ansöka till just nu!");
     s("task.no_teams_available.title", "Inga tillgängliga team");
     s("list.all_users.title", "Lista alla användare");
+    s("tasks.account.noSuchUser", "Nejdu! Den användaren finns inte!");
+    s("tasks.account.loginFailed", "Nix! Testa ett annat lösenord!");
+
+
+    s('input.value.sv', "Svenska");
+    s('input.value.eng', "Engelska");
+    s('input.value.all', "Alla språk");
+    s('role.base_manager', "Gruppledare");
+    s('role.base_receipt_submitter', "Kvittomucklare");
+    s("role.done_staff_test", "Vällärd potentiell crewmedlem");
+    s("role.base_competition_manager", "Tävlingsarrangör");
+    s("profile.roles", "Dina levels");
+    s("profile.achievements", "Dina Achievements!")
+    s("achievement.great_competition_manager", "Rapporterat in tävlingsresultat");
+    s("achievement.done_staff_test", "Gjort ett antagningsprov");
 
 };
