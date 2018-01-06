@@ -45,7 +45,7 @@ module.exports = async (app) => {
     api.add_filter("textbox", (d) => `${d}`);
     api.add_filter("password", (d) => `${d}`);
     api.add_filter("ssn", (d) => {
-        if (!d || d === "") {
+        if (d === "") {
             return "";
         }
         d = d.replace(/\D/g, "");
@@ -105,15 +105,9 @@ module.exports = async (app) => {
         return d;
     });
     api.add_filter("number", (d) => {
-        if (!d) {
-            return 0;
-        }
         return d.replace(/\D/g, "");
     });
     api.add_filter("amount", (d) => {
-        if (!d) {
-            return 0;
-        }
         return d.replace(/\D/g, "");
     });
 
@@ -125,6 +119,8 @@ module.exports = async (app) => {
             if (!v.field) {
                 continue;
             }
+            if(!Object.prototype.hasOwnProperty.call(response, v.field)) 
+                continue;
             out[v.field] = app.taskFilters[v.type](response[v.field], v);
         }
         return out;
@@ -524,11 +520,11 @@ module.exports = async (app) => {
         console.log(`respond_task(${task_id})`);
 
         const inst = await updateTaskInstance(task_id);
-        inst.error = "no error message :(";
 
         if (!inst || inst.result !== "WAIT_RESPONSE" || !await secureTask(ctx, task_id, inst)) {
             return "NO_TASK_ID";
         } // There is no matching task instance.
+        inst.error = "no error message :(";
         console.log(`Found ${task_id}. Processing response!`);
 
         await updateTaskInstance(task_id, inst);
@@ -546,6 +542,7 @@ module.exports = async (app) => {
                 response = api.filterResponse(response, task.inputs);
             }
         } catch (e) {
+            console.dir(e);
             inst.error = "{task.error.filterFailure}";
             inst.result = "WAIT_RESPONSE";
             await updateTaskInstance(task_id, inst);
@@ -555,7 +552,13 @@ module.exports = async (app) => {
 
         // Process the response
         inst.response = response;
-        let result = await task.result_handler(inst, ctx);
+        let result = null;
+        
+        //Default handlers to avoid common task pitfalls
+        if(inst.response.cancel) result = 'OK';
+        else if(app.taskApi.emptyFields(inst)) result = 'RETRY';
+        else result = await task.result_handler(inst, ctx);
+
         delete inst.response;
 
         // Store the result
