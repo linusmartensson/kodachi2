@@ -369,6 +369,8 @@ module.exports = (app) => {
     s('role.base_receipt_submitter', "Kvittomucklare");
     s("role.done_staff_test", "Vällärd potentiell crewmedlem");
     s("role.base_competition_manager", "Tävlingsarrangör");
+    s("role.base_visitor", "Konventare!");
+    s("role.base_sleeper", "Sovsäcksexpert");
     s("profile.roles", "Dina levels");
     s("profile.achievements", "Dina Achievements!")
     s("achievement.great_competition_manager", "Rapporterat in tävlingsresultat");

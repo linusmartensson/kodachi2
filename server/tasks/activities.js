@@ -124,7 +124,7 @@ module.exports = async (app) => {
 
             const user = await app.userApi.userId(ctx);
 
-            await app.roleApi.addRole(user, "user", 1500);
+            await app.roleApi.addRole(user, "user", 550);
             await app.roleApi.addRole(user, "done_staff_test", 1000);
             await app.roleApi.addAchievement(user, "done_staff_test", 1, app.userApi.getActiveEvent(ctx), 1, 20);
 
