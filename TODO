@@ -5,6 +5,10 @@ HIGH
 * forgot password
 * transfer tickets & update ticket page
 
+* account create not finding duplicate ssn accounts
+
+* Make task auto-opening less stupid
+
 
 MEDIUM
 * view whole budget + team/act/vendor/aa purchase needs
@@ -17,6 +21,8 @@ LOW
 
 * kai.kodachi.se autoredirectar till https. fuck chrome. -__-
 
+* Warn before finishing dangerous tasks
+
 
 LOWEST
 
@@ -27,7 +33,6 @@ LOWEST
 * Remove team/activity/etc
 
 * achievement ui notification
-* list achivements
 
 * editor/selector doesn't show until change
 
