@@ -98,6 +98,49 @@ module.exports = async (app) => {
         return r.records.length > 0;
     };
 
+    api.getAchievements = async(user) => {
+        const v = await app.cypher("MATCH (u:User {id:{user}})-[e:ACHIEVEMENT_PROGRESS]->(r:Achievement) RETURN r,e ORDER BY r.type DESC", {user});
+
+        if (v.records.length === 0) {
+            return [];
+        }
+
+        var res = [];
+        for(var q in v.records){
+
+            const r = v.records[q].get("r").properties;
+            const e = v.records[q].get("e").properties;
+
+            res.push({
+                achievement: r.type,
+                points: e.points,
+                req: r.req,
+                achieved: e.achieved
+            });
+        }
+        return res;
+    }
+    api.getAllRoles = async(user) => {
+        const v = await app.cypher("MATCH (u:User {id:{user}})-[e:HAS_ROLE]->(r:Role) WHERE EXISTS(e.xp)  RETURN r,e ORDER BY e.xp DESC", {user});
+
+        if (v.records.length === 0) {
+            return [{role: "anonymous", level: 1, xp: 0}];
+        }
+
+        var res = [];
+        for(var q in v.records){
+
+            const r = v.records[q].get("r").properties;
+            const e = v.records[q].get("e").properties;
+
+            res.push({
+                role: r.type,
+                xp: e.xp ? typeof e.xp.toNumber === "function" ? e.xp.toNumber() : e.xp : 0,
+                level: e.level ? typeof e.level.toNumber === "function" ? e.level.toNumber() : e.level : 1
+            });
+        }
+        return res;
+    }
     api.getBestRole = async (user) => {
         const v = await app.cypher("MATCH (u:User {id:{user}})-[e:HAS_ROLE]->(r:Role) WHERE EXISTS(e.xp)  RETURN r,e ORDER BY e.xp DESC LIMIT 1", {user});
 
