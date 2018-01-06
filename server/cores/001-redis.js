@@ -1,4 +1,4 @@
-import Redis from 'ioredis'
+import Redis from "ioredis"
 
 class RedisStore {
     constructor(redis) {
@@ -15,7 +15,7 @@ class RedisStore {
     	if(sid.startsWith("koa:sess:")) sid = sid.slice(9);
         try {
             // Use redis set EX to automatically drop expired sessions
-            await this.redis.set(`koa:sess:${sid}`, JSON.stringify(v), 'EX', maxAge / 1000);
+            await this.redis.set(`koa:sess:${sid}`, JSON.stringify(v), "EX", maxAge / 1000);
         } catch (e) {console.dir(e);}
         return sid;
     }

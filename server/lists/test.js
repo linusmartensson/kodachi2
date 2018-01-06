@@ -3,7 +3,7 @@
 module.exports = (app) => {
     if(true) return;
 
-    app.listApi.create_list("test", "tasks", ['anonymous', 'user'], {}, 
+    app.listApi.create_list("test", "tasks", ["anonymous", "user"], {}, 
     (inst, ctx) => {
 
 
@@ -12,9 +12,9 @@ module.exports = (app) => {
             r.tiers.push({
                 id:r.tiers.length,
                 panels:[
-                    {id:0, content:[{id:0, type:'text', text:v}]},
-                    {id:1, content:[{id:0, type:'text', text:JSON.stringify(app.tasks[v])}]},
-                    {id:2, content:[{id:0, type:'editbutton', text:'edit', tool:'login', data:{id:v}}]}
+                    {id:0, content:[{id:0, type:"text", text:v}]},
+                    {id:1, content:[{id:0, type:"text", text:JSON.stringify(app.tasks[v])}]},
+                    {id:2, content:[{id:0, type:"editbutton", text:"edit", tool:"login", data:{id:v}}]}
                 ]
             });
         }

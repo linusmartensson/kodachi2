@@ -1,12 +1,12 @@
 
-import bcrypt from 'bcrypt'
+import bcrypt from "bcrypt"
 
 module.exports = async (app) => {
 
-    await app.cypher('CREATE CONSTRAINT ON (u:User) ASSERT u.id IS UNIQUE');
+    await app.cypher("CREATE CONSTRAINT ON (u:User) ASSERT u.id IS UNIQUE");
     var api = {};
 
-    var coreRoles = ['user', 'anonymous', 'editor', 'admin'];
+    var coreRoles = ["user", "anonymous", "editor", "admin"];
 
     for(var v of coreRoles){
         await app.roleApi.create_role(v);
@@ -30,23 +30,23 @@ module.exports = async (app) => {
     }
 
     api.getUser = async (id) => {
-        var user = await app.cypher('MATCH (u:User) WHERE u.id={id} RETURN u', {id:id});
+        var user = await app.cypher("MATCH (u:User) WHERE u.id={id} RETURN u", {id:id});
         if(user.records.length > 0){
-            user = user.records[0].get('u').properties;
+            user = user.records[0].get("u").properties;
             delete user.verifyCode;
             return user;
         }
         return undefined;
     }
     api.getRoles = async (id) => {
-        if(!id) return ['anonymous'];
+        if(!id) return ["anonymous"];
         var userRoles = await app.cypher(
-                'MATCH (u:User)-[:HAS_ROLE]->(r:Role) WHERE u.id={id} RETURN r', {id:id});
+                "MATCH (u:User)-[:HAS_ROLE]->(r:Role) WHERE u.id={id} RETURN r", {id:id});
         if(userRoles.records.length == 0) return [];
 
         var r = [];
         for(var v of userRoles.records){
-            r.push(v.get('r').properties.type);
+            r.push(v.get("r").properties.type);
         }
         return r;
     }
@@ -55,26 +55,26 @@ module.exports = async (app) => {
     }
     api.getActiveEvent = async (ctx) => {
         var e = false;
-        if(await api.hasAnyRole(await api.userId(ctx), ['admin'])) {
-            e = await app.cypher('MATCH (e:Event) RETURN e ORDER BY e.publish DESC LIMIT 1');
+        if(await api.hasAnyRole(await api.userId(ctx), ["admin"])) {
+            e = await app.cypher("MATCH (e:Event) RETURN e ORDER BY e.publish DESC LIMIT 1");
         } else {
-            e = await app.cypher('MATCH (e:Event) WHERE e.publish < {now} RETURN e ORDER BY e.publish DESC LIMIT 1', {now:Date.now()});
+            e = await app.cypher("MATCH (e:Event) WHERE e.publish < {now} RETURN e ORDER BY e.publish DESC LIMIT 1", {now:Date.now()});
         }
 
-        return e.records.length>0?e.records[0].get('e').properties:false;
+        return e.records.length>0?e.records[0].get("e").properties:false;
         
     }
     api.getLanguage = async (ctx) => {
-        return 'sv';
+        return "sv";
     }
     api.getUserLanguage = async (user) => {
-        return 'sv';
+        return "sv";
     }
     api.hasAnyRole = async (id, roles) => {
         var userRoles = await api.getRoles(id);
         for(let v of roles){
             if(v.match(/^!/) != null){
-                if(userRoles.includes(v.split('!')[1])) return false;
+                if(userRoles.includes(v.split("!")[1])) return false;
             }
         }
         for(let v of roles){
@@ -84,9 +84,9 @@ module.exports = async (app) => {
     }
     api.userId = async (ctx) => {
         var u = await app.cypher(
-            'MATCH (u:User)-[:HAS_SESSION]->(s:Session) WHERE s.id={id} AND NOT EXISTS(s.insecure) RETURN u',
+            "MATCH (u:User)-[:HAS_SESSION]->(s:Session) WHERE s.id={id} AND NOT EXISTS(s.insecure) RETURN u",
             {id:ctx.session.localSession});
-        return (u.records.length>0?u.records[0].get('u').properties.id:false);
+        return (u.records.length>0?u.records[0].get("u").properties.id:false);
     }
 
 
@@ -94,8 +94,8 @@ module.exports = async (app) => {
         //Return current session
         var s = ctx.session.localSession;
 
-        var q = s?(await app.cypher('MATCH (s:Session) WHERE s.id={id} RETURN s', {id:s})).records:null;
-        if(!q || q.length == 0 || q[0].get('s').properties.insecure){
+        var q = s?(await app.cypher("MATCH (s:Session) WHERE s.id={id} RETURN s", {id:s})).records:null;
+        if(!q || q.length == 0 || q[0].get("s").properties.insecure){
             s = ctx.session.localSession = false;
         }
         if(s){
@@ -119,16 +119,16 @@ module.exports = async (app) => {
         p.code = app.uuid()+app.uuid();
 
         var firstUser = false;
-        var users = (await app.cypher('MATCH (s:User) RETURN s'));
+        var users = (await app.cypher("MATCH (s:User) RETURN s"));
 
         if(users && users.records && users.records.length == 0){
             firstUser = true;
         }
 
-        await app.cypher('CREATE (:User {verified:false, verifyCode:{code}, id:{userId}, email:{email}, password:{password}, ssn:{ssn}, givenName:{givenName}, lastName:{lastName}, street:{street}, zipCode:{zipCode}, city:{city}, country:{country}, nickname:{nickname}, phone:{phone}, emergencyphone:{emergencyphone}, points:0})', p);
+        await app.cypher("CREATE (:User {verified:false, verifyCode:{code}, id:{userId}, email:{email}, password:{password}, ssn:{ssn}, givenName:{givenName}, lastName:{lastName}, street:{street}, zipCode:{zipCode}, city:{city}, country:{country}, nickname:{nickname}, phone:{phone}, emergencyphone:{emergencyphone}, points:0})", p);
 
         //Ensure new user and session are associated.
-        await app.cypher('MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (:Role {type:"anonymous"})<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d', {userId:p.userId, sessionId: await api.session(ctx)});
+        await app.cypher("MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (:Role {type:\"anonymous\"})<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d", {userId:p.userId, sessionId: await api.session(ctx)});
 
         await app.roleApi.addRole(p.userId, "user", "1500");
         
@@ -136,31 +136,31 @@ module.exports = async (app) => {
             await app.roleApi.addRole(p.userId, "admin", "50500");
         }
 
-        await api.emailUser(p.userId, 'Verifiera ditt Kodachikonto!', 'Tryck på denna länken för att verifiera ditt Kodachikonto: https://kodachi.se/__verifyEmail/'+p.code);
+        await api.emailUser(p.userId, "Verifiera ditt Kodachikonto!", "Tryck på denna länken för att verifiera ditt Kodachikonto: https://kodachi.se/__verifyEmail/"+p.code);
                 
-        await app.roleApi.addAchievement(p.userId, 'welcome_home', 1, api.getActiveEvent(ctx), 1, 0);
+        await app.roleApi.addAchievement(p.userId, "welcome_home", 1, api.getActiveEvent(ctx), 1, 0);
         
     }
     api.emailUser = async(userId, subject, text, html) => {
-        var u = (await app.cypher('MATCH (u:User {id:{id}}) RETURN u', {id:userId})).records;
+        var u = (await app.cypher("MATCH (u:User {id:{id}}) RETURN u", {id:userId})).records;
         if(u.length == 0) return false;
         if(!html) html = text;
-        u = u[0].get('u').properties;
+        u = u[0].get("u").properties;
         var lang = await app.userApi.getUserLanguage(u);
         await app.utils.email(u.email, app.stringApi.parse(subject, lang), app.stringApi.parse(text, lang), app.stringApi.parse(html, lang));
     }
     api.findAccount = async (p) => {
         var q = [];
         if(p.ssn){
-            q = await app.cypher('MATCH (u:User) WHERE u.ssn={ssn} RETURN u', p); 
+            q = await app.cypher("MATCH (u:User) WHERE u.ssn={ssn} RETURN u", p); 
         } else if(p.email) {
-            q = await app.cypher('MATCH (u:User) WHERE u.email={email} RETURN u', p);
+            q = await app.cypher("MATCH (u:User) WHERE u.email={email} RETURN u", p);
         } else if(p.nickname) {
-            q = await app.cypher('MATCH (u:User) WHERE u.nickname={nickname} RETURN u', p);
+            q = await app.cypher("MATCH (u:User) WHERE u.nickname={nickname} RETURN u", p);
         }   
 
         if(q && q.records && q.records.length > 0) {
-            var q = q.records[0].get('u').properties;
+            var q = q.records[0].get("u").properties;
             delete q.verifyCode;
             return q;
         }
@@ -174,13 +174,13 @@ module.exports = async (app) => {
         if(!pwCheck) return false;
 
         //associate current session with user
-        await app.cypher('MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (r:Role {type:"anonymous"}), (r)<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d', {userId:user.id, sessionId: await api.session(ctx)});
+        await app.cypher("MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (r:Role {type:\"anonymous\"}), (r)<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d", {userId:user.id, sessionId: await api.session(ctx)});
 
         return true;
         
     }
     api.logout = async (ctx) => {
-        await app.cypher('MATCH (u:User {id:{userId}})-[h:HAS_SESSION]->(s:Session), (r:Role {type:"anonymous"}) DELETE h CREATE (r)<-[:HAS_ROLE]-(s)', {userId:await api.userId(ctx)});
+        await app.cypher("MATCH (u:User {id:{userId}})-[h:HAS_SESSION]->(s:Session), (r:Role {type:\"anonymous\"}) DELETE h CREATE (r)<-[:HAS_ROLE]-(s)", {userId:await api.userId(ctx)});
         console.dir("logged out");
         delete ctx.userId;
     }

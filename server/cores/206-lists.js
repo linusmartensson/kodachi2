@@ -1,5 +1,5 @@
 
-var _ = require('lodash');
+var _ = require("lodash");
 module.exports = async (app) => {
     var api = {};
     if(!app.lists) app.lists = {};
@@ -19,7 +19,7 @@ module.exports = async (app) => {
         
         if(!list){
             //Retrieving list for event:
-            var split = list_name.split('.');
+            var split = list_name.split(".");
             list = app.lists[split[0]]?_.cloneDeep(app.lists[split[0]]):false;
 
             //No list exists
@@ -60,7 +60,7 @@ module.exports = async (app) => {
 
     app.listApi = api;
 
-	await (require('../tools/core').loader("lists", app));
+	await (require("../tools/core").loader("lists", app));
     var q = app.lists;
     for(var v in q){
         var b = "list."+q[v].list_name+".title";

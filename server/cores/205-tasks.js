@@ -1,5 +1,5 @@
 
-var _ = require('lodash');
+var _ = require("lodash");
 module.exports = async (app) => {
     var api = {};
 
@@ -7,7 +7,7 @@ module.exports = async (app) => {
     if(!app.tasks) app.tasks = {};
 
     //Delete all orphaned tasks (e.g. aborted registration)
-    app.cypher('MATCH (t:Task) WHERE NOT (t)-[:HANDLED_BY]->() DELETE t');
+    app.cypher("MATCH (t:Task) WHERE NOT (t)-[:HANDLED_BY]->() DELETE t");
 
     api.add_filter = (type, filterFunc) => {
         app.taskFilters[type] = filterFunc;
@@ -17,46 +17,46 @@ module.exports = async (app) => {
         return re.test(email);
     }
     api.add_filter("button", (d)=>{
-        return d=='true';});
-    api.add_filter("text", (d)=>{return ''+d;});
+        return d=="true";});
+    api.add_filter("text", (d)=>{return ""+d;});
     api.add_filter("simpletext", (d)=>{
         if(/^[a-zA-Z0-9-_]*$/.test(d)) return d;
-        throw 'Invalid Simpletext';
+        throw "Invalid Simpletext";
     });
     api.add_filter("phone", (d)=>{
         if(/^[0-9-+ ]*$/.test(d)) return d;
-        throw 'Invalid phone number';
+        throw "Invalid phone number";
     });
     api.add_filter("select", (d)=>{
         var v = JSON.parse(d);
-        if(!Array.isArray(v)) throw 'Invalid select data';
+        if(!Array.isArray(v)) throw "Invalid select data";
         return v;
     });
     api.add_filter("editor", (d)=>{
-        return ''+d;
+        return ""+d;
     });
-    api.add_filter("textbox", (d)=>{return ''+d;});
-    api.add_filter("password", (d)=>{return ''+d;});
+    api.add_filter("textbox", (d)=>{return ""+d;});
+    api.add_filter("password", (d)=>{return ""+d;});
     api.add_filter("ssn", (d)=>{
-        if(!d || d=='') return '';
-        d = d.replace(/\D/g, '');
+        if(!d || d=="") return "";
+        d = d.replace(/\D/g, "");
         if(d.length == 10){
-            if(d[0] == '0' || d[0] == '1') d = "20"+d;
+            if(d[0] == "0" || d[0] == "1") d = "20"+d;
             else d = "19" + d;
             return d;
         } else if(d.length == 12)
             return d;
-        throw 'Invalid SSN';
+        throw "Invalid SSN";
     });
     api.add_filter("email", (d)=>{
-        if(d === '') return d;
-        if(!validateEmail(d)) throw 'Invalid Email';
-        return ''+d;
+        if(d === "") return d;
+        if(!validateEmail(d)) throw "Invalid Email";
+        return ""+d;
     });
     api.add_filter("file", (d)=>{return {file:d.path, mimeType:d.mimeType};});
     api.add_filter("image", (d)=>{return {file:d.path, mimeType:d.mimeType};});
     api.add_filter("bool", (d)=>{
-        return d=='true';
+        return d=="true";
     });
     api.add_filter("date", (d)=>{
         return new Date(d).getTime();
@@ -68,24 +68,24 @@ module.exports = async (app) => {
     api.add_filter("hours", (d)=>{return d;}); //TODO How2handle hours??
     api.add_filter("dropdown", (d,q)=>{ //Index of values-list.
         d = JSON.parse(d);
-        if(q.values.length == 0) return '';
-        if(!Array.isArray(d) || d.length < 1) throw 'Invalid dropdown selection';
+        if(q.values.length == 0) return "";
+        if(!Array.isArray(d) || d.length < 1) throw "Invalid dropdown selection";
         d = d[0];
-        if(~~d >= q.values.length) throw 'Invalid dropdown selection';
+        if(~~d >= q.values.length) throw "Invalid dropdown selection";
         var v = q.values[~~d];
         return v;
     });
     api.add_filter("staticselect", (d,q)=>{ //Index of values-list.
         d = JSON.parse(d);
-        if(!Array.isArray(d)) throw 'Invalid dropdown selection';
+        if(!Array.isArray(d)) throw "Invalid dropdown selection";
         for(var v in d){
-            if(~~d[v] >= q.values.length) throw 'Invalid dropdown selection';
+            if(~~d[v] >= q.values.length) throw "Invalid dropdown selection";
             d[v] = q.values[~~d[v]];
         }
         return d;
     });
-    api.add_filter("number", (d)=>{if(!d) return 0; return d.replace(/\D/g, '');});
-    api.add_filter("amount", (d)=>{if(!d) return 0; return d.replace(/\D/g, '');});
+    api.add_filter("number", (d)=>{if(!d) return 0; return d.replace(/\D/g, "");});
+    api.add_filter("amount", (d)=>{if(!d) return 0; return d.replace(/\D/g, "");});
 
 
     api.filterResponse = (response, inputs) => {
@@ -100,10 +100,10 @@ module.exports = async (app) => {
 
     //Task creation api
     api.yesno = () => {
-        return [{field:'no', type:'button'},{field:'yes', type:'button'}];
+        return [{field:"no", type:"button"},{field:"yes", type:"button"}];
     }
     api.okcancel = () => {
-        return [{field:'cancel', type:'button'},{field:'ok', type:'button'}];
+        return [{field:"cancel", type:"button"},{field:"ok", type:"button"}];
     }
     api.step = (task_name, inputs, result_handler, post_handler) => {
         api.create_task("", task_name, [], [], inputs, result_handler, post_handler);
@@ -111,7 +111,7 @@ module.exports = async (app) => {
     }
     api.create_task = (task_group, task_name, starter_roles, handler_roles, inputs, result_handler, post_handler) => {
 
-        if(!post_handler) post_handler = ()=>{return 'OK'};
+        if(!post_handler) post_handler = ()=>{return "OK"};
 
         for(var v in inputs){
             if(!inputs[v].field) continue;
@@ -162,8 +162,8 @@ module.exports = async (app) => {
         var task = api.getTask(inst.task_name); 
 
         for(var v of task.inputs){
-            if(v.field && !(v.type=='bool') && !v.nocheck && (inst.response[v.field] === undefined || inst.response[v.field] === '')){
-                inst.error = '{task.error.emptyFields}';
+            if(v.field && !(v.type=="bool") && !v.nocheck && (inst.response[v.field] === undefined || inst.response[v.field] === "")){
+                inst.error = "{task.error.emptyFields}";
                 return true;
             }
         }
@@ -185,7 +185,7 @@ module.exports = async (app) => {
             var d = JSON.stringify(data);
             v = (await app.cypher("MATCH (t:Task) WHERE t.id={target} SET t.data={data} RETURN t", {target:task_id, data:d})).records;
         }
-        if(v.length > 0) return JSON.parse(v[0].get('t').properties.data);
+        if(v.length > 0) return JSON.parse(v[0].get("t").properties.data);
         return undefined;
     }
     async function notifyTask(task_id){
@@ -193,7 +193,7 @@ module.exports = async (app) => {
 
         var q = [];
         for(let m of s){
-            q.push(m.get('s').properties.id);
+            q.push(m.get("s").properties.id);
         }
 
         //Notify task update
@@ -214,7 +214,7 @@ module.exports = async (app) => {
         
         var q = [];
         for(let m of s){
-            q.push(m.get('s').properties.id);
+            q.push(m.get("s").properties.id);
         }
 
         //Delete finished task
@@ -275,7 +275,7 @@ module.exports = async (app) => {
         
         if(!task){
             //Retrieving task for event:
-            var split = task_name.split('.');
+            var split = task_name.split(".");
             task = app.tasks[split[0]]?_.cloneDeep(app.tasks[split[0]]):false;
 
             //No task exists
@@ -333,7 +333,7 @@ module.exports = async (app) => {
                 origin = user;
             }
         }
-        var inst = {task_name:task.task_name, id:app.uuid(), data:{private:{}, start_data:start_data}, next_tasks:[], origin:origin, result:'WAIT_RESPONSE', response:{}}
+        var inst = {task_name:task.task_name, id:app.uuid(), data:{private:{}, start_data:start_data}, next_tasks:[], origin:origin, result:"WAIT_RESPONSE", response:{}}
         
         setupTask(ctx, inst, task);
         return true;
@@ -359,17 +359,17 @@ module.exports = async (app) => {
             await updateTaskInstance(inst.id, inst);
 
             switch(result){
-                case 'OK':
+                case "OK":
                     break;
-                case 'RETRY':
+                case "RETRY":
                     await finishChildren(inst);
                     inst.children = {}; //Reset all sub-tasks.
                     inst.next_tasks = [];
-                    inst.result = 'WAIT_RESPONSE';
+                    inst.result = "WAIT_RESPONSE";
                     await updateTaskInstance(inst.id, inst);
                     notifyTask(inst.id);
                     return result;
-                case 'FAIL':
+                case "FAIL":
                 default:
                     inst.next_tasks = [];
                     break;
@@ -394,7 +394,7 @@ module.exports = async (app) => {
         } else {
             await updateTaskInstance(inst.id, inst);
             notifyTask(inst.id);
-            return 'OK';
+            return "OK";
         }
     }
     async function nextTask(ctx, inst, task){
@@ -405,7 +405,7 @@ module.exports = async (app) => {
             for(var n=0;n<inst.next_tasks.length;++n){
                 var uuid = app.uuid();
                 var tasktype = inst.next_tasks[n];
-                if(typeof inst.next_tasks[n] === 'object'){
+                if(typeof inst.next_tasks[n] === "object"){
                     uuid = tasktype.uuid || uuid;
                     tasktype = tasktype.task;
                 }
@@ -413,8 +413,8 @@ module.exports = async (app) => {
                 if(api.eventTask(child_task)){
                     child_task = api.getTask(tasktype+"."+inst.data.start_data.event_id);
                 }
-                var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst.id, origin:inst.origin, result:'WAIT_RESPONSE', response:{}};
-                if(typeof inst.next_tasks[n] === 'object'){
+                var child_inst = {task_name:child_task.task_name, id:uuid, next_tasks:[], data:inst.data, parent:inst.id, origin:inst.origin, result:"WAIT_RESPONSE", response:{}};
+                if(typeof inst.next_tasks[n] === "object"){
                     if(inst.next_tasks[n].handlers) child_inst.handler_roles = inst.next_tasks[n].handlers;
                 }
 
@@ -440,7 +440,7 @@ module.exports = async (app) => {
         var inst = await updateTaskInstance(task_id);
         inst.error = "no error message :(";
 
-        if(!inst || inst.result != 'WAIT_RESPONSE' || !await secureTask(ctx, task_id, inst)) return 'NO_TASK_ID';  //There is no matching task instance.
+        if(!inst || inst.result != "WAIT_RESPONSE" || !await secureTask(ctx, task_id, inst)) return "NO_TASK_ID";  //There is no matching task instance.
         console.log("Found "+task_id+". Processing response!");
 
         await updateTaskInstance(task_id, inst);
@@ -457,10 +457,10 @@ module.exports = async (app) => {
             }
         } catch (e) {
             inst.error = "{task.error.filterFailure}";
-            inst.result = 'WAIT_RESPONSE';
+            inst.result = "WAIT_RESPONSE";
             await updateTaskInstance(task_id, inst)
             console.log("Task processing error: "+inst.error);
-            return 'RETRY';
+            return "RETRY";
         }
 
         //Process the response
@@ -473,15 +473,15 @@ module.exports = async (app) => {
         await updateTaskInstance(task_id, inst);
 
         switch(result){
-            case 'OK': 
+            case "OK": 
                 result = await nextTask(ctx, inst, task);
                 return result;
-            case 'RETRY':
-                inst.result = 'WAIT_RESPONSE';
+            case "RETRY":
+                inst.result = "WAIT_RESPONSE";
                 await updateTaskInstance(task_id, inst);
                 notifyTask(task_id);
                 return app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx));
-            case 'FAIL':
+            case "FAIL":
             default:
                 inst.next_tasks = [];
                 await nextTask(ctx, inst, task);
@@ -492,7 +492,7 @@ module.exports = async (app) => {
 
     app.taskApi = api;
 
-	await (require('../tools/core').loader("tasks", app));
+	await (require("../tools/core").loader("tasks", app));
 
     var q = app.tasks;
     for(var v in q){

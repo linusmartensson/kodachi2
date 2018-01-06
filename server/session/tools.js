@@ -13,7 +13,7 @@ module.exports = (app) => {
         var uniques = {};
 
         for(let q of s){
-            var task = JSON.parse(q.get('t').properties.data);
+            var task = JSON.parse(q.get("t").properties.data);
             if(app.taskApi.uniqueTask(app.tasks[task.task_name])) {
                 uniques[task.task_name] = true;
             }
@@ -33,21 +33,21 @@ module.exports = (app) => {
             var rs = app.tasks[t].starter_roles;
             var event_task = false;
             if(app.taskApi.eventTask(app.tasks[t])){
-                rs = app.taskApi.getTask(t+'.'+activeEvent).starter_roles;
+                rs = app.taskApi.getTask(t+"."+activeEvent).starter_roles;
                 event_task = true;
             }
             var skip = false;
             for(let v of rs){
-                if(v.match(/^!/) != null && roles.includes(v.split('!')[1])){skip = true; break;};
+                if(v.match(/^!/) != null && roles.includes(v.split("!")[1])){skip = true; break;};
             }
             if(skip) continue;
             for(let v of rs){
                 if(roles.includes(v)){
-                    var id = event_task?(t+'.'+activeEvent):t;
+                    var id = event_task?(t+"."+activeEvent):t;
                     tools.push({
                         id:id, 
                         task:id, 
-                        title:'{task.'+app.tasks[t].task_name+'.title}'
+                        title:"{task."+app.tasks[t].task_name+".title}"
                     });
                     break;
                 }

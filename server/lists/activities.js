@@ -2,7 +2,7 @@
 
 module.exports = (app) => {
 
-    app.listApi.create_list("activites", "show_team", ['manager.', 'team_member.'], {event_list:true}, 
+    app.listApi.create_list("activites", "show_team", ["manager.", "team_member."], {event_list:true}, 
         async (inst, ctx) => {
             //List all member names
             //Hover-text for applications
@@ -16,14 +16,14 @@ module.exports = (app) => {
             //for teams
             for(var v in teams.records){
 
-                var team = teams.records[v].get('w').properties;
+                var team = teams.records[v].get("w").properties;
                 var managers = await app.cypher("MATCH (u:User)-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN u", {team:team.id});
                 managers = managers.records;
 
                 var tls = {};
 
                 for(var q of managers){
-                    var u = q.get('u').properties;
+                    var u = q.get("u").properties;
                     tls[u.id] = u;
                 }
                 var manager = !!tls[await app.userApi.userId(ctx)];
@@ -33,9 +33,9 @@ module.exports = (app) => {
 
                 var teamdesc = {tiers:[{
                     id:0, panels:[
-                        {id:0, content:[{id:0, type:'text', text:team.name}]},
-                        {id:1, content:[{id:0, type:'text', text:members.records.length+"/"+team.size}]},
-                        {id:2, content:[{id:0, type:'editbutton', text:"Email team", task:'email_team.'+inst.start_data.event_id, data:{team:team.id}}]}
+                        {id:0, content:[{id:0, type:"text", text:team.name}]},
+                        {id:1, content:[{id:0, type:"text", text:members.records.length+"/"+team.size}]},
+                        {id:2, content:[{id:0, type:"editbutton", text:"Email team", task:"email_team."+inst.start_data.event_id, data:{team:team.id}}]}
                     ]
                 }], id:content.length};
 
@@ -47,22 +47,22 @@ module.exports = (app) => {
                 for(var w in members.records){
                     var member = members.records[w];
 
-                    var t = member.get('t').properties;
-                    var u = member.get('u').properties;
+                    var t = member.get("t").properties;
+                    var u = member.get("u").properties;
                     let tier = {
                         id:r.tiers.length,
                         panels:[
-                            {id:0, content:[{id:0, type:'text', hover:t.description, text:u.givenName+" \""+u.nickname+"\" "+u.lastName}]},
-                            {id:1, content:[{id:0, type:'text', hover:t.description, text:u.email}]},
+                            {id:0, content:[{id:0, type:"text", hover:t.description, text:u.givenName+" \""+u.nickname+"\" "+u.lastName}]},
+                            {id:1, content:[{id:0, type:"text", hover:t.description, text:u.email}]},
                         ]
                     }
 
                     if(manager){
-                        tier.panels.push({id:2, content:[{id:0, type:'editbutton', text:'Remove user', task:'remove_team_member.'+inst.start_data.event_id, data:{team:team.id, user:u.id}}]});
+                        tier.panels.push({id:2, content:[{id:0, type:"editbutton", text:"Remove user", task:"remove_team_member."+inst.start_data.event_id, data:{team:team.id, user:u.id}}]});
                         if(!tls[u.id]) 
-                            tier.panels.push({id:3, content:[{id:0, type:'editbutton', text:'Promote user', task:'promote_manager.'+inst.start_data.event_id, data:{team:team.id, user:u.id}}]});
+                            tier.panels.push({id:3, content:[{id:0, type:"editbutton", text:"Promote user", task:"promote_manager."+inst.start_data.event_id, data:{team:team.id, user:u.id}}]});
                         else 
-                            tier.panels.push({id:3, content:[{id:0, type:'editbutton', text:'Demote user', task:'demote_manager.'+inst.start_data.event_id, data:{team:team.id, user:u.id}}]});
+                            tier.panels.push({id:3, content:[{id:0, type:"editbutton", text:"Demote user", task:"demote_manager."+inst.start_data.event_id, data:{team:team.id, user:u.id}}]});
                     }
 
                     r.tiers.push(tier);
@@ -75,7 +75,7 @@ module.exports = (app) => {
         });
 
 
-    app.listApi.create_list("activities", "show_activities", ['anonymous', 'user'], {event_list:true},
+    app.listApi.create_list("activities", "show_activities", ["anonymous", "user"], {event_list:true},
         async(inst, ctx) => {
 
             var teams = await app.cypher("MATCH (:Event {id:{event}})--(w:WorkGroup) RETURN w", {event:inst.start_data.event_id, type:""});
@@ -86,7 +86,7 @@ module.exports = (app) => {
             //for teams
             for(var v in teams.records){
 
-                var team = teams.records[v].get('w').properties;
+                var team = teams.records[v].get("w").properties;
                 //              name
                 //              schedule
                 //open
@@ -108,7 +108,7 @@ module.exports = (app) => {
                 //{field:'shop_type', type:'dropdown', values:['artist_alley','vendor']},
                 var teamdesc = {tiers:[{
                     id:0, panels:[
-                        {id:0, content:[{id:0, type:'caption', text:team.name}, {id:1, type:'image', image:team.image}]},
+                        {id:0, content:[{id:0, type:"caption", text:team.name}, {id:1, type:"image", image:team.image}]},
                     ]
                 }/*,{ -- This will not be viable to have here until we get the scheduling integrated in the website.
                     id:1, panels:[

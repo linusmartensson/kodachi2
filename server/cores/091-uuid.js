@@ -1,5 +1,5 @@
 
-var u = require('uuid/v4');
+var u = require("uuid/v4");
 
 module.exports = (app) => {
 

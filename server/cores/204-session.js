@@ -1,11 +1,11 @@
 
-var _ = require('lodash');
+var _ = require("lodash");
 
 module.exports = async (app) => {
 
     //app.cypher('MATCH (s:Session) DETACH DELETE s'); //On server boot, delete all sessions.
 
-    var patcher = require('jsondiffpatch').create({
+    var patcher = require("jsondiffpatch").create({
         objectHash: (obj) => {
             return obj.id || obj._id;
         }
@@ -27,7 +27,7 @@ module.exports = async (app) => {
                         var ctx = app.clients[s][id];
                         var current = await api.buildSession(ctx);
                         var patch = patcher.diff(ctx.session.state, current);
-                        ctx.socket.emit('update', patch);
+                        ctx.socket.emit("update", patch);
                         ctx.session.state = current;
                     }
                 }
@@ -55,5 +55,5 @@ module.exports = async (app) => {
 
     app.sessionApi = api;
 
-    await require('../tools/core').loader("session", app);
+    await require("../tools/core").loader("session", app);
 }

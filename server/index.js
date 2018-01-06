@@ -1,17 +1,18 @@
 //cluster.isMaster is a watcher, whose only task is restarting children on filesystem changes.
 //!cluster.isMaster will load all files from /cores in sorted order.
-require('babel-register');
+"use strict";
+require("babel-register");
 
-import cluster from 'cluster';
-import winston from 'winston';
-import os from 'os';
+import cluster from "cluster";
+import winston from "winston";
+import os from "os";
 
-process.on('unhandledRejection', r => {
+process.on("unhandledRejection", r => {
     console.dir(r);
     process.exit(1);
 });
 
-var tools = require('./tools/core')
+var tools = require("./tools/core");
 
 winston.level = "info";
 
@@ -27,16 +28,16 @@ var reload = () => {
 		}
 		return;
 	} else {
-		if(app.koa) process.exit();
+		if(app.koa) {process.exit();}
 	}
 
-	var start = async (connection) => {
+	var start = async () => {
 		winston.info("Starting...");
-		tools.loader('cores', app, ()=>{}).catch((e)=>{winston.error(e)});
+		tools.loader("cores", app, ()=>{}).catch((e)=>{winston.error(e);});
 	};
 
-	start().catch((e) => {winston.error(e)});
-}
+	start().catch((e) => {winston.error(e);});
+};
 
 winston.info("Setting up watchers...");
 tools.watch(__dirname, reload);

@@ -1,5 +1,5 @@
 
-import winston from 'winston'
+import winston from "winston"
 
 module.exports = (app) => {
 
@@ -7,7 +7,7 @@ module.exports = (app) => {
 
     app.clientSessions = {};
 
-	app.io.on('connection', async (ctx) => {
+	app.io.on("connection", async (ctx) => {
         try{
             var cid = (ctx.socket.client.id);
             var token = ctx.socket.handshake.query.token;
@@ -38,11 +38,11 @@ module.exports = (app) => {
             ctx.session.state = await app.sessionApi.buildSession(ctx);
 
             app.clientSessions[cid] = ctx.session;
-            ctx.socket.emit('state', ctx.session.state);
+            ctx.socket.emit("state", ctx.session.state);
         } catch(e) {console.dir(e);}
     });
 
-	app.io.on('disconnect', async ctx => {
+	app.io.on("disconnect", async ctx => {
         ctx.session = app.clientSessions[ctx.socket.socket.id];
         if(!ctx.session) return;
 
@@ -50,7 +50,7 @@ module.exports = (app) => {
 		delete app.clients[ctx.session.localSession][ctx.session.uuid];
 
         if(!app.clients[ctx.session.localSession]){
-            await app.cypher('MATCH (s:Session) WHERE EXISTS(s.insecure) AND s.id={id} DETACH DELETE s', {id:ctx.session.localSession});
+            await app.cypher("MATCH (s:Session) WHERE EXISTS(s.insecure) AND s.id={id} DETACH DELETE s", {id:ctx.session.localSession});
         }
         delete app.clientSessions[ctx.socket.socket.id];
 	});

@@ -1,17 +1,17 @@
-import winston from 'winston'
+import winston from "winston"
 
 module.exports = (app) => {
 
-	app.io.on('hello', (ctx, data) => {
+	app.io.on("hello", (ctx, data) => {
 		console.log("LOL");
-		ctx.socket.emit('world', {
-			'message':"woop!"
+		ctx.socket.emit("world", {
+			"message":"woop!"
 		})
 	});
 
-	app.io.on('data', (ctx, data) => {
+	app.io.on("data", (ctx, data) => {
 		console.dir("OMG");
-		ctx.socket.emit('response', {
+		ctx.socket.emit("response", {
 			message:"wtf"
 		})
 	});

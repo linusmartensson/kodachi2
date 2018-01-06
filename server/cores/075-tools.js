@@ -1,7 +1,7 @@
 
-import asyncBusboy from 'async-busboy'
-import mail from 'nodemailer';
-var fs = require('fs');
+import asyncBusboy from "async-busboy"
+import mail from "nodemailer";
+var fs = require("fs");
 
 module.exports = (app) => {
     var api = {};
@@ -17,7 +17,7 @@ module.exports = (app) => {
 
     api.upload = async (file) => {
 
-        var suffix = '.'+file.file.split(/\./).slice(-1)[0];
+        var suffix = "."+file.file.split(/\./).slice(-1)[0];
         var base = app.uuid()+suffix;
 
         var read = fs.createReadStream(file.file);
@@ -36,7 +36,7 @@ module.exports = (app) => {
     api.email = async (to, subject, text, html, immediate) => {
 
         var opts = {
-            from: '"Kodachi" <no-reply@kodachi.se>',
+            from: "\"Kodachi\" <no-reply@kodachi.se>",
             to,
             subject,
             text,

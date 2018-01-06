@@ -1,4 +1,4 @@
-import bodyParser from 'koa-bodyparser'
+import bodyParser from "koa-bodyparser"
 
 
 module.exports = (app) => {
