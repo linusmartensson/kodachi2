@@ -36,4 +36,4 @@ module.exports = (app) => {
         await app.stringApi.translate(ctx, lists);
         state.lists = lists;
     });
-}
+};

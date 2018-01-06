@@ -37,7 +37,7 @@ module.exports = async (app) => {
             inst.data.receipt.id = app.uuid();
             inst.next_tasks.push("review_receipt");
             return "OK";
-        }, async(inst)=>{return "OK"});
+        }, async(inst)=>{return "OK";});
 
     app.taskApi.create_task("budget", "review_receipt", 
         [], ["budget."],
@@ -65,19 +65,19 @@ module.exports = async (app) => {
             inst.next_tasks.push("accept_receipt");
             inst.next_tasks.push("pay_receipt");
             return "OK";
-        }, async(inst)=>{return "OK"});
+        }, async(inst)=>{return "OK";});
 
     app.taskApi.create_task("budget", "pay_receipt", 
         [], ["budget."], [{event_task:true, field:"ok", type:"button"}],
         async (inst) => {
             await app.cypher("MATCH (r:Receipt id:{id}) SET r.paid=1", {id:inst.data.receipt.id});
-            return "OK";}, async(inst)=>{return "OK"});
+            return "OK";}, async(inst)=>{return "OK";});
     app.taskApi.create_task("budget", "accept_receipt", 
         [], [], [{event_task:true, field:"ok", type:"button"}],
-        async (inst) => {return "OK";}, async(inst)=>{return "OK"});
+        async (inst) => {return "OK";}, async(inst)=>{return "OK";});
     app.taskApi.create_task("budget", "deny_receipt", 
         [], [], [{event_task:true, field:"ok", type:"button"}],
-        async (inst) => {return "OK";}, async(inst)=>{return "OK"});
+        async (inst) => {return "OK";}, async(inst)=>{return "OK";});
 
     app.taskApi.create_task("budget", "add_budgetgroup", ["budget.", "admin.","overseer."],[], app.taskApi.okcancel().concat({event_task:true, field:"budget_type",type:"simpletext"},{field:"limit", type:"number"}),
         async(inst, ctx) => {
@@ -87,9 +87,9 @@ module.exports = async (app) => {
             await app.budgetApi.addGroup(inst.data.start_data.event_id, inst.response.budget_type, inst.response.limit);
             return "OK";
         },
-        async(inst) => {return "OK"});
+        async(inst) => {return "OK";});
 
 
 
 
-}
+};

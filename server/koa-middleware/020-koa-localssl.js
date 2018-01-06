@@ -10,4 +10,4 @@ module.exports = (app) => {
 		ctx.set("Access-Control-Allow-Credentials", "true");
 		await next();
 	});
-}
+};

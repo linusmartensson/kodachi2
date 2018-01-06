@@ -1,6 +1,6 @@
 
 const https = require("https");
-import {URLSearchParams} from "url" 
+import {URLSearchParams} from "url"; 
 
 module.exports = async (app) => {
 
@@ -59,7 +59,7 @@ module.exports = async (app) => {
             trackingId:trackId,
             "receiverList.receiver(0).email":app.paysonkey.email,
             "receiverList.receiver(0).amount":sum
-        }
+        };
         console.dir(data);
 
         return new URLSearchParams(await query("/1.0/Pay/", new URLSearchParams(data).toString()));
@@ -70,10 +70,10 @@ module.exports = async (app) => {
 
     async function markPaid(paysonFee, token, user, numTickets, numSleep, points, event){
 
-        for(var v = 0; v < numSleep; ++v) {
+        for(let v = 0; v < numSleep; ++v) {
             await app.cypher("MATCH (u:User {id:{user}}), (e:Event {id:{event}}) CREATE (u)-[:TICKET {type:{type}, used:false, id:{ticket}}]->(e)", {user, event, type:"ticket", ticket:app.uuid()});
         }
-        for(var v = 0; v < numTickets; ++v) {
+        for(let v = 0; v < numTickets; ++v) {
             await app.cypher("MATCH (u:User {id:{user}}), (e:Event {id:{event}}) CREATE (u)-[:TICKET {type:{type}, used:false, id:{ticket}}]->(e)", {user, event, type:"sleep", ticket:app.uuid()});
         }
         await app.budgetApi.addBudget(event, "ticket_income", 300*numTickets);
@@ -193,4 +193,4 @@ module.exports = async (app) => {
        }, async(inst, ctx) => {
             return "OK";
        });
-}
+};

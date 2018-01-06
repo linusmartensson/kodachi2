@@ -6,12 +6,12 @@ module.exports = async (app) => {
 
     api.create_string = (name, string) => {
         app.strings[name] = string;
-    }
+    };
     api.add_string = (lang, name, string, nolog) => {
         if(!app.strings[name]) app.strings[name] = {};
         app.strings[name][lang] = string;
         if(string === "" && !nolog) console.log("Empty string: "+name);
-    }
+    };
     api.add_strings = (nls) => {
         for(var v in nls){
             if(!app.strings[v]) app.strings[v] = {};
@@ -19,7 +19,7 @@ module.exports = async (app) => {
                 app.strings[v][q] = nls[v][q];
             }
         }
-    }
+    };
 
     api.get_string = (name, t) => {
         var orig = name;
@@ -52,7 +52,7 @@ module.exports = async (app) => {
             console.log("s('"+orig+"', '')"); 
             return undefined;
         }
-    }
+    };
     api.bookParser = (v, idbase) => {
         //We assume there's a localized string here, that may or may not be a book
         if(typeof v !== "string") v = [];
@@ -136,7 +136,7 @@ module.exports = async (app) => {
                     text:s
                 });
             }
-        }
+        };
 
 
         for(var w of v){
@@ -158,7 +158,7 @@ module.exports = async (app) => {
 
         return pages;
 
-    }
+    };
     api.parse = (v, tokens) => {
         if(v.startsWith("{|")){
             var q = v.slice(2, -1);
@@ -175,13 +175,13 @@ module.exports = async (app) => {
             return q;
         });
         return r;
-    }
+    };
     api.userParse = async (ctx, v, lang) => {
         if(!lang)
             lang = await app.userApi.getLanguage(ctx);
         var w = api.parse(v, lang);
         return w;
-    }
+    };
 
     api.translate = async (ctx, v, lang) => {
         if(!lang) lang = await app.userApi.getLanguage(ctx);
@@ -189,17 +189,17 @@ module.exports = async (app) => {
             if(typeof v[w] === "object") await api.translate(ctx, v[w], lang);
             if(typeof v[w] === "string") v[w] = await api.userParse(ctx, v[w], lang);
         }
-    }
+    };
     
     api.parseDeep = (v, tokens) => {
         if(v) for(var w in v) {
             if(typeof v[w] === "object") api.parseDeep(v[w], tokens);
             if(typeof v[w] === "string") v[w] = api.parse(v[w], tokens);
         }
-    }
+    };
 
 
     app.stringApi = api;
 	
     await require("../tools/core").loader("strings", app);
-}
+};

@@ -16,7 +16,7 @@ module.exports = async (app) => {
     //Core function for registering session components.
     api.register = (f) => {
         app.sessionComponents.push(f);
-    }
+    };
 
     //Core function for updating live clients.
     api.notifySessions = async (ss) => {
@@ -35,7 +35,7 @@ module.exports = async (app) => {
         }catch(e){
             console.dir(e);
         }
-    }
+    };
 
     //Build a complete session state -> The data we send to the client.
     api.buildSession = async (ctx) => {
@@ -51,9 +51,9 @@ module.exports = async (app) => {
         }
         return state;
 
-    }
+    };
 
     app.sessionApi = api;
 
     await require("../tools/core").loader("session", app);
-}
+};

@@ -21,4 +21,4 @@ module.exports = (app) => {
 
         return {content:[r], id:0};
     });
-}
+};

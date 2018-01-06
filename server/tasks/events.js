@@ -52,4 +52,4 @@ module.exports = async (app) => {
         }, (inst) => {
             return "OK";
         });
-}
+};

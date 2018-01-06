@@ -1,9 +1,9 @@
 import Koa from "koa";
-import winston from "winston"
-import https from "https"
-import http from "http"
-import koa from "koa"
-var tools = require("../tools/core")
+import winston from "winston";
+import https from "https";
+import http from "http";
+import koa from "koa";
+var tools = require("../tools/core");
 
 module.exports = async (app) => {
 
@@ -16,4 +16,4 @@ module.exports = async (app) => {
 	winston.info("Started koa!");
 
 	return true;
-}
+};

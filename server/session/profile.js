@@ -8,7 +8,7 @@ module.exports = app => {
             lang: await app.userApi.getLanguage(ctx),
             event: await app.userApi.getActiveEvent(ctx),
 
-        }
+        };
         if(app.userApi.userId(ctx)){
             var user = await app.userApi.getUser(await app.userApi.userId(ctx));
             if(user){
@@ -26,4 +26,4 @@ module.exports = app => {
 
     });
 
-}
+};

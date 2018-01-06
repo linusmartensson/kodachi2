@@ -1,5 +1,5 @@
 
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 
 module.exports = async (app) => {
 
@@ -17,16 +17,16 @@ module.exports = async (app) => {
             bcrypt.hash(pwd, 10, (err, hash) => {
                 if(err) reject(err);
                 resolve(hash);
-            })
-        })
+            });
+        });
     }
     function compare(pwd, hash){
         return new Promise((resolve, reject) => {
             bcrypt.compare(pwd, hash, (err, res) => {
                 if(err) reject(err);
                 resolve(res);
-            })
-        })
+            });
+        });
     }
 
     api.getUser = async (id) => {
@@ -37,7 +37,7 @@ module.exports = async (app) => {
             return user;
         }
         return undefined;
-    }
+    };
     api.getRoles = async (id) => {
         if(!id) return ["anonymous"];
         var userRoles = await app.cypher(
@@ -49,10 +49,10 @@ module.exports = async (app) => {
             r.push(v.get("r").properties.type);
         }
         return r;
-    }
+    };
     api.getUserRoles = async (ctx) => {
         return api.getRoles(await api.userId(ctx));
-    }
+    };
     api.getActiveEvent = async (ctx) => {
         var e = false;
         if(await api.hasAnyRole(await api.userId(ctx), ["admin"])) {
@@ -63,13 +63,13 @@ module.exports = async (app) => {
 
         return e.records.length>0?e.records[0].get("e").properties:false;
         
-    }
+    };
     api.getLanguage = async (ctx) => {
         return "sv";
-    }
+    };
     api.getUserLanguage = async (user) => {
         return "sv";
-    }
+    };
     api.hasAnyRole = async (id, roles) => {
         var userRoles = await api.getRoles(id);
         for(let v of roles){
@@ -81,13 +81,13 @@ module.exports = async (app) => {
             if(userRoles.includes(v)) return true;
         }
         return false;
-    }
+    };
     api.userId = async (ctx) => {
         var u = await app.cypher(
             "MATCH (u:User)-[:HAS_SESSION]->(s:Session) WHERE s.id={id} AND NOT EXISTS(s.insecure) RETURN u",
             {id:ctx.session.localSession});
         return (u.records.length>0?u.records[0].get("u").properties.id:false);
-    }
+    };
 
 
     api.session = async (ctx) => {
@@ -108,7 +108,7 @@ module.exports = async (app) => {
 
         ctx.session.localSession = id;
         return id;
-    }
+    };
 
     api.createUser = async (ctx, p) => {
 
@@ -140,7 +140,7 @@ module.exports = async (app) => {
                 
         await app.roleApi.addAchievement(p.userId, "welcome_home", 1, api.getActiveEvent(ctx), 1, 0);
         
-    }
+    };
     api.emailUser = async(userId, subject, text, html) => {
         var u = (await app.cypher("MATCH (u:User {id:{id}}) RETURN u", {id:userId})).records;
         if(u.length == 0) return false;
@@ -148,7 +148,7 @@ module.exports = async (app) => {
         u = u[0].get("u").properties;
         var lang = await app.userApi.getUserLanguage(u);
         await app.utils.email(u.email, app.stringApi.parse(subject, lang), app.stringApi.parse(text, lang), app.stringApi.parse(html, lang));
-    }
+    };
     api.findAccount = async (p) => {
         var q = [];
         if(p.ssn){
@@ -166,7 +166,7 @@ module.exports = async (app) => {
         }
 
         return false;
-    }
+    };
     api.tryLogin = async (ctx, user, password) => {
         //login account
 
@@ -178,25 +178,25 @@ module.exports = async (app) => {
 
         return true;
         
-    }
+    };
     api.logout = async (ctx) => {
         await app.cypher("MATCH (u:User {id:{userId}})-[h:HAS_SESSION]->(s:Session), (r:Role {type:\"anonymous\"}) DELETE h CREATE (r)<-[:HAS_ROLE]-(s)", {userId:await api.userId(ctx)});
         console.dir("logged out");
         delete ctx.userId;
-    }
+    };
     api.updateUser = async (id, p) => {
         //TODO 
-    }
+    };
     api.loggedIn = async (ctx) => {
         if(await api.userId(ctx)) return true;
         return false;
-    }
+    };
     api.requireAuth = () => {
         return async (ctx, next) => {
             if(!await api.loggedIn(ctx)) return;
             return await next();
-        }
-    }
+        };
+    };
 
     app.userApi = api;
-}
+};

@@ -1,4 +1,4 @@
-import winston from "winston"
+import winston from "winston";
 
 module.exports = (app) => {
 
@@ -6,14 +6,14 @@ module.exports = (app) => {
 		console.log("LOL");
 		ctx.socket.emit("world", {
 			"message":"woop!"
-		})
+		});
 	});
 
 	app.io.on("data", (ctx, data) => {
 		console.dir("OMG");
 		ctx.socket.emit("response", {
 			message:"wtf"
-		})
+		});
 	});
 
 /*	app.io.on('ack', (ctx, data) => {
@@ -22,5 +22,5 @@ module.exports = (app) => {
 		});
 	});*/
 
-	return (ctx,next) => {next()};
-}
+	return (ctx,next) => {next();};
+};

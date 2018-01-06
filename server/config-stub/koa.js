@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'fs';
 
 module.exports = (app) => {
 	app.koa.keys = ['GIMMEAKEY'];
@@ -17,7 +17,7 @@ module.exports = (app) => {
         'http://dev.kodachi.se',
         'https://dev.kodachi.se'
             
-    ]
+    ];
 
     app.emailTransport = mail.createTransport({
         host: '',
@@ -44,16 +44,16 @@ module.exports = (app) => {
     app.paysonkey.returnurl = 'https://kodachi.se';
     app.paysonkey.serverurl = 'https://dev.kodachi.se';
     app.paysonkey.email = 'test@lol.se';
-    app.paysonkey.ext = 'https://www.payson.se/paysecure/?token='
+    app.paysonkey.ext = 'https://www.payson.se/paysecure/?token=';
 
     app.ratsitkey = {
         endpoint:'',
         auth:''
-    }
+    };
 
 	app.ssl = {
-		key: fs.readFileSync(...),
-		cert: fs.readFileSync(...),
-		ca: fs.readFileSync(...)
-	}
-}
+		key: fs.readFileSync(/*...*/),
+		cert: fs.readFileSync(/*...*/),
+		ca: fs.readFileSync(/*...*/)
+	};
+};

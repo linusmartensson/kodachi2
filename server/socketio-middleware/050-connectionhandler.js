@@ -1,5 +1,5 @@
 
-import winston from "winston"
+import winston from "winston";
 
 module.exports = (app) => {
 
@@ -59,6 +59,6 @@ module.exports = (app) => {
         ctx.session = app.clientSessions[ctx.socket.client.id];
         await next();
         app.clientSessions[ctx.socket.client.id] = ctx.session;
-    }
+    };
 
-}
+};

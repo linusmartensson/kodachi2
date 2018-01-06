@@ -89,4 +89,4 @@ module.exports = (app) => {
 
         return {content:content, id:0};
     });
-}
+};

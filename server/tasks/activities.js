@@ -23,7 +23,7 @@ module.exports = async (app) => {
             return "OK";
 
 
-        }, async(inst, ctx) => {return "OK"});
+        }, async(inst, ctx) => {return "OK";});
 
 
     app.taskApi.create_task("activity", "promote_manager", ["manager."], [],
@@ -44,7 +44,7 @@ module.exports = async (app) => {
             return "OK";
 
 
-        }, async(inst, ctx) => {return "OK"});
+        }, async(inst, ctx) => {return "OK";});
 
 
     app.taskApi.create_task("activity", "demote_manager", ["manager."], [],
@@ -67,7 +67,7 @@ module.exports = async (app) => {
             return "OK";
 
 
-        }, async(inst, ctx) => {return "OK"});
+        }, async(inst, ctx) => {return "OK";});
 
 
     app.taskApi.create_task("activity", "email_team", ["manager.", "team_member."], [],
@@ -93,7 +93,7 @@ module.exports = async (app) => {
             return "OK";
 
 
-        }, async(inst, ctx) => {return "OK"});
+        }, async(inst, ctx) => {return "OK";});
 
 
     app.taskApi.create_task("activity", "staff_test", ["user", "!done_staff_test"], [],
@@ -129,7 +129,7 @@ module.exports = async (app) => {
 
             inst.next_tasks.push("join_staff");
             return "OK";
-        }, async (inst) => {return "OK"});
+        }, async (inst) => {return "OK";});
 
     app.taskApi.create_task("activity", "join_staff", 
         ["done_staff_test"], [],
@@ -204,7 +204,7 @@ module.exports = async (app) => {
         });
 
     app.taskApi.create_task("activity","review_team_application",[],[],app.taskApi.yesno().concat({event_task:true}),
-        async (inst) => {
+        async (inst, ctx) => {
             if(inst.response.no){
                 app.userApi.emailUser(inst.origin, "{email.app_denied.subject}","{email.app_denied.text}","{email.app_denied.text.html}");
                 return "OK";
@@ -571,7 +571,7 @@ module.exports = async (app) => {
             await app.roleApi.addAchievement(inst.origin, "for_glory", 1, app.userApi.getActiveEvent(ctx), 1, 10);
 
 
-            var role = role.records[0].get("r").properties.type;
+            role = role.records[0].get("r").properties.type;
             
             inst.next_tasks.push({handlers: [
                 role, "overseer."+inst.data.start_data.event_id
@@ -593,4 +593,4 @@ module.exports = async (app) => {
         }, async (inst) => {
             return "OK";
         });
-}
+};

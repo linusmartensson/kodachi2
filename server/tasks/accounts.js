@@ -1,4 +1,4 @@
-import https from "https"
+import https from "https";
 module.exports = (app) => {
 
     //Login
@@ -20,7 +20,7 @@ module.exports = (app) => {
                     "Authorization": app.ratsitkey.auth,
                     "Package": "personadress"
                 }
-            }
+            };
             console.dir(options);
             const req = https.request(options, (res) => {
                 console.log("statusCode:", res.statusCode);
@@ -78,11 +78,11 @@ module.exports = (app) => {
                         if(await app.userApi.tryLogin(ctx, user, inst.response.password)){
                             return "OK";
                         } else {
-                            inst.error = "{tasks.account.loginFailed}"
+                            inst.error = "{tasks.account.loginFailed}";
                             return "RETRY";
                         }
                     } else {
-                        inst.error = "{tasks.account.noSuchUser}"
+                        inst.error = "{tasks.account.noSuchUser}";
                         return "RETRY";
                     }
                 }
@@ -117,7 +117,7 @@ module.exports = (app) => {
                 inst.data.ssnResult = JSON.parse(await validateSsn(inst.response.ssn));
 
                 if(inst.data.ssnResult && inst.data.ssnResult.responseCode && inst.data.ssnResult.responseCode == "Ok") {
-                    var res = await app.userApi.findAccount({ssn:inst.data.ssnResult.ssn})
+                    var res = await app.userApi.findAccount({ssn:inst.data.ssnResult.ssn});
                     if(res)
                         inst.next_tasks.push("ssn_exists_forgot_details");
                     else {
@@ -219,4 +219,4 @@ module.exports = (app) => {
                 return "OK"; 
             });
 
-}
+};

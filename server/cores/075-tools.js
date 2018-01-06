@@ -1,5 +1,5 @@
 
-import asyncBusboy from "async-busboy"
+import asyncBusboy from "async-busboy";
 import mail from "nodemailer";
 var fs = require("fs");
 
@@ -13,7 +13,7 @@ module.exports = (app) => {
             data.fields[data.files[i].fieldname] = data.files[i];
         }
         return data.fields;
-    }
+    };
 
     api.upload = async (file) => {
 
@@ -31,7 +31,7 @@ module.exports = (app) => {
         });
         read.pipe(upload);
         return "//kodachi-uploads.s3-eu-west-1.amazonaws.com/"+base;
-    }
+    };
 
     api.email = async (to, subject, text, html, immediate) => {
 
@@ -41,7 +41,7 @@ module.exports = (app) => {
             subject,
             text,
             html
-        }
+        };
 
         setTimeout(() => {
             app.emailTransport.sendMail(opts, (error, info) => {
@@ -49,7 +49,7 @@ module.exports = (app) => {
                 console.log("message %s sent: %s!", info.messageId, info.response);
             });
         }, immediate?Math.random()*5000+5000:Math.random()*60000*9+60000);
-    }
+    };
 
     app.utils = api;
-}
+};

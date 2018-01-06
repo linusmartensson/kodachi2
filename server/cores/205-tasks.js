@@ -11,7 +11,7 @@ module.exports = async (app) => {
 
     api.add_filter = (type, filterFunc) => {
         app.taskFilters[type] = filterFunc;
-    }
+    };
     function validateEmail(email) {
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
@@ -96,22 +96,22 @@ module.exports = async (app) => {
             out[v.field] = app.taskFilters[v.type](response[v.field], v);
         }
         return out;
-    }
+    };
 
     //Task creation api
     api.yesno = () => {
         return [{field:"no", type:"button"},{field:"yes", type:"button"}];
-    }
+    };
     api.okcancel = () => {
         return [{field:"cancel", type:"button"},{field:"ok", type:"button"}];
-    }
+    };
     api.step = (task_name, inputs, result_handler, post_handler) => {
         api.create_task("", task_name, [], [], inputs, result_handler, post_handler);
         return api.step;
-    }
+    };
     api.create_task = (task_group, task_name, starter_roles, handler_roles, inputs, result_handler, post_handler) => {
 
-        if(!post_handler) post_handler = ()=>{return "OK"};
+        if(!post_handler) post_handler = ()=>{return "OK";};
 
         for(var v in inputs){
             if(!inputs[v].field) continue;
@@ -129,9 +129,9 @@ module.exports = async (app) => {
             inputs:inputs,
             result_handler:result_handler,
             post_handler:post_handler
-        }
+        };
         return api.create_task;
-    }
+    };
     //-----------------------------------
 
     api.uniqueTask = (task) => {
@@ -140,14 +140,14 @@ module.exports = async (app) => {
             if(i.unique) return true;
         }
         return false;
-    }
+    };
     api.eventTask = (task) => {
         if(!task) return false;
         for(let i of task.inputs) {
             if(i.event_task) return true;
         }
         return false;
-    }
+    };
 
     //This is a dangerous flag. It bypasses all security and input filters to provide raw input from an external api.
     api.externalTask = (task) => {
@@ -156,7 +156,7 @@ module.exports = async (app) => {
             if(i.external) return true;
         }
         return false;
-    }
+    };
 
     api.emptyFields = (inst) => {
         var task = api.getTask(inst.task_name); 
@@ -168,7 +168,7 @@ module.exports = async (app) => {
             }
         }
         return false;
-    }
+    };
 
     async function findTaskByType(ctx, type){
         var t = (await app.cypher("MATCH (t:Task {type:{type}}), (s:Session {id:{sessionId}}) WHERE (t)-[:HANDLED_BY]->(s) OR (t)-[:HANDLED_BY]->(:User)-[:HAS_SESSION]->(s) OR (t)-[:HANDLED_BY]->(:Role)<-[:HAS_ROLE]-(:User)-[:HAS_SESSION]->(s) RETURN t", {type:type, sessionId:ctx.session.localSession})).records;
@@ -296,7 +296,7 @@ module.exports = async (app) => {
         }
         return task;
 
-    }
+    };
 
     //NOTE: Setting origin bypasses security. Do NOT set origin in user calls.
     api.start_task = async (ctx, task_name, start_data, origin) => {
@@ -333,11 +333,11 @@ module.exports = async (app) => {
                 origin = user;
             }
         }
-        var inst = {task_name:task.task_name, id:app.uuid(), data:{private:{}, start_data:start_data}, next_tasks:[], origin:origin, result:"WAIT_RESPONSE", response:{}}
+        var inst = {task_name:task.task_name, id:app.uuid(), data:{private:{}, start_data:start_data}, next_tasks:[], origin:origin, result:"WAIT_RESPONSE", response:{}};
         
         setupTask(ctx, inst, task);
         return true;
-    }
+    };
 
     async function trickleTask(ctx, inst, child_inst){
         if(!inst) return;
@@ -458,7 +458,7 @@ module.exports = async (app) => {
         } catch (e) {
             inst.error = "{task.error.filterFailure}";
             inst.result = "WAIT_RESPONSE";
-            await updateTaskInstance(task_id, inst)
+            await updateTaskInstance(task_id, inst);
             console.log("Task processing error: "+inst.error);
             return "RETRY";
         }
@@ -488,7 +488,7 @@ module.exports = async (app) => {
                 return app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx));
         }
         
-    }
+    };
 
     app.taskApi = api;
 
@@ -521,4 +521,4 @@ module.exports = async (app) => {
             //cry
         }
     }
-}
+};

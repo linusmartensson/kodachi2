@@ -55,7 +55,7 @@ module.exports = (app) => {
                             {id:0, content:[{id:0, type:"text", hover:t.description, text:u.givenName+" \""+u.nickname+"\" "+u.lastName}]},
                             {id:1, content:[{id:0, type:"text", hover:t.description, text:u.email}]},
                         ]
-                    }
+                    };
 
                     if(manager){
                         tier.panels.push({id:2, content:[{id:0, type:"editbutton", text:"Remove user", task:"remove_team_member."+inst.start_data.event_id, data:{team:team.id, user:u.id}}]});
@@ -126,4 +126,4 @@ module.exports = (app) => {
 
             return {content, id:0};
         });
-}
+};

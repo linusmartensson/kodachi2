@@ -11,4 +11,4 @@ module.exports = async (app) => {
 	tools.loader("socketio-middleware", app);
 
 	winston.info("SocketIO loaded!");
-}
+};

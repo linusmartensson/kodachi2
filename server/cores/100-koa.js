@@ -1,6 +1,6 @@
 import Koa from "koa";
-import winston from "winston"
-var tools = require("../tools/core")
+import winston from "winston";
+var tools = require("../tools/core");
 
 module.exports = async (app) => {
 	winston.info("Starting koa...");
@@ -16,4 +16,4 @@ module.exports = async (app) => {
 
 
 	return true;
-}
+};

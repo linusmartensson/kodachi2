@@ -42,4 +42,4 @@ module.exports = async (app) => {
             return "OK";
         });
 
-}
+};

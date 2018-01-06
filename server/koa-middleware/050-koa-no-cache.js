@@ -5,4 +5,4 @@ module.exports = (app) => {
        paths:["/service-worker.js"],
        types: ["manifest"] 
    })); 
-}
+};

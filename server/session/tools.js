@@ -57,4 +57,4 @@ module.exports = (app) => {
         await app.stringApi.translate(ctx, tools);
         state.tools = tools;
     });
-}
+};

@@ -13,13 +13,13 @@ module.exports = async (app) => {
         if(role.records.length==0){
             await app.cypher("CREATE (r:Achievement {type:{name}, req:{req}, value:{value}})", {name, req, value});
         }
-    }
+    };
     api.create_role = async (name) => {
         var role = await app.cypher("MATCH (r:Role {type:{name}}) RETURN r", {name});
         if(role.records.length==0){
             await app.cypher("CREATE (r:Role {type:{name}})", {name});
         }
-    }
+    };
     api.emailMembers = async (role) => {
         var members = (await app.cypher("MATCH (r:Role {type:{role}})-->(u:User) RETURN u", {role})).records; 
         for(var v in members){
@@ -27,7 +27,7 @@ module.exports = async (app) => {
             var lang = app.userApi.getUserLanguage(u);
             await app.utils.email(u.email, app.stringApi.translate(null, "{email.assignment.title}", lang), app.stringApi.translate(null, "{email.assignment.text}", lang), app.stringApi.translate(null, "{email.assignment.text.html}", lang));
         }
-    }
+    };
 
     api.addAchievement = async (user, achievement, points, event, req, value) => {
         await api.create_achievement(achievement, req, value);    //pre-generate any non-existant role dynamically.
@@ -45,7 +45,7 @@ module.exports = async (app) => {
         
         if(status.records[0].get("e").properties.achieved)
             await app.budgetApi.addBudget(event, "point_cost", status.records[0].get("r").properties.value);
-    }
+    };
     api.removeRole = async (user, role, xp) => {
         await api.create_role(role);    //pre-generate any non-existant role dynamically.
         if(!xp) xp = 1000;
@@ -57,7 +57,7 @@ module.exports = async (app) => {
         await app.cypher(   "MATCH (u:User {id:{user}})-[e:HAS_ROLE]->(r:Role {type:{role}}) " + 
                             " (u)-[e:HAS_ROLE]->(r) DETACH DELETE e;"
                          , {user, role, xp});
-    }
+    };
     api.addRole = async (user, role, xp) => {
         await api.create_role(role);    //pre-generate any non-existant role dynamically.
         if(!xp) xp = 1000;
@@ -71,11 +71,11 @@ module.exports = async (app) => {
                             "ON MATCH SET   e.level = (toInt(e.xp) + toInt({xp}) + 1000)/1000 , e.xp = toInt(e.xp) + toInt({xp}) "+
                             "ON CREATE SET  e.level = (1000+toInt({xp}))/1000          , e.xp = toInt({xp})"
                          , {user, role, xp});
-    }
+    };
     api.hasRole = async (user, role) => {
         var r = await app.cypher("MATCH (:User {id:{user}})-[e:HAS_ROLE]->(:Role {type:{role}}) RETURN e", {user, role});
         return r.records.length > 0;
-    }
+    };
 
     api.getBestRole = async (user) => {
         var v = await app.cypher("MATCH (u:User {id:{user}})-[e:HAS_ROLE]->(r:Role) WHERE EXISTS(e.xp)  RETURN r,e ORDER BY e.xp DESC LIMIT 1", {user});
@@ -89,8 +89,8 @@ module.exports = async (app) => {
             role:r.type,
             xp:e.xp?typeof e.xp.toNumber === "function"?e.xp.toNumber():e.xp:0,
             level:e.level?typeof e.level.toNumber === "function"?e.level.toNumber():e.level:1,
-        }
-    }
+        };
+    };
 	
     app.roleApi = api;
-}
+};

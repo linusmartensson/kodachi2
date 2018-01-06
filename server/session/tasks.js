@@ -44,4 +44,4 @@ module.exports = async (app) => {
         state.tasks = tasks;
     });
 
-}
+};

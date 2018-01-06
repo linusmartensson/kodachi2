@@ -8,15 +8,15 @@ var loader = async (dir, app)=> {
 	var npath = path.join(__dirname, "..", dir);
 	winston.info("loading "+dir);
 	fs.readdirSync(npath).forEach(function(file) {
-		if(!file.match("\.js$")) return;
+		if(!file.match(/\.js$/)) return;
 		mw.push("../"+dir+"/" + file);
-	})
+	});
 	var v = mw.sort();
     for(var elem of v){
 		winston.info(elem);
 		await require(elem)(app);
 	}
-}
+};
 
 //Watch for file changes
 var timeout = null;
@@ -29,7 +29,7 @@ function watch(file, reload) {
 			watch(file + "/" + f, reload);
 		}
 	});
-	var watcher = fs.watch(file, {
+	fs.watch(file, {
 		persistent: cluster.isMaster,
 		recursive: true
 	}, (eventType, fileName) => {

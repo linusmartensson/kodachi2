@@ -5,15 +5,15 @@ module.exports = async (app) => {
     if(!app.lists) app.lists = {};
 
     api.create_list = (list_group, list_name, starter_roles, options, result_handler) => {
-        app.lists[list_name] = {list_group, list_name, starter_roles, options, result_handler}
+        app.lists[list_name] = {list_group, list_name, starter_roles, options, result_handler};
         return api.create_list;
-    }
+    };
     //-----------------------------------
 
     api.eventList = (list) => {
         if(!list) return false;
         return !!list.options.event_list;
-    }
+    };
     api.getList = (list_name) => {
         var list = app.lists[list_name]?_.cloneDeep(app.lists[list_name]):false;
         
@@ -38,7 +38,7 @@ module.exports = async (app) => {
         }
         return list;
 
-    }
+    };
 
     api.fetch_list = async (ctx, list_name, start_data) => {
         if(!app.lists) return false; 
@@ -53,10 +53,10 @@ module.exports = async (app) => {
         if(list.start_data) Object.assign(start_data, list.start_data);
         var user = await app.userApi.userId(ctx);
 
-        var inst = {list, start_data:start_data}
+        var inst = {list, start_data:start_data};
         
         return list.result_handler(inst, ctx);
-    }
+    };
 
     app.listApi = api;
 
@@ -68,4 +68,4 @@ module.exports = async (app) => {
                     console.log("s('"+b+"', '')"); 
         }
     }
-}
+};

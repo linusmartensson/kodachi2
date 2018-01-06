@@ -8,4 +8,4 @@ module.exports = (app) => {
         if(!ctx.session.uuid) ctx.session.uuid = app.uuid();
         await next();
     });
-}
+};

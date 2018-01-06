@@ -1,4 +1,4 @@
-import Router from "koa-router"
+import Router from "koa-router";
 
 module.exports = (app) => {
 
@@ -14,5 +14,5 @@ module.exports = (app) => {
     });
     return r;
 
-}
+};
 

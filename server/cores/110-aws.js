@@ -7,4 +7,4 @@ module.exports = (app) => {
     app.s3.client(new app.AWS.S3());
 
     app.emailTransport = mail.createTransport(app.emailTransport);
-}
+};

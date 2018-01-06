@@ -5,6 +5,6 @@ module.exports = (app) => {
 
     app.uuid = function(){
         return u();
-    }
+    };
 
-}
+};

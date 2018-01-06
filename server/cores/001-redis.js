@@ -1,4 +1,4 @@
-import Redis from "ioredis"
+import Redis from "ioredis";
 
 class RedisStore {
     constructor(redis) {
@@ -31,4 +31,4 @@ module.exports = (app) => {
 	app.redis = new Redis();
 	app.sessionStore = new RedisStore(app.redis);
 	console.log("Redis loaded!");
-}
+};
