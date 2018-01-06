@@ -6,22 +6,30 @@ class RedisStore {
     }
 
     async get (sid) {
-        if(sid.startsWith("koa:sess:")) sid = sid.slice(9);
+        if (sid.startsWith("koa:sess:")) {
+            sid = sid.slice(9);
+        }
         const data = await this.redis.get(`koa:sess:${sid}`);
         return JSON.parse(data);
     }
 
     async set (sid, v, maxAge = 1000000) {
-        if(sid.startsWith("koa:sess:")) sid = sid.slice(9);
+        if (sid.startsWith("koa:sess:")) {
+            sid = sid.slice(9);
+        }
         try {
             // Use redis set EX to automatically drop expired sessions
             await this.redis.set(`koa:sess:${sid}`, JSON.stringify(v), "EX", maxAge / 1000);
-        } catch (e) {console.dir(e);}
+        } catch (e) {
+            console.dir(e);
+        }
         return sid;
     }
 
     async destroy (sid) {
-        if(sid.startsWith("koa:sess:")) sid = sid.slice(9);
+        if (sid.startsWith("koa:sess:")) {
+            sid = sid.slice(9);
+        }
         return await this.redis.del(`koa:sess:${sid}`);
     }
 }

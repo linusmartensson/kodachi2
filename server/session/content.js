@@ -1,5 +1,5 @@
 
-module.exports = app => {
+module.exports = (app) => {
     app.sessionApi.register(async (ctx, state) => {
         state.books = [];
 
@@ -8,14 +8,16 @@ module.exports = app => {
 
         const e = await app.userApi.getActiveEvent(ctx);
 
-        if(e) state.books.push({group: 1,id: e.id, path: e.id, title: e.name, content: app.stringApi.bookParser(e.description, e.id)});
+        if (e) {
+            state.books.push({group: 1, id: e.id, path: e.id, title: e.name, content: app.stringApi.bookParser(e.description, e.id)});
+        }
 
-        for(const v of content.records){
+        for (const v of content.records) {
             const w = v.get("c").properties;
-            if(w.event && w.event != "" && w.event != activeEvent.id){
+            if (w.event && w.event !== "" && w.event !== activeEvent.id) {
                 continue;
             }
-            state.books.push({group: 1,id: w.id, path: w.id, title: w.title, content: app.stringApi.bookParser(w.content, w.id)});
+            state.books.push({group: 1, id: w.id, path: w.id, title: w.title, content: app.stringApi.bookParser(w.content, w.id)});
         }
 
     });

@@ -7,7 +7,7 @@ module.exports = async (app) => {
 
     app.koa = new Koa();
     require("../config/koa")(app);
-    app.koa.on("error", function (err, ctx){
+    app.koa.on("error", (err, ctx) => {
         winston.error("koa-onerror", err);
     });
     require("koa-onerror")(app.koa);

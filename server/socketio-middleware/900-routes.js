@@ -22,5 +22,7 @@ module.exports = (app) => {
         });
     });*/
 
-    return (ctx,next) => {next();};
+    return (ctx, next) => {
+        next();
+    };
 };

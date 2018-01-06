@@ -2,19 +2,20 @@
 
 module.exports = (app) => {
 
-    app.listApi.create_list("activites", "show_team", ["manager.", "team_member."], {event_list: true},
+    app.listApi.create_list(
+        "activites", "show_team", ["manager.", "team_member."], {event_list: true},
         async (inst, ctx) => {
-            //List all member names
-            //Hover-text for applications
-            //Email button
+            // List all member names
+            // Hover-text for applications
+            // Email button
 
-            //get team memberships
+            // get team memberships
             const teams = await app.cypher("MATCH (:User {id:{id}})-[:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN w", {event: inst.start_data.event_id, id: await app.userApi.userId(ctx)});
             const content = [];
 
 
-            //for teams
-            for(const v in teams.records){
+            // for teams
+            for (const v in teams.records) {
 
                 const team = teams.records[v].get("w").properties;
                 let managers = await app.cypher("MATCH (u:User)-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN u", {team: team.id});
@@ -22,11 +23,11 @@ module.exports = (app) => {
 
                 const tls = {};
 
-                for(const q of managers){
+                for (const q of managers) {
                     const u = q.get("u").properties;
                     tls[u.id] = u;
                 }
-                const manager = !!tls[await app.userApi.userId(ctx)];
+                const manager = Boolean(tls[await app.userApi.userId(ctx)]);
 
 
                 const members = await app.cypher("MATCH (w:WorkGroup {id:{id}})-[t:TEAM_MEMBER]-(u:User) RETURN t,u", {id: team.id});
@@ -34,17 +35,17 @@ module.exports = (app) => {
                 const teamdesc = {tiers: [{
                     id: 0, panels: [
                         {id: 0, content: [{id: 0, type: "text", text: team.name}]},
-                        {id: 1, content: [{id: 0, type: "text", text: members.records.length+"/"+team.size}]},
-                        {id: 2, content: [{id: 0, type: "editbutton", text: "Email team", task: "email_team."+inst.start_data.event_id, data: {team: team.id}}]}
+                        {id: 1, content: [{id: 0, type: "text", text: `${members.records.length}/${team.size}`}]},
+                        {id: 2, content: [{id: 0, type: "editbutton", text: "Email team", task: `email_team.${inst.start_data.event_id}`, data: {team: team.id}}]}
                     ]
                 }], id: content.length};
 
-                //content.push(teamdesc);
+                // content.push(teamdesc);
 
 
-                //list team
+                // list team
                 const r = {tiers: teamdesc.tiers, id: content.length};
-                for(const w in members.records){
+                for (const w in members.records) {
                     const member = members.records[w];
 
                     const t = member.get("t").properties;
@@ -52,17 +53,18 @@ module.exports = (app) => {
                     const tier = {
                         id: r.tiers.length,
                         panels: [
-                            {id: 0, content: [{id: 0, type: "text", hover: t.description, text: u.givenName+" \""+u.nickname+"\" "+u.lastName}]},
-                            {id: 1, content: [{id: 0, type: "text", hover: t.description, text: u.email}]},
+                            {id: 0, content: [{id: 0, type: "text", hover: t.description, text: `${u.givenName} "${u.nickname}" ${u.lastName}`}]},
+                            {id: 1, content: [{id: 0, type: "text", hover: t.description, text: u.email}]}
                         ]
                     };
 
-                    if(manager){
-                        tier.panels.push({id: 2, content: [{id: 0, type: "editbutton", text: "Remove user", task: "remove_team_member."+inst.start_data.event_id, data: {team: team.id, user: u.id}}]});
-                        if(!tls[u.id])
-                            tier.panels.push({id: 3, content: [{id: 0, type: "editbutton", text: "Promote user", task: "promote_manager."+inst.start_data.event_id, data: {team: team.id, user: u.id}}]});
-                        else
-                            tier.panels.push({id: 3, content: [{id: 0, type: "editbutton", text: "Demote user", task: "demote_manager."+inst.start_data.event_id, data: {team: team.id, user: u.id}}]});
+                    if (manager) {
+                        tier.panels.push({id: 2, content: [{id: 0, type: "editbutton", text: "Remove user", task: `remove_team_member.${inst.start_data.event_id}`, data: {team: team.id, user: u.id}}]});
+                        if (Object.property.hasOwnProperty.call(tls, u.id) === false) {
+                            tier.panels.push({id: 3, content: [{id: 0, type: "editbutton", text: "Promote user", task: `promote_manager.${inst.start_data.event_id}`, data: {team: team.id, user: u.id}}]});
+                        } else {
+                            tier.panels.push({id: 3, content: [{id: 0, type: "editbutton", text: "Demote user", task: `demote_manager.${inst.start_data.event_id}`, data: {team: team.id, user: u.id}}]});
+                        }
                     }
 
                     r.tiers.push(tier);
@@ -71,46 +73,48 @@ module.exports = (app) => {
                 content.push(r);
             }
 
-            return {content: content, id: 0};
-        });
+            return {content, id: 0};
+        }
+    );
 
 
-    app.listApi.create_list("activities", "show_activities", ["anonymous", "user"], {event_list: true},
+    app.listApi.create_list(
+        "activities", "show_activities", ["anonymous", "user"], {event_list: true},
         async (inst, ctx) => {
 
             const teams = await app.cypher("MATCH (:Event {id:{event}})--(w:WorkGroup) RETURN w", {event: inst.start_data.event_id, type: ""});
-            let content=[];
+            let content = [];
 
             const lang = await app.userApi.getLanguage(ctx);
 
-            //for teams
-            for(const v in teams.records){
+            // for teams
+            for (const v in teams.records) {
 
                 const team = teams.records[v].get("w").properties;
                 //              name
                 //              schedule
-                //open
-                //uniform
-                //image
-                //size
-                //id
-                //budget
+                // open
+                // uniform
+                // image
+                // size
+                // id
+                // budget
                 //              desc
                 //
                 //
-                //activity/competition:
-                //format {field:'act_format', type:'dropdown', values:['competition', 'activity']},
-                //length {field:'act_length', type:'dropdown', translate:true, values:['short', 'medium', 'long', 'half_day', 'day']},
-                //participant count {field:'act_participants', type:'number'},
+                // activity/competition:
+                // format {field:'act_format', type:'dropdown', values:['competition', 'activity']},
+                // length {field:'act_length', type:'dropdown', translate:true, values:['short', 'medium', 'long', 'half_day', 'day']},
+                // participant count {field:'act_participants', type:'number'},
                 //
-                //vendor
-                //table count {field:'shop_tables', type:'number'}, //How large?
-                //{field:'shop_type', type:'dropdown', values:['artist_alley','vendor']},
+                // vendor
+                // table count {field:'shop_tables', type:'number'}, //How large?
+                // {field:'shop_type', type:'dropdown', values:['artist_alley','vendor']},
                 const teamdesc = {tiers: [{
                     id: 0, panels: [
-                        {id: 0, content: [{id: 0, type: "caption", text: team.name}, {id: 1, type: "image", image: team.image}]},
+                        {id: 0, content: [{id: 0, type: "caption", text: team.name}, {id: 1, type: "image", image: team.image}]}
                     ]
-                }/*,{ -- This will not be viable to have here until we get the scheduling integrated in the website.
+                }/* ,{ -- This will not be viable to have here until we get the scheduling integrated in the website.
                     id:1, panels:[
                         {id:0, content:[{id:0, type:'text', text:app.stringApi.get_string('list.show_activities.times', lang)}]},
                         {id:1, content:[{id:0, type:'text', text:team.schedule.map(function(s){return app.stringApi.get_string(s, lang)}).join(", ")}]}
@@ -125,5 +129,6 @@ module.exports = (app) => {
             }
 
             return {content, id: 0};
-        });
+        }
+    );
 };

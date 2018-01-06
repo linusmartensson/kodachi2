@@ -5,12 +5,12 @@ module.exports = (app) => {
 
     app.origins = [
 
-        //dev targets
+        // dev targets
         "http://localhost:3000",
         "https://localhost:3000",
         "https://localhost:3001",
 
-        //prod targets
+        // prod targets
         "http://kodachi.se",
         "https://kodachi.se",
         "https://api.kodachi.se",
@@ -52,8 +52,8 @@ module.exports = (app) => {
     };
 
     app.ssl = {
-        key: fs.readFileSync(/*...*/),
-        cert: fs.readFileSync(/*...*/),
-        ca: fs.readFileSync(/*...*/)
+        key: fs.readFileSync(/* ...*/),
+        cert: fs.readFileSync(/* ...*/),
+        ca: fs.readFileSync(/* ...*/)
     };
 };
