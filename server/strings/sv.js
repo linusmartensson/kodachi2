@@ -362,7 +362,13 @@ module.exports = (app) => {
     s("tasks.account.loginFailed", "Nix! Testa ett annat lösenord!");
 
 
+    s('email.app_accepted.subject', "Din ansökan har uppdaterats");
+    s('email.app_accepted.text', "Tjohej! Titta in på kodachi.se, din ansökan till ett team har uppdaterats.");
+    s('email.app_denied.subject', "Din ansökan har uppdaterats");
+    s('email.app_denied.text', "Tjohej! Titta in på kodachi.se, din ansökan till ett team har uppdaterats.");
     s('input.value.sv', "Svenska");
+    s('tasks.account.nickNameTaken', "Smeknamnet är upptaget! :o");
+    s('tasks.account.emailTaken', "Emailadressen används redan! :o");
     s('input.value.eng', "Engelska");
     s('input.value.all', "Alla språk");
     s('role.base_manager', "Gruppledare");
