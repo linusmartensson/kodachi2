@@ -55,7 +55,7 @@ module.exports = async (app) => {
         );
 
         if (status.records[0].get("e").properties.achieved) {
-            await app.cypher("MATCH (u:User {id:{user}}) SET u.points = toInt(u.points) + toInt({points})", {user, value});
+            await app.cypher("MATCH (u:User {id:{user}}) SET u.points = toInt(u.points) + toInt({points})", {user, points:value});
             await app.budgetApi.addBudget(event, "point_cost", value);
         }
     };
