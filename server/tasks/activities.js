@@ -197,7 +197,7 @@ module.exports = async (app) => {
             await app.roleApi.addAchievement(inst.origin, "i_wanna_work", 1, app.userApi.getActiveEvent(ctx), 1, 10);
             await app.roleApi.addAchievement(inst.origin, "i_wanna_work_everywhere", 1, app.userApi.getActiveEvent(ctx), 10, 10);
             inst.next_tasks.push({"handlers": [
-                `manager.${inst.response.team}`, `admin.${inst.data.start_data.event_id}`
+                `manager.${inst.response.team.event_id}`, 'admin'
             ], task: "review_team_application"});
 
             return "OK";
