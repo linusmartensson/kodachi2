@@ -192,7 +192,6 @@ module.exports = async (app) => {
             }
 
             inst.data.application = inst.response;
-            inst.data.application.team = inst.data.application.team.id;
             delete inst.data.user.password;
 
             await app.roleApi.addAchievement(inst.origin, "i_wanna_work", 1, app.userApi.getActiveEvent(ctx), 1, 10);
@@ -214,11 +213,11 @@ module.exports = async (app) => {
             }
             await app.userApi.emailUser(inst.origin, "{email.app_accepted.subject}", "{email.app_accepted.text}", "{email.app_accepted.text.html}");
             await app.roleApi.addRole(`team_member.${inst.data.start_data.event_id}`, 3000);
-            await app.roleApi.addRole(`team_member.${inst.data.application.team}`);
+            await app.roleApi.addRole(`team_member.${inst.data.application.team.id}`);
 
             const q = inst.data.application;
             q.id = inst.origin;
-            q.team = inst.data.team;
+            q.team = q.team.id;
             await app.roleApi.addAchievement(q.id, "joined_a_team", 1, app.userApi.getActiveEvent(ctx), 1, 10);
 
             await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}, description:{app_description}}]->(t)", q);
