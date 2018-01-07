@@ -15,6 +15,7 @@ class TaskPopup extends Component{
         super(props);
         this.setWrapperRef = this.setWrapperRef.bind(this);
         this.setFormRef = this.setFormRef.bind(this);
+        this.setInnerRef = this.setInnerRef.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -24,6 +25,9 @@ class TaskPopup extends Component{
     }
     setFormRef(node){
         this.formRef = node;
+    }
+    setInnerRef(node){
+        this.innerRef = node;
     }
 
 
@@ -36,6 +40,7 @@ class TaskPopup extends Component{
     }
     handleClickOutside(event) {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+            if(this.innerRef && event.clientX > this.innerRef.getBoundingClientRect().right) return;
             var t = this.props.task.type.inputs; 
             for(var i of t){
                 if(i.autocancel){
@@ -96,11 +101,11 @@ class TaskPopup extends Component{
             });
         }
         if(buttons.panels.length > 0) pages.push({id:"_buttons", tiers:[buttons]});
-        return (<div className="TaskPopup"><form ref={this.setFormRef} onSubmit={this.handleSubmit}>
+        return (<div className="TaskPopup"><div ref={this.setInnerRef} className="TaskPopup-inner" ><form ref={this.setFormRef} onSubmit={this.handleSubmit}>
                 <div className="TaskPopup-item" ref={this.setWrapperRef}>
                     <Surface key={this.props.id} pages={pages} />
                 </div></form>
-            </div>);
+            </div></div>);
     }
 }
 

@@ -23,6 +23,9 @@
     overflow-y:scroll;
     z-index:10;
 }
+.TaskPopup-inner{
+    width:100%;
+}
 .TaskPopup-item{
     display:block;
     position:absolute;
@@ -35,7 +38,7 @@
 
     top:10%;
     bottom:10%;
-   font-family:Schoolbell;
+    font-family:Schoolbell;
 }
 
 
