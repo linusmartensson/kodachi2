@@ -212,8 +212,8 @@ module.exports = async (app) => {
                 return "OK";
             }
             await app.userApi.emailUser(inst.origin, "{email.app_accepted.subject}", "{email.app_accepted.text}", "{email.app_accepted.text.html}");
-            await app.roleApi.addRole(`team_member.${inst.data.start_data.event_id}`, 3000);
-            await app.roleApi.addRole(`team_member.${inst.data.application.team.id}`);
+            await app.roleApi.addRole(inst.origin, `team_member.${inst.data.start_data.event_id}`, 3000);
+            await app.roleApi.addRole(inst.origin, `team_member.${inst.data.application.team.id}`);
 
             const q = inst.data.application;
             q.id = inst.origin;
@@ -241,8 +241,8 @@ module.exports = async (app) => {
         q.team = inst.data.application.team || inst.data.application.activity || inst.data.application.shop;
 
         await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}}]->(t)", q);
-        await app.roleApi.addRole(`team_member.${inst.data.start_data.event_id}`, 3000);
-        await app.roleApi.addRole(`team_member.${q.team}`);
+        await app.roleApi.addRole(inst.origin, `team_member.${inst.data.start_data.event_id}`, 3000);
+        await app.roleApi.addRole(inst.origin, `team_member.${q.team}`);
         await app.roleApi.addAchievement(q.id, "joined_a_team", 1, app.userApi.getActiveEvent(ctx), 1, 10);
 
         return "OK";
