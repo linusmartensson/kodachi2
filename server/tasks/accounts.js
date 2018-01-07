@@ -231,6 +231,10 @@ module.exports = (app) => {
                 return "RETRY";
             }
 
+            if ((await app.userApi.findAccount({email: inst.response.email})) !== false) {
+                inst.error = "{tasks.account.emailTaken}";
+                return "RETRY";
+            }
             if ((await app.userApi.findAccount({nickname: inst.response.nickname})) !== false) {
                 inst.error = "{tasks.account.nickNameTaken}";
                 return "RETRY";
