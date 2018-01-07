@@ -164,7 +164,6 @@ module.exports = (app) => {
     s("role.base_team_member", "Kodachicreware");
     s("role.vendor", "Försäljare");
     s("role.artist", "Konstnär");
-    s("role.base_team_leader", "Lagledare");
     s("role.activiteer", "Lekmästare");
     s("role.user", "Nyfiken");
     s("role.visitor", "Konventare");
@@ -381,5 +380,13 @@ module.exports = (app) => {
     s("profile.achievements", "Dina Achievements!")
     s("achievement.great_competition_manager", "Rapporterat in tävlingsresultat");
     s("achievement.done_staff_test", "Gjort ett antagningsprov");
+    
+    s('achievement.i_made_the_best_application', 'Jag har gjort den BÄSTA ansökningen!')
+    s('achievement.i_wanna_work', 'Jag vill jobba!')
+    s('achievement.i_wanna_work_everywhere', 'Jag vill jobba ÖVERALLT!')
+    s('achievement.joined_a_team', 'Med i ett team! :D')
+    s('achievement.my_very_own_team', 'Mitt heeeelt egna team!')
+    s('achievement.welcome_home', 'Välkommen hem!')
+    s('role.team_leader', 'Lagledare')
 
 };
