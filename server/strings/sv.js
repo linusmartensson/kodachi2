@@ -372,7 +372,7 @@ module.exports = (app) => {
     s('input.value.all', "Alla språk");
     s('role.base_manager', "Gruppledare");
     s('role.base_receipt_submitter', "Kvittomucklare");
-    s("role.done_staff_test", "Vällärd potentiell crewmedlem");
+    s("role.done_staff_test", "Crewkandidat");
     s("role.base_competition_manager", "Tävlingsarrangör");
     s("role.base_visitor", "Konventare!");
     s("role.base_sleeper", "Sovsäcksexpert");
