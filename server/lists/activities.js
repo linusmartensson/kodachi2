@@ -60,7 +60,7 @@ module.exports = (app) => {
 
                     if (manager) {
                         tier.panels.push({id: 2, content: [{id: 0, type: "editbutton", text: "Remove user", task: `remove_team_member.${inst.start_data.event_id}`, data: {team: team.id, user: u.id}}]});
-                        if (Object.property.hasOwnProperty.call(tls, u.id) === false) {
+                        if (Object.prototype.hasOwnProperty.call(tls, u.id) === false) {
                             tier.panels.push({id: 3, content: [{id: 0, type: "editbutton", text: "Promote user", task: `promote_manager.${inst.start_data.event_id}`, data: {team: team.id, user: u.id}}]});
                         } else {
                             tier.panels.push({id: 3, content: [{id: 0, type: "editbutton", text: "Demote user", task: `demote_manager.${inst.start_data.event_id}`, data: {team: team.id, user: u.id}}]});
