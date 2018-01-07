@@ -136,7 +136,7 @@ class Panel extends Component {
         //width:this.props.width?"calc("+this.props.width+"% - 20px)":"",
     }
     var ne = (e) => {
-        if(e.key == 'Enter') e.preventDefault();
+        if(e.key === 'Enter') e.preventDefault();
     }
 
     const content = this.props.content.map((elem) => {

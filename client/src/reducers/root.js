@@ -85,7 +85,7 @@ export const actions = createActions({
                         fetch(host+'task/respond_task/'+task.id,
                             {credentials:'include', method:'POST', body:form}).then(r=>{return r.text()}).then((data)=>{
                                 clearTimeout(q);
-                                if(data != 'OK'){
+                                if(data !== 'OK'){
                                     dispatch(actions.app.task.error.show(data));
                                     setTimeout(()=>{dispatch(actions.app.task.error.hide())}, 10000);
                                 }
@@ -121,19 +121,19 @@ export const reducer = handleActions({
         REFRESH: (state)=>({...state}),
         SERVER: {
             UPDATE: (state, action) => {
-                var v = _.cloneDeep(state);  
+                let v = _.cloneDeep(state);  
                 patcher.patch(v.session, action.payload.diff)
                 if(v.session.tasks.length > state.session.tasks.length){
-                    for(var m of v.session.tasks){
+                    for(let m of v.session.tasks){
                         if(m.result === 'WAIT_RESPONSE'){
-                            var w = _.cloneDeep(m);
+                            let w = _.cloneDeep(m);
                             return {...v, currentTask:{task:w}};
                         }
                     }
                 }
-                var found = false;
-                if(v.currentTask) for(var m of v.session.tasks) {
-                    if(m.result === 'WAIT_RESPONSE' && m.id == v.currentTask.task.id){
+                let found = false;
+                if(v.currentTask) for(let m of v.session.tasks) {
+                    if(m.result === 'WAIT_RESPONSE' && m.id === v.currentTask.task.id){
                         found = true;
                         break;
                     }

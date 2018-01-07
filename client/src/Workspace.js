@@ -20,7 +20,6 @@ import TaskPopup from './TaskPopup';
 import Loader from './Loader';
 
 import './Workspace.css'
-import { withRouter } from 'react-router-dom'
 import {connect} from 'react-redux'
 import InfoPopup from './InfoPopup';
 
@@ -93,6 +92,9 @@ var SurfaceRouteBase = (props) => {
             break;
         case 'profile':
             matches = props.profile ? props.profile.content : false;
+            break;
+        default:
+            matches = false;
     }
 
     if(matches)
