@@ -10,7 +10,7 @@
     position:relative;
     z-index:2;
     overflow:show;
-    white-space:nowrap;
+    white-space:normal;
     left:-20px;
     top:12px;
     margin:5px;
@@ -20,7 +20,7 @@
     margin-bottom:0;
     
     font-family:"Rock Salt";
-    font-size:1.2em;
+    font-size:1.0em;
     padding:2px 7px;
     clear:both;
 
@@ -39,6 +39,6 @@
 }
 
 .Caption + .Image {
-    top:-5.25em !important;
-    margin-bottom:-5.25em !important;
+    top:-4.75em !important;
+    margin-bottom:-4.75em !important;
 }
