@@ -1,3 +1,5 @@
+
+
 .Panel-inside{
  display:block;
  height:inherit;
@@ -58,7 +60,7 @@ font-size:1.5em;
 }
 .PanelText{
    font-size:1.2em;
-   line-height:150%;
+   line-height:145%;
    font-family:Schoolbell;
    display:block;
    padding:0.1em 1.0em;
