@@ -71,10 +71,10 @@ module.exports = async (app) => {
     async function markPaid (paysonFee, token, user, numTickets, numSleep, points, event) {
 
         for (let v = 0; v < numSleep; ++v) {
-            await app.cypher("MATCH (u:User {id:{user}}), (e:Event {id:{event}}) CREATE (u)-[:TICKET {type:{type}, used:false, id:{ticket}}]->(e)", {user, event, type: "ticket", ticket: app.uuid()});
+            await app.cypher("MATCH (u:User {id:{user}}), (e:Event {id:{event}}) CREATE (u)-[:TICKET {type:{type}, used:false, id:{ticket}}]->(e)", {user, event, type: "sleep", ticket: app.uuid()});
         }
         for (let v = 0; v < numTickets; ++v) {
-            await app.cypher("MATCH (u:User {id:{user}}), (e:Event {id:{event}}) CREATE (u)-[:TICKET {type:{type}, used:false, id:{ticket}}]->(e)", {user, event, type: "sleep", ticket: app.uuid()});
+            await app.cypher("MATCH (u:User {id:{user}}), (e:Event {id:{event}}) CREATE (u)-[:TICKET {type:{type}, used:false, id:{ticket}}]->(e)", {user, event, type: "ticket", ticket: app.uuid()});
         }
         await app.budgetApi.addBudget(event, "ticket_income", 300 * numTickets);
         await app.budgetApi.addBudget(event, "sleep_income", 150 * numSleep);
