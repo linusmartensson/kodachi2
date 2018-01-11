@@ -126,7 +126,7 @@ export const reducer = handleActions({
                 
                 //Close any old or deleted currentTask
                 let found = false;
-                if(v.currentTask) for(let m of v.session.tasks) {
+                if(v.currentTask && v.currentTask.task) for(let m of v.session.tasks) {
                     if(m.result === 'WAIT_RESPONSE' && m.id === v.currentTask.task.id){
                         found = true;
                         break;
