@@ -85,6 +85,11 @@ module.exports = async (app) => {
             throw "Invalid dropdown selection";
         }
         d = d[0];
+        if(typeof q.values[0] === 'object' && q.values[0].id){
+            for(let m of q.values){
+                if(m.id === d) return m;
+            }
+        }
         if (~~d >= q.values.length) {
             throw "Invalid dropdown selection";
         }
