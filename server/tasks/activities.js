@@ -6,7 +6,7 @@ module.exports = async (app) => {
         async (inst, ctx) => {
 
             const team = await app.cypher("MATCH (u:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: inst.origin, team: inst.data.start_data.team});
-            if (!team.records || team.records.length() < 1) {
+            if (!team.records || team.records.length < 1) {
                 return "FAIL";
             }
 
@@ -32,7 +32,7 @@ module.exports = async (app) => {
         async (inst, ctx) => {
 
             const team = await app.cypher("MATCH (u:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: inst.origin, team: inst.data.start_data.team});
-            if (!team.records || team.records.length() < 1) {
+            if (!team.records || team.records.length < 1) {
                 return "FAIL";
             }
 
@@ -53,7 +53,7 @@ module.exports = async (app) => {
         async (inst, ctx) => {
 
             const team = await app.cypher("MATCH (u:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: inst.origin, team: inst.data.start_data.team});
-            if (!team.records || team.records.length() < 1) {
+            if (!team.records || team.records.length < 1) {
                 return "FAIL";
             }
 
@@ -80,7 +80,7 @@ module.exports = async (app) => {
         async (inst, ctx) => {
 
             const team = await app.cypher("MATCH (u:User), (:User {id:{user}})-[:TEAM_MEMBER]-(w:WorkGroup {id:{team}}) WHERE (w)--(u) RETURN w,u", {user: inst.origin, team: inst.data.start_data.team});
-            if (!team.records || team.records.length() < 1) {
+            if (!team.records || team.records.length < 1) {
                 return "FAIL";
             }
 
