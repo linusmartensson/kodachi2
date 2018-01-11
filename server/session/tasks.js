@@ -14,7 +14,7 @@ module.exports = async (app) => {
             task.description = `{|task.${task.type.task_name}.desc}`;
             task.title = `{task.${task.type.task_name}.title.active}`;
 
-            if(aux && aux.taskChanged === q.id) task.updated = true;
+            if(aux && aux.taskChanged === q.get("t").properties.id) task.updated = true;
             else task.updated = false;
 
             for (const v of task.type.inputs) {
