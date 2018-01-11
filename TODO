@@ -7,7 +7,7 @@ HIGH
 
 * account create not finding duplicate ssn accounts
 
-* Make task auto-opening less stupid
+* /list/ react/server adress overlap causes site traversal issues for new users
 
 
 MEDIUM

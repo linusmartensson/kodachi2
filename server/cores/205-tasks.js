@@ -241,7 +241,7 @@ module.exports = async (app) => {
         }
 
         // Notify task update
-        await app.sessionApi.notifySessions(q);
+        await app.sessionApi.notifySessions(q, {taskChanged:task_id});
     }
     async function secureTask (ctx, task_id, inst) {
         const task = api.getTask(inst.task_name);
@@ -269,7 +269,7 @@ module.exports = async (app) => {
         await app.cypher("MATCH (t:Task) WHERE t.id={target} DETACH DELETE t", {target: task_id});
 
         // Notify task finish
-        await app.sessionApi.notifySessions(q);
+        await app.sessionApi.notifySessions(q, {taskChanged:task_id});
     }
     async function finishChildren (inst) {
         if (inst.childIds) {

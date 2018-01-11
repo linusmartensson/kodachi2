@@ -123,14 +123,8 @@ export const reducer = handleActions({
             UPDATE: (state, action) => {
                 let v = _.cloneDeep(state);  
                 patcher.patch(v.session, action.payload.diff)
-                if(v.session.tasks.length > state.session.tasks.length){
-                    for(let m of v.session.tasks){
-                        if(m.result === 'WAIT_RESPONSE'){
-                            let w = _.cloneDeep(m);
-                            return {...v, currentTask:{task:w}};
-                        }
-                    }
-                }
+                
+                //Close any old or deleted currentTask
                 let found = false;
                 if(v.currentTask) for(let m of v.session.tasks) {
                     if(m.result === 'WAIT_RESPONSE' && m.id === v.currentTask.task.id){
@@ -141,6 +135,15 @@ export const reducer = handleActions({
                 if(!found){
                     v.currentTask = undefined;
                 }
+                
+                for(let m of v.session.tasks){
+                    //Open any updated task
+                    if(m.result === 'WAIT_RESPONSE' && m.updated){
+                        let w = _.cloneDeep(m);
+                        return {...v, currentTask:{task:w}};
+                    }
+                }
+                
                 return v;
             },
             STATE: (state, action) => {

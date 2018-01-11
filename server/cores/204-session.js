@@ -17,13 +17,13 @@ module.exports = async (app) => {
     };
 
     // Core function for updating live clients.
-    api.notifySessions = async (ss) => {
+    api.notifySessions = async (ss, aux) => {
         try {
             for (const s of ss) {
                 if (app.clients[s]) {
                     for (const id in app.clients[s]) {
                         const ctx = app.clients[s][id];
-                        const current = await api.buildSession(ctx);
+                        const current = await api.buildSession(ctx, aux);
                         const patch = patcher.diff(ctx.session.state, current);
                         ctx.socket.emit("update", patch);
                         ctx.session.state = current;
@@ -36,12 +36,12 @@ module.exports = async (app) => {
     };
 
     // Build a complete session state -> The data we send to the client.
-    api.buildSession = async (ctx) => {
+    api.buildSession = async (ctx, aux) => {
         const state = {};
         try {
 
             for (const v of app.sessionComponents) {
-                await v(ctx, state);
+                await v(ctx, state, aux);
             }
 
         } catch (e) {

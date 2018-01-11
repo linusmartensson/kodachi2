@@ -2,7 +2,7 @@
 const _ = require("lodash");
 module.exports = async (app) => {
 
-    app.sessionApi.register(async (ctx, state) => {
+    app.sessionApi.register(async (ctx, state, aux) => {
 
         const tasks = [];
         const s = (await app.cypher("MATCH (t:Task), (s:Session {id:{id}}) WHERE (t)-[:HANDLED_BY]->(s) OR (t)-[:HANDLED_BY]->(:User)-[:HAS_SESSION]->(s) OR (t)-[:HANDLED_BY]->(:Role)<-[:HAS_ROLE]-(:User)-[:HAS_SESSION]->(s) RETURN t", {id: ctx.session.localSession})).records;
@@ -13,6 +13,10 @@ module.exports = async (app) => {
             task.type = _.cloneDeep(app.tasks[task.task_name]);
             task.description = `{|task.${task.type.task_name}.desc}`;
             task.title = `{task.${task.type.task_name}.title.active}`;
+
+            if(aux && aux.taskChanged === q.id) task.updated = true;
+            else task.updated = false;
+
             for (const v of task.type.inputs) {
 
                 if (v.prepare) {
