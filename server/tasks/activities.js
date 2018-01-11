@@ -79,7 +79,7 @@ module.exports = async (app) => {
         ),
         async (inst, ctx) => {
 
-            const team = await app.cypher("MATCH (:User {id:{user}})-[:TEAM_MEMBER]-(w:WorkGroup {id:{team}})-[:TEAM_MEMBER]-(u:User) RETURN w,u", {user: inst.origin, team: inst.data.start_data.team});
+            const team = await app.cypher("MATCH (u:User), (:User {id:{user}})-[:TEAM_MEMBER]-(w:WorkGroup {id:{team}}) WHERE (w)--(u) RETURN w,u", {user: inst.origin, team: inst.data.start_data.team});
             if (!team.records || team.records.length() < 1) {
                 return "FAIL";
             }
