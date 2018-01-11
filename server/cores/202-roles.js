@@ -65,13 +65,13 @@ module.exports = async (app) => {
             xp = 1000;
         }
         if (role.match(/\./) !== null) {
-            // When adding .-roles such as for events, add the xp to a role named base_[rolename] instead of [rolename].[eventname].
+            //With .-roles, we will add negative xp to the base role.
             await api.addRole(user, `base_${role.replace(/\.[^.]*/, "")}`, -xp);
             xp = 0;
         }
         await app.cypher(
             "MATCH (u:User {id:{user}})-[e:HAS_ROLE]->(r:Role {type:{role}}) " +
-                            " (u)-[e:HAS_ROLE]->(r) DETACH DELETE e;"
+                            "WHERE (u)-[e:HAS_ROLE]->(r) DETACH DELETE e;"
             , {user, role, xp}
         );
     };
