@@ -99,8 +99,7 @@ module.exports = async (app) => {
                 });
             },
             "@" (s) {
-                const c = s.search(/[^(]/);
-                const q = s.slice(c).split(")");
+                const q = s.slice(2).split(")");
                 panel.content.push({
                     id: pos++ + idbase,
                     type: "image",
