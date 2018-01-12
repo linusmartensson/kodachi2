@@ -8,7 +8,7 @@ module.exports = (app) => {
     r.get("/session", async (ctx) => {
         ctx.body = ctx.session_id; // Output session id.
     });
-    r.get("/list/:target", async (ctx, next) => {
+    r.get("/data/:target", async (ctx, next) => {
         ctx.response.body = await app.listApi.fetch_list(ctx, ctx.params.target, ctx.params);
     });
 

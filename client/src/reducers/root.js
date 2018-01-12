@@ -41,7 +41,7 @@ export const actions = createActions({
             SHOW: (list, history) => {
                 return dispatch => {
                     dispatch(actions.app.list.start.request(list));
-                    fetch(host+'list/'+list,{credentials:'include'})
+                    fetch(host+'data/'+list,{credentials:'include'})
                         .then(r=>{return r.json()})
                         .then(r=>{
                         dispatch(actions.app.list.load(list, r));
