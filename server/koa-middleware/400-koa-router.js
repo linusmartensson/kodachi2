@@ -31,7 +31,7 @@ module.exports = (app) => {
     app.koa.use(r.allowedMethods());
 
     app.koa.use(async (ctx, next) => {
-        if (ctx.response.status === "404") {
+        if (ctx.response.status === 404) {
             ctx.redirect("/");
         }
     });
