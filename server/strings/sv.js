@@ -389,6 +389,7 @@ module.exports = (app) => {
     s('achievement.welcome_home', 'Välkommen hem!')
     s('role.team_leader', 'Lagledare')
     s('achievement.write_stuff', 'Jag är duktig på att skriva')
-    s('achievement.write_so_much_stuff', 'Jag är ÄNNU duktigare på att skriva!')
 
+    s('achievement.write_so_much_stuff', 'Jag är ÄNNU duktigare på att skriva!')
+    s('achievement.let_them_buy_cake', 'Jag säljer på Kodachicon!')
 };
