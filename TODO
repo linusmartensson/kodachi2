@@ -4,25 +4,21 @@ NEXT SPRINT
 
 
 HIGH
-content
 * edit team/vendor/act/aa page
-
-bugs
 * email strings
+* cleanup old sessions (every 24h, delete sessions not used for 24h)
 
 
 MEDIUM
 * view whole budget + team/act/vendor/aa purchase needs
-* cleanup old sessions
 
 
 LOW
 * deltagarsidor för tävlingar & aktiviteter (Visa deltagarlista m.m.)
 * join specific activity timeslots (spökrundan, t.ex.)
 
-* kai.kodachi.se autoredirectar till https. fuck chrome. -__-
-
 * Warn before finishing dangerous tasks
+
 
 
 LOWEST
@@ -36,6 +32,8 @@ LOWEST
 * achievement ui notification
 
 * editor/selector doesn't show until change
+
+* user config - edit profile etc
 
 
 
