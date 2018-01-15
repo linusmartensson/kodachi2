@@ -148,7 +148,7 @@ module.exports = async (app) => {
         await app.roleApi.addAchievement(p.userId, "welcome_home", 1, api.getActiveEvent(ctx), 1, 0);
 
     };
-    api.emailUser = async (userId, subject, text, html) => {
+    api.emailUser = async (userId, subject, text, html, immediate) => {
         let u = (await app.cypher("MATCH (u:User {id:{id}}) RETURN u", {id: userId})).records;
         if (u.length === 0) {
             return false;
@@ -158,7 +158,7 @@ module.exports = async (app) => {
         }
         u = u[0].get("u").properties;
         const lang = await app.userApi.getUserLanguage(u);
-        app.utils.email(u.email, app.stringApi.parse(subject, lang), app.stringApi.parse(text, lang), app.stringApi.parse(html, lang));
+        app.utils.email(u.email, app.stringApi.parse(subject, lang), app.stringApi.parse(text, lang), app.stringApi.parse(html, lang), immediate);
         return true;
     };
     api.findAccount = async (p) => {
@@ -193,6 +193,10 @@ module.exports = async (app) => {
         return true;
 
     };
+    api.loginSession = async (userId, sessionId) => {
+        await app.cypher("MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (r:Role {type:\"anonymous\"}), (r)<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d", {userId, sessionId});
+        return true;
+    }
     api.logout = async (ctx) => {
         await app.cypher("MATCH (u:User {id:{userId}})-[h:HAS_SESSION]->(s:Session), (r:Role {type:\"anonymous\"}) DELETE h CREATE (r)<-[:HAS_ROLE]-(s)", {userId: await api.userId(ctx)});
         console.dir("logged out");

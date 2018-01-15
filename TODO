@@ -1,13 +1,14 @@
+NEXT SPRINT
+* transfer tickets & update ticket page
+* account create not finding duplicate ssn accounts
+
 
 HIGH
 content
 * edit team/vendor/act/aa page
-* forgot password
-* transfer tickets & update ticket page
 
 bugs
 * email strings
-* account create not finding duplicate ssn accounts
 
 
 MEDIUM

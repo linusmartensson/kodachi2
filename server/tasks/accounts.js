@@ -79,13 +79,18 @@ module.exports = (app) => {
     app.taskApi.create_task(
         "account", "login",
         ["anonymous"], [],
-        app.taskApi.okcancel().concat(
+        [{field: "forgotpassword", type:'button'}].concat(
+        app.taskApi.okcancel(),
             {field: "email_or_ssn", type: "text"},
-            {field: "password", type: "password"},
+            {field: "password", type: "password", nocheck: true},
             {unique: true, autocancel: true}
         ),
         async (inst, ctx) => {
             if (inst.response.ok) {
+                if(!inst.response.password){
+                    inst.error = "{task.error.emptyFields}";
+                    return "RETRY";
+                }
                 const user = await app.userApi.findAccount({ssn: inst.response.email_or_ssn}) || await app.userApi.findAccount({email: inst.response.email_or_ssn});
                 if (user) {
                     if (await app.userApi.tryLogin(ctx, user, inst.response.password)) {
@@ -98,6 +103,19 @@ module.exports = (app) => {
                 inst.error = "{tasks.account.noSuchUser}";
                 return "RETRY";
 
+            } else if(inst.response.forgotpassword){
+                const user = await app.userApi.findAccount({ssn: inst.response.email_or_ssn}) || await app.userApi.findAccount({email: inst.response.email_or_ssn});
+                if(user) {
+                    var code = app.uuid() + app.uuid() + app.uuid();
+                    await app.cypher("MATCH (u:User {id:{user}}) SET u.logincode={code}", {user:user.id, code});
+
+                    var session = ctx.session_id;
+                    let msg = `Tryck på denna länken för att logga in på hemsidan: https://kodachi.se/__doLogin/${session}/${code}`;
+                    await app.userApi.emailUser(user.id, "Logga in på kodachi.se!", msg, msg, true);
+
+                    return "OK";
+                }
+                inst.error = "{tasks.account.noSuchUser}";
             }
             return "OK";
         }

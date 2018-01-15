@@ -346,6 +346,8 @@ module.exports = (app) => {
     s("task.review_receipt.desc", "Tjohej! Det har kommit in ett kvitto du behöver ta ställning till! \n@({receipt.image})\nSumma:{receipt.total}\nMottagare:{user.nickname}\nBudgetpost:{receipt.group}\nInköp:{receipt.purchase}");
     s("input.role.desc", "");
     s("input.role.name", "Rollnamn");
+    s("input.forgotpassword.name", "Maila inloggningslänk");
+    s("input.forgotpassword.desc", "Skickar ett email med en inloggningslänk till ditt konto och loggar in dig här när du trycker på den. ^_^");
     s("task.add_super_role.desc", "Här lägger du till en administratör");
     s("task.add_super_role.title", "Lägg till admin");
     s("task.remove_team_member.desc", "Är du säker på att du vill ta bort personen från ditt team?");
