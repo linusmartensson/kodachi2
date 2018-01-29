@@ -70,8 +70,8 @@ module.exports = async (app) => {
         }
         return `${d}`;
     });
-    api.add_filter("file", (d) => ({file: d.path, mimeType: d.mimeType}));
-    api.add_filter("image", (d) => ({file: d.path, mimeType: d.mimeType}));
+    api.add_filter("file", (d) => (d.path!==undefined?{file: d.path, mimeType: d.mimeType}:""));
+    api.add_filter("image", (d) => (d.path!==undefined?{file: d.path, mimeType: d.mimeType}:""));
     api.add_filter("bool", (d) => d === "true" || d === true);
     api.add_filter("date", (d) => new Date(d).getTime());
     api.add_filter("time", (d) => new Date(d).getTime());
@@ -208,7 +208,7 @@ module.exports = async (app) => {
 
         for (const v of task.inputs) {
             if (v.field && !(v.type === "bool") && !(v.type === "checkbox") && !v.nocheck && (!Object.prototype.hasOwnProperty.call(inst.response, v.field) || inst.response[v.field] === "")) {
-                inst.error = "{task.error.emptyFields}";
+                inst.error = `{task.error.emptyFields.${v.field}}`;
                 return true;
             }
         }
