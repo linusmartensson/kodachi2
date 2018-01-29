@@ -199,7 +199,6 @@ module.exports = async (app) => {
     }
     api.logout = async (ctx) => {
         await app.cypher("MATCH (u:User {id:{userId}})-[h:HAS_SESSION]->(s:Session), (r:Role {type:\"anonymous\"}) DELETE h CREATE (r)<-[:HAS_ROLE]-(s)", {userId: await api.userId(ctx)});
-        console.dir("logged out");
         delete ctx.userId;
     };
     api.loggedIn = async (ctx) => {
