@@ -91,7 +91,18 @@ module.exports = (app) => {
                     inst.error = "{task.error.emptyFields}";
                     return "RETRY";
                 }
-                const user = await app.userApi.findAccount({ssn: inst.response.email_or_ssn}) || await app.userApi.findAccount({email: inst.response.email_or_ssn});
+                let d = inst.response.email_or_ssn;
+                if (!(d === "")) {
+                    d = d.replace(/\D/g, "");
+                    if (d.length === 10) {
+                        if (d[0] === "0" || d[0] === "1") {
+                            d = `20${d}`;
+                        } else {
+                            d = `19${d}`;
+                        }
+                    }
+                }
+                const user = await app.userApi.findAccount({ssn: d}) || await app.userApi.findAccount({email: inst.response.email_or_ssn});
                 if (user) {
                     if (await app.userApi.tryLogin(ctx, user, inst.response.password)) {
                         return "OK";
