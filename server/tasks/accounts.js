@@ -164,9 +164,13 @@ module.exports = (app) => {
             inst.data.ssnResult = JSON.parse(await validateSsn(inst.response.ssn));
 
             if (inst.data.ssnResult && inst.data.ssnResult.responseCode && inst.data.ssnResult.responseCode === "Ok") {
-                const res = await app.userApi.findAccount({ssn: inst.data.ssnResult.ssn});
+                const res = await app.userApi.findAccount({ssn: inst.response.ssn});
                 if (res) {
                     inst.next_tasks.push("ssn_exists_forgot_details");
+                } else if (!inst.data.ssnResult.basic) {
+                    inst.data.ssn = inst.response.ssn;
+                    inst.data.country = "Sverige";
+                    inst.next_tasks.push("manual_ssn_details");
                 } else {
                     inst.next_tasks.push("check_ssn_details");
                     inst.data.ssn = inst.response.ssn;
