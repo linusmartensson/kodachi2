@@ -87,6 +87,26 @@ module.exports = async (app) => {
                     });
                 }
             },
+            "[" (s) {
+                const c = s.search(/[^[]/);
+                let q = s.slice(c).split(',');
+                const text = q[0];
+                const task = q[1];
+                q = q.slice(2);
+                let data = {};
+                for(var w in q){
+                    const m = w.split(":");
+                    const o = w.slice(1).join(":");
+                    data[m] = o;
+                }
+                panel.content.push({
+                    id: pos++ + idbase,
+                    type: "editbutton",
+                    text,
+                    task,
+                    data
+                });
+            },
             "(" (s) {
                 const c = s.search(/[^(]/);
                 const q = s.slice(c).split(")");
@@ -181,11 +201,11 @@ module.exports = async (app) => {
         return pages;
 
     };
-    api.parse = (v, tokens) => {
+    api.parse = (v, tokens, idbase) => {
         if (v.startsWith("{|")) {
             const q = v.slice(2, -1);
             v = api.get_string(q, tokens);
-            return api.bookParser(v && v.length > 0 ? v : null, q);
+            return api.bookParser(v && v.length > 0 ? v : null, idbase?idbase:q);
         }
         let count = 1;
         const total = 0;
@@ -200,11 +220,11 @@ module.exports = async (app) => {
         });
         return r;
     };
-    api.userParse = async (ctx, v, lang) => {
+    api.userParse = async (ctx, v, lang, idbase) => {
         if (!lang) {
             lang = await app.userApi.getLanguage(ctx);
         }
-        const w = api.parse(v, lang);
+        const w = api.parse(v, lang, idbase);
         return w;
     };
 
