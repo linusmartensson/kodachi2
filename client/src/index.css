@@ -1,7 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Schoolbell');
 
+@font-face {
+  font-family: 'OpenDyslexic';
+  font-style: normal;
+  font-weight: 400;
+  
+  src: local('Open Dyslexic Regular'), local('OpenDyslexic-Regular'), url('/OpenDyslexic-Regular.otf') format('woff2');
+}
+
 body {
-  font-family: sans-serif;
+  font-family: "OpenDyslexic";
   font-size:95%;
   margin:0;padding:0;
   overflow-x:hidden;

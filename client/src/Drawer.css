@@ -37,7 +37,7 @@
 .Drawer{
     box-shadow: 10px 0 40px 0 rgba(0,0,0,0.5);
     
-    font-family:"Schoolbell";
+    font-family:"OpenDyslexic";
     background:rgba(250,250,250,0.75);
     z-index:10000;
     //background:#6cbe45;
@@ -100,9 +100,8 @@
  margin:0;
  padding:5px 0 5px 5px;
  margin:0;
- font-family:"Schoolbell";
+ font-family:"OpenDyslexic";
  text-decoration:none;
- font-size:18px;
  color:black;
 }
 .Drawer .Tool *, .Drawer .Pages *{

@@ -44,24 +44,22 @@
     height:2em;
     width:100%;
     font-size:1.5em;
-    font-family:"Schoolbell";
+    font-family:"OpenDyslexic";
 }
 .PanelCheckbox{
     width:5em;
     height:2em;
-font-size:1.5em;
+    font-size:1.5em;
     margin:1.5em 0.25em;
     padding:0.5em 1em;
     display:block;
-    font-family:"Schoolbell";
+    font-family:"OpenDyslexic";
     background:rgba(200,250,200,0.5);
     border:1px solid #aaa;
 
 }
 .PanelText{
-   font-size:1.2em;
-   line-height:145%;
-   font-family:Schoolbell;
+   font-family:"OpenDyslexic";
    display:block;
    padding:0.1em 1.0em;
 }
@@ -84,7 +82,7 @@ font-size:1.5em;
     margin:1.5em 1em;
     padding:0.5em 1em;
     padding-right:0;
-    font-family:"Schoolbell";
+    font-family:"OpenDyslexic";
     background:rgba(200,250,200,0.5);
     border:1px solid #aaa;
 }

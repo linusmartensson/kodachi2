@@ -19,18 +19,19 @@
     
     margin-bottom:0;
     
-    font-family:"Rock Salt";
+    font-family:"OpenDyslexic";
     font-size:1.0em;
     padding:2px 7px;
     clear:both;
 
     box-shadow:5px 5px 10px 0px rgba(108,190,84,0.5);
-    text-shadow:1px 1px rgba(255,10,10,0.25);
 }
 .Caption::first-letter{
     color:#ed3093;
     font-size:3em;
     line-height:0em;
+    font-weight:100;
+    letter-spacing:-0.0em;
 }
 .Strength-2{
     font-weight:500;
