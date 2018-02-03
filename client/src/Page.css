@@ -1,9 +1,9 @@
 
 .Page{
-    margin:50px auto;
-    padding:50px 0;
+    margin:0px auto;
+    padding:10px 0;
     background:rgba(225,255,240,0.75);
-    border:4px solid rgba(50,50,50,0.9);
+    border-top:4px solid rgba(50,50,50,0.9);
     border-left:0;
     border-right:0;
     box-shadow:0 5px 30px 1px rgba(0,0,0,0.5);
@@ -11,3 +11,12 @@
     
 }
 
+.Page + .Page {
+    border-top:0;
+}
+.Page:last-child{
+    border-bottom:4px solid rgba(50,50,50,0.9);
+}
+.Panel .Page:last-child{
+    border:0;
+}
