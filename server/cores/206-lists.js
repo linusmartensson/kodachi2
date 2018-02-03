@@ -10,6 +10,64 @@ module.exports = async (app) => {
         app.lists[list_name] = {list_group, list_name, starter_roles, options, result_handler};
         return api.create_list;
     };
+    api.build_list = (list_group, list_name, starter_roles, query, outputs, map, options) => {
+        api.create_list(list_group, list_name, starter_roles, options, async (inst, ctx) => {
+            let filter = {};
+
+            for(let k in map){
+                let v = map[k];
+                switch(typeof v){
+                    case 'function':
+                        filter[k] = await v(inst, ctx);
+                        continue;
+                    case 'string':
+                        let q = v.split('.');
+                        filter[k] = {inst, ctx};
+                        for(let w of q){
+                            filter[k] = filter[k][w];
+                        }
+                        continue;
+
+                }
+            }
+
+            let q = app.mapCypher(await app.cypher(query, filter), outputs);
+            //assume each entry in q is a row to be displayed.
+            
+
+            let output = [];
+            
+            let header = await app.stringApi.userParse(ctx, `{|list.auto.header.${list_name}}`);
+
+            console.dir(header);
+
+            let pos = 0;
+
+            for(let k in q){
+                let v = q[k];
+                
+
+                let m = await app.stringApi.userParse(ctx, `{|list.auto.row.${list_name}}`, undefined, list_name+(pos++));
+                
+
+                //Add in targets
+                app.stringApi.parseDeep(m, v);
+
+                output = output.concat(m);
+            }
+            output = header.concat(output);
+
+            await app.stringApi.translate(ctx, output);
+            app.stringApi.parseDeep(output, filter);
+            console.dir(output);
+
+            return {content:output, id:0};
+        });
+        return api.build_list;
+    }
+    api.remap = (f) => {
+        return async (inst, ctx) => {return await f(ctx);}
+    }
     // -----------------------------------
 
     api.eventList = (list) => {
