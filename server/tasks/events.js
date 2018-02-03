@@ -43,7 +43,7 @@ module.exports = async (app) => {
                     const w = q.get("u").properties;
                     v.values.push(w.email);
                 }
-            }}, {field: "type", type: "dropdown", values: ["admin", "budget", "schedule", "artist_alley_admin", "vendor_admin", "team_admin", "activity_admin"]}
+            }}, {field: "type", type: "dropdown", values: ["admin", "budget", "schedule", "artist_alley_admin", "vendor_admin", "team_admin", "activity_admin", "crew_admin"]}
         ),
         async (inst, ctx) => {
             if (inst.response.cancel) {
