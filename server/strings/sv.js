@@ -396,4 +396,14 @@ module.exports = (app) => {
 
     s('achievement.write_so_much_stuff', 'Jag är ÄNNU duktigare på att skriva!')
     s('achievement.let_them_buy_cake', 'Jag säljer på Kodachicon!')
+    s('role.base_activity_admin', 'Aktivitetsfisk')
+    s('role.base_crew_admin', 'Crewdruid')
+    s('list.auto.header.my_team', "!Tjohej!\nHär kan du som gruppledare se alla dina medlemmars kontaktuppgifter och deras ansökningar! ^_^");
+    s('list.auto.row.my_team', "{w.name} - uniform: {{w.uniform}}\n_\n{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}\n{|m.description}");
+    s('list.auto.header.admin_teams', "!Tjohej!\nHär kan du som administratör se alla medlemmar i alla team");
+    s('list.auto.row.admin_teams', "{w.name} - uniform: {{w.uniform}}\n_\n{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}");
+    s('list.admin_teams.title', 'Administrera team')
+    s('list.my_team.title', 'Administrera mina team')
+
 };
+
