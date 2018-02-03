@@ -15,5 +15,17 @@ module.exports = async (app) => {
             throw e;
         }
     };
+    app.mapCypher = (c, r) => {
+        const rs = c.records;
+        let rows = [];
+        for(let i=0;i<rs.length;++i){
+            var row = {};
+            for(var v of r){
+                row[v] = rs[i].get(v).properties;
+            }
+            rows.push(row);
+        }
+        return rows;
+    }
     winston.info("Neo4j driver loaded!");
 };
