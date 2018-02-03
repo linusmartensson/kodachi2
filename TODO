@@ -1,16 +1,16 @@
-NEXT SPRINT
-* transfer tickets & update ticket page
-* account create not finding duplicate ssn accounts
-
+FEBRUARY
+* transfer tickets
+* update ticket page
+* view whole budget + team/act/vendor/aa purchase needs
+* edit team/vendor/act/aa page
+* Update teams/activities/vendors/artistalley layout to make it more pretty
 
 HIGH
-* edit team/vendor/act/aa page
 * email strings
 * cleanup old sessions (every 24h, delete sessions not used for 24h)
 
 
 MEDIUM
-* view whole budget + team/act/vendor/aa purchase needs
 
 
 LOW
@@ -23,7 +23,6 @@ LOW
 
 LOWEST
 
-* adminlista för alla team osv
 
 * pay+register on-site ui
 
@@ -42,7 +41,6 @@ AFTER NEW YEAR
 * add point cost to point price
 * manage points
 * trade in points for things
-* Update teams/activities/vendors/artistalley layout to make it more pretty
 
 
 
