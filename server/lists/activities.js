@@ -62,8 +62,7 @@ module.exports = (app) => {
                     const tier = {
                         id: r.tiers.length,
                         panels: [
-                            {id: 0, content: [{id: 0, type: "text", hover: t.description, text: `${u.givenName} "${u.nickname}" ${u.lastName}`}]},
-                            {id: 1, content: [{id: 0, type: "text", hover: t.description, text: u.email}]}
+                            {id: 0, content: [{id: 0, type: "text", hover: t.description, text: `${u.givenName} "${u.nickname}" ${u.lastName} - ${u.email}`}]},
                         ]
                     };
 
