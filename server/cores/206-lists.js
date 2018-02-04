@@ -21,11 +21,7 @@ module.exports = async (app) => {
                         filter[k] = await v(inst, ctx);
                         continue;
                     case 'string':
-                        let q = v.split('.');
-                        filter[k] = {inst, ctx};
-                        for(let w of q){
-                            filter[k] = filter[k][w];
-                        }
+                        filter[k] = _.get({inst, ctx}, v);
                         continue;
 
                 }
