@@ -2,16 +2,13 @@ FEBRUARY
 * transfer tickets
 * update ticket page
 * view whole budget + team/act/vendor/aa purchase needs
-* edit team/vendor/act/aa page
 * Update teams/activities/vendors/artistalley layout to make it more pretty
 
 HIGH
 * email strings
-* cleanup old sessions (every 24h, delete sessions not used for 24h)
-
 
 MEDIUM
-
+* cleanup old sessions (every 24h, delete sessions not used for 24h)
 
 LOW
 * deltagarsidor för tävlingar & aktiviteter (Visa deltagarlista m.m.)
