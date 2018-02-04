@@ -399,9 +399,14 @@ module.exports = (app) => {
     s('role.base_activity_admin', 'Aktivitetsfisk')
     s('role.base_crew_admin', 'Crewdruid')
     s('list.auto.header.my_team', "!Tjohej!\nHär kan du som gruppledare se alla dina medlemmars kontaktuppgifter och deras ansökningar! ^_^");
-    s('list.auto.row.my_team', "{w.name} - uniform: {{w.uniform}}\n_\n{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}\n{|m.description}");
     s('list.auto.header.admin_teams', "!Tjohej!\nHär kan du som administratör se alla medlemmar i alla team!");
-    s('list.auto.row.admin_teams', "{w.name} - uniform: {{w.uniform}} - {q} / {w.size} medlemmar\n_\n{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}");
+    
+    s('list.auto.group.my_team', "!{w.name}\nuniform: {{w.uniform}}");
+    s('list.auto.row.my_team', "{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}\n{|m.description}");
+
+    s('list.auto.group.admin_teams', "!{w.name}\nuniform: {{w.uniform}} - {q} / {w.size} medlemmar");
+    s('list.auto.row.admin_teams', "{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Gruppledare: {{leader}}");
+
     s('list.admin_teams.title', 'Administrera team')
     s('list.my_team.title', 'Administrera mina team')
 

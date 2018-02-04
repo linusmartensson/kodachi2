@@ -37,9 +37,20 @@ module.exports = async (app) => {
 
             let pos = 0;
 
+            let prev = null;
+
             for(let k in q){
                 let v = q[k];
                 
+                if(options.group_by){
+                    let q = _.get(v, options.group_by);
+                    if(q != prev){
+                        prev = q;
+                        let m = await app.stringApi.userParse(ctx, `{|list.auto.group.${list_name}}`, undefined, list_name+(pos++));
+                        app.stringApi.parseDeep(m, v);
+                        output = output.concat(m);       
+                    }
+                }
 
                 let m = await app.stringApi.userParse(ctx, `{|list.auto.row.${list_name}}`, undefined, list_name+(pos++));
                 
