@@ -245,6 +245,24 @@ module.exports = async (app) => {
         return "OK";
     }, async (inst) => "OK");
 
+    app.taskApi.create_task(
+        "activity", "update_team_desc",
+        ["manager."], [],
+        app.taskApi.okcancel().concat(
+            {event_task: true, hide:true},
+            {field: "update_name", type: "text"},
+            {field: "update_desc", type: "editor"},
+        ),
+        async (inst, ctx) => {
+            const q = {};
+            q.team = inst.data.start_data.team;
+            q.name = inst.response.update_name;
+            q.desc = inst.response.update_desc;
+            q.user = inst.origin;
+            await app.cypher("MATCH (s:WorkGroup {id:{team}})-[:MANAGED_BY]-(:Role)-[:HAS_ROLE]-(u:User {id:{user}}) SET s.name = {name}, s.desc = {desc}", q);
+            return "OK";
+        }, async (inst) => "OK"
+    );
 
     app.taskApi.create_task(
         "activity", "create_team",

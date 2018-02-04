@@ -45,6 +45,9 @@ module.exports = (app) => {
                         {id: 2, content: [{id: 0, type: "editbutton", text: "Email team", task: `email_team.${inst.start_data.event_id}`, data: {team: team.id}}]}
                     ]
                 }], id: content.length};
+                if(manager) {
+                    teamdesc.tiers[0].panels.push({id:3, content: [{id: 0, type: 'editbutton', text:'Update team profile', task: `update_team_desc.${inst.start_data.event_id}`, data: {team: team.id, update_name: team.name, update_desc:team.desc}}]})
+                }
 
                 // content.push(teamdesc);
 
