@@ -233,9 +233,6 @@ module.exports = async (app) => {
         {field: "can_cleanup_sunday", type: "bool"},
         {field: "tshirt", type: "dropdown", values: ["S", "M", "L", "XL", "XXL"]}
     ], async (inst, ctx) => {
-        if (app.taskApi.emptyFields(inst)) {
-            return "RETRY";
-        }
         const q = inst.response;
         q.id = inst.origin;
         q.team = inst.data.application.team || inst.data.application.activity || inst.data.application.shop;
