@@ -3,7 +3,7 @@
 module.exports = (app) => {
 
     app.listApi.build_list("activities", "admin_teams", ["admin", "team_admin.", "event_admin.", "crew_admin."], 
-        "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w order by w.name, u.nickname", ["u", "m", "w"], {event:'inst.start_data.event_id'}, {event_list: true});
+        "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) with u,m,w,count(m) as q RETURN u,m,w,q order by w.name, u.nickname", ["u", "m", "w", "q"], {event:'inst.start_data.event_id'}, {event_list: true});
 
     app.listApi.build_list("activities", "my_team", ["manager."], 
         "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)-[:MANAGED_BY]->(:Role)<-[:HAS_ROLE]-(:User {id:{user_id}}) WHERE (w)--(:Event {id:{event}}) RETURN u,m,w order by w.name, u.nickname", ["u", "m", "w"], {event:'inst.start_data.event_id', user_id:app.listApi.remap(app.userApi.userId)}, {event_list: true});
