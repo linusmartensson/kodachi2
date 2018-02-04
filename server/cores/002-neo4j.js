@@ -22,6 +22,7 @@ module.exports = async (app) => {
             var row = {};
             for(var v of r){
                 row[v] = rs[i].get(v).properties;
+                if(row[v] === undefined) row[v] = rs[i].get(v);
             }
             rows.push(row);
         }

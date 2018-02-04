@@ -39,8 +39,6 @@ module.exports = async (app) => {
             
             let header = await app.stringApi.userParse(ctx, `{|list.auto.header.${list_name}}`);
 
-            console.dir(header);
-
             let pos = 0;
 
             for(let k in q){
@@ -59,7 +57,6 @@ module.exports = async (app) => {
 
             await app.stringApi.translate(ctx, output);
             app.stringApi.parseDeep(output, filter);
-            console.dir(output);
 
             return {content:output, id:0};
         });
