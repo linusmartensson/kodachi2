@@ -29,7 +29,6 @@ module.exports = async (app) => {
 
             let q = app.mapCypher(await app.cypher(query, filter), outputs);
             //assume each entry in q is a row to be displayed.
-            
 
             let output = [];
             

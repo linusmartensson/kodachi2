@@ -3,7 +3,7 @@
 module.exports = (app) => {
 
     app.listApi.build_list("activities", "admin_teams", ["admin", "team_admin.", "event_admin.", "crew_admin."], 
-        "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) with u,m,w,count(m) as q,count((w)-[:MANAGED_BY]-(:Role)--(u))>0 as leader RETURN u,m,w,q,leader order by w.name, u.nickname", ["u", "m", "w", "q", "leader"], {event:'inst.start_data.event_id'}, {event_list: true, group_by: 'w.id'});
+        "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w,SIZE(()-[:TEAM_MEMBER]-(w)) as q,SIZE((u)--(:Role)-[:MANAGED_BY]-(w))>0 as leader order by w.name, u.nickname", ["u", "m", "w", "q", "leader"], {event:'inst.start_data.event_id'}, {event_list: true, group_by: 'w.id'});
 
     app.listApi.build_list("activities", "my_team", ["manager."], 
         "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)-[:MANAGED_BY]->(:Role)<-[:HAS_ROLE]-(:User {id:{user_id}}) WHERE (w)--(:Event {id:{event}}) RETURN u,m,w order by w.name, u.nickname", ["u", "m", "w"], {event:'inst.start_data.event_id', user_id:app.listApi.remap(app.userApi.userId)}, {event_list: true, group_by: 'w.id'});
