@@ -8,7 +8,7 @@ module.exports = async (app) => {
 
     api.create_list = (list_group, list_name, starter_roles, options, result_handler) => {
         app.lists[list_name] = {list_group, list_name, starter_roles, options, result_handler};
-        return api.create_list;
+        return list_name;
     };
     api.build_list = (list_group, list_name, starter_roles, query, outputs, map, options) => {
         api.create_list(list_group, list_name, starter_roles, options, async (inst, ctx) => {
@@ -66,7 +66,22 @@ module.exports = async (app) => {
 
             return {content:output, id:0};
         });
-        return api.build_list;
+        return list_name;
+    }
+    api.join_lists = (list_group, list_name, starter_roles, lists) => {
+        api.create_list(list_group, list_name, starter_roles, options, async (inst, ctx) => {
+            var res = [];
+            var ps = [];
+            for(let v in lists){
+                ps.push(api.fetch_list(ctx, lists[v], _.cloneDeep(inst.start_data)));
+            }
+            for(let v in ps){
+                res.concat((await ps[v]).content);
+            }
+            
+            return {content:res, id:0};
+        });
+        return list_name;
     }
     api.remap = (f) => {
         return async (inst, ctx) => {return await f(ctx);}
