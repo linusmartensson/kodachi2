@@ -362,7 +362,16 @@ module.exports = (app) => {
     s("task.no_teams_available.title", "Inga tillgängliga team");
     s("list.all_users.title", "Lista alla användare");
     s("tasks.account.noSuchUser", "Nejdu! Den användaren finns inte!");
+    s("tasks.purchases.giftToMe", "Du kan ju inte ge en biljett till dig själv! ^_^");
     s("tasks.account.loginFailed", "Nix! Testa ett annat lösenord!");
+    
+    s('achievement.i_bought_a_thing', 'Jag har köpt en biljett! ^_^');
+    s('achievement.my_nap_spot', 'Min helt egna konventssovplats!');
+    s('input.recipient_name.desc', '', true);
+    s('input.recipient_name.name', 'Vem ska få biljetten?');
+    s('task.give_ticket.desc', '', true);
+    s('task.give_ticket.title.active', '', true);
+    s('task.give_ticket.title', 'Överför biljett');
 
 
     s('email.app_accepted.subject', "Din ansökan har uppdaterats");

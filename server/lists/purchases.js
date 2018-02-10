@@ -70,7 +70,8 @@ module.exports = (app) => {
                 const ticket = ticketTypes.ticket[v];
                 const row = {
                     id: rows.length, panels: [
-                        {id: 0, content: [{id: 0, type: "text", text: ticket.id}]}
+                        {id: 0, content: [{id: 0, type: "text", text: ticket.id}]},
+                            {id: 1, content: [{id: 0, type: "editbutton", text: "Överför konventsbiljett", task:`give_ticket.${inst.start_data.event_id}`, data:{ticket:ticket.id}}]}
                     ]
                 };
 
@@ -84,7 +85,8 @@ module.exports = (app) => {
                 const ticket = ticketTypes.sleep[v];
                 const row = {
                     id: rows.length, panels: [
-                        {id: 0, content: [{id: 0, type: "text", text: ticket.id}]}
+                        {id: 0, content: [{id: 0, type: "text", text: ticket.id}]},
+                            {id: 1, content: [{id: 0, type: "editbutton", text: "Överför sovsalsplats", task:`give_ticket.${inst.start_data.event_id}`, data:{ticket:ticket.id}}]}
                     ]
                 };
 
