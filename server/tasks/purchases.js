@@ -195,4 +195,53 @@ module.exports = async (app) => {
         "purchase", "purchase_complete", [], [], [{field: "ok", autocancel: true, type: "button"}],
         async (inst, ctx) => "OK", async (inst, ctx) => "OK"
     );
+
+
+    app.taskApi.create_task(
+        "purchase", "give_ticket", ["user"], [], app.taskApi.okcancel().concat({field:"recipient_name", type:"text", event_task:true}),
+        async (inst, ctx) => {
+            let ticket = inst.data.start_data.ticket;
+            let user = inst.origin;
+            let recipient = inst.response.recipient_name;
+            console.dir(inst.data);
+            let target = app.mapCypher(await app.cypher("MATCH (u:User {id:{user}})-[t:TICKET {id:{ticket}, used:false}]-(e:Event {id:{event}}) RETURN t", {user, ticket, event:inst.data.start_data.event_id}), ["t"]);
+
+            if(target.length < 1) return "FAIL";
+            recipient = (await app.userApi.findAccount({ssn:recipient, email:recipient, nickname:recipient})).id;
+
+            if(!recipient){
+                inst.error = "{tasks.account.noSuchUser}";
+                return "RETRY";
+            }
+            if(recipient === user){
+                inst.error = "{tasks.purchases.giftToMe}";
+                return "RETRY";
+            }
+            let type = target[0].t.type;
+
+            await app.cypher("MATCH (r:User {id:{recipient}}), (u:User {id:{user}})-[t:TICKET {id:{ticket}}]-(e:Event {id:{event}}) CREATE (r)-[:TICKET {type:t.type, used:false, id:{newid}}]->(e) DELETE t", {recipient, user, ticket, event:inst.data.start_data.event_id, newid:app.uuid()});
+            
+            if (type === 'ticket') {
+                await app.roleApi.addRole(recipient, `visitor.${inst.data.start_data.event_id}`, 2000);
+                await app.roleApi.addAchievement(recipient, "i_bought_a_thing", 1, inst.data.start_data.event_id, 1, 10);
+            }
+            if (type === 'sleep') {
+                await app.roleApi.addRole(recipient, `sleeper.${inst.data.start_data.event_id}`, 1000);
+                await app.roleApi.addAchievement(recipient, "my_nap_spot", 1, inst.data.start_data.event_id, 1, 10);
+            }
+
+            let tickets = app.mapCypher(await app.cypher("MATCH (u:User {id:{user}})-[t:TICKET]-(e:Event {id:{event}}) RETURN t", {user, event:inst.data.start_data.event_id}), ["t"]);
+
+            let hasSleep = false, hasTicket = false;
+
+            for(var v in tickets){
+                if(tickets[v].t.type == "sleep") hasSleep = true;
+                if(tickets[v].t.type == "ticket") hasTicket = true;
+            }
+            if(type === 'sleep' && !hasSleep) await app.roleApi.removeRole(user, `sleeper.${inst.data.start_data.event_id}`, 1000);
+            if(type === 'ticket' && !hasTicket) await app.roleApi.removeRole(user, `visitor.${inst.data.start_data.event_id}`, 2000);
+            
+            return 'OK';
+        }
+    );
 };
