@@ -1,5 +1,6 @@
 
 import bcrypt from "bcrypt";
+const _ = require("lodash");
 
 module.exports = async (app) => {
 
@@ -161,23 +162,31 @@ module.exports = async (app) => {
         app.utils.email(u.email, app.stringApi.parse(subject, lang), app.stringApi.parse(text, lang), app.stringApi.parse(html, lang), immediate);
         return true;
     };
-    api.findAccount = async (p) => {
+    api.findAccount = async (m) => {
+        let p = _.cloneDeep(m);
         let q = [];
         if (p.ssn) {
             q = await app.cypher("MATCH (u:User) WHERE u.ssn={ssn} RETURN u", p);
+            delete p.ssn;
         } else if (p.email) {
             q = await app.cypher("MATCH (u:User) WHERE u.email={email} RETURN u", p);
+            delete p.email;
         } else if (p.nickname) {
             q = await app.cypher("MATCH (u:User) WHERE u.nickname={nickname} RETURN u", p);
+            delete p.nickname;
+        } else {
+            return false;
         }
+        console.dir(p);
+        console.dir(q);
 
         if (q && q.records && q.records.length > 0) {
+            console.dir("res");
             const res = q.records[0].get("u").properties;
             delete res.verifyCode;
             return res;
         }
-
-        return false;
+        return await api.findAccount(p);
     };
     api.tryLogin = async (ctx, user, password) => {
         // login account
