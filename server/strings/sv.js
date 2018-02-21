@@ -66,7 +66,7 @@ module.exports = (app) => {
     s("input.lang.name", "Vilket språk är denna text på?");
     s("input.lastName.name", "Vilket är ditt efternamn?");
     s("input.limit.name", "Vad är kostnadsgränsen för denna budgetpost?");
-    s("input.nickname.desc", "Ditt namn, smeknamn, eller något helt annat som du känner passar dig unikt bra när vi ska prata med dig! Detta namnet kommer vi använda överallt på sajten för att kommunicera med dig.");
+    s("input.nickname.desc", "Ditt namn, smeknamn, eller något helt annat som du känner passar dig unikt bra när vi ska prata med dig! Detta namnet kommer vi använda överallt på sajten för att kommunicera med dig. Tänk på att det bara får innehålla små och stora bokstäver, samt siffror och bindestreck eller understreck.");
     s("input.nickname.name", "Vad vill du att vi ska kalla dig? ^_^");
     s("input.no.desc", "", true);
     s("input.no.name", "Nej :(");
