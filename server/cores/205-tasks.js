@@ -527,7 +527,7 @@ module.exports = async (app) => {
         const inst = await updateTaskInstance(task_id);
 
         if (!inst || inst.result !== "WAIT_RESPONSE" || !await secureTask(ctx, task_id, inst)) {
-            return "NO_TASK_ID";
+            return app.stringApi.parse("{task.error.noSuchTask}", await app.userApi.getLanguage(ctx));
         } // There is no matching task instance.
         inst.error = "no error message :(";
         console.log(`Found ${task_id}. Processing response!`);
@@ -552,7 +552,7 @@ module.exports = async (app) => {
             inst.result = "WAIT_RESPONSE";
             await updateTaskInstance(task_id, inst);
             console.log(`Task processing error: ${inst.error}`);
-            return "RETRY";
+            return app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx));
         }
 
         // Process the response
