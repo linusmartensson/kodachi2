@@ -254,16 +254,13 @@ module.exports = (app) => {
                 return "OK";
             }
             if (inst.response.email !== inst.response.email_verify) {
+                inst.error = "{tasks.account.differentEmails}";
                 return "RETRY";
             }
             if (inst.response.password !== inst.response.password_verify) {
+                inst.error = "{tasks.account.verifyPassword}";
                 return "RETRY";
             }
-
-            if (app.taskApi.emptyFields(inst)) {
-                return "RETRY";
-            }
-
             if ((await app.userApi.findAccount({email: inst.response.email})) !== false) {
                 inst.error = "{tasks.account.emailTaken}";
                 return "RETRY";

@@ -425,6 +425,13 @@ module.exports = (app) => {
     s("input.update_desc.desc", "Här kan du uppdatera din gruppbeskrivning. Tänk på att den ska vara riktad främst mot besökare på evenemanget!");
     s('task.update_team_desc.desc', 'Här har du möjlighet att uppdatera ditt teams beskrivning ^_^')
     s('task.update_team_desc.title', 'Uppdatera team')
+    
+    
+    s('tasks.account.differentEmails', 'Dina emailadresser måste vara likadana!');
+    s('tasks.account.verifyPassword', 'Ett av lösenorden har nog blivit fel, skriv om dem för säkerhets skull!');
+    s('task.error.noSuchTask', 'Det har blivit något fel! Ladda om sidan och prova igen.');
+
+
 
 };
 
