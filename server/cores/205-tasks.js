@@ -29,7 +29,7 @@ module.exports = async (app) => {
         throw "Invalid Simpletext";
     });
     api.add_filter("phone", (d) => {
-        if (/^[0-9-+ ]*$/.test(d)) {
+        if (/^[0-9-+ ()]*$/.test(d)) {
             return d;
         }
         throw "Invalid phone number";
