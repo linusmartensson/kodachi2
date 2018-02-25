@@ -418,6 +418,9 @@ module.exports = (app) => {
     s('list.auto.group.admin_teams', "!{w.name}\nuniform: {{w.uniform}} - {q} / {w.size} medlemmar");
     s('list.auto.row.admin_teams', "{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Gruppledare: {{leader}}");
     
+    s('list.auto.group.admin_budget', "!Budgetposter för {w.type}\nTotal: {total}");
+    s('list.auto.row.admin_budget', "{w.name}\nBudget: {w.budget}");
+
     s('list.auto.row.list_team_leaders', "!{w.name}\nGrupptyp: {w.type}\n{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}");
 
     s('list.admin_teams.title', 'Administrera team')

@@ -1,43 +1,19 @@
 FEBRUARY
-* update ticket page
-* view whole budget + team/act/vendor/aa purchase needs
 * Update teams/activities/vendors/artistalley layout to make it more pretty
 
-HIGH
-* email strings
-
-MEDIUM
+MARCH
+* Remove team/activity/etc (Ta bort alla tasks som matchar .data =~ ".*objid.*")
 * cleanup old sessions (every 24h, delete sessions not used for 24h)
-
-LOW
-* deltagarsidor för tävlingar & aktiviteter (Visa deltagarlista m.m.)
-* join specific activity timeslots (spökrundan, t.ex.)
-
+* email strings
 * Warn before finishing dangerous tasks
-
-
-
-LOWEST
-
-
-* pay+register on-site ui
-
-* Remove team/activity/etc
-
-* achievement ui notification
-
 * editor/selector doesn't show until change
 
+APRIL
+* pay+register on-site ui
+* deltagarsidor för tävlingar & aktiviteter (Visa deltagarlista m.m.)
+* join specific activity timeslots (spökrundan, t.ex.)
+* update ticket page (Single QR code with checkin link?)
 * user config - edit profile etc
-
-
-
-
-AFTER NEW YEAR
-* add point cost to point price
-* manage points
-* trade in points for things
-
 
 
 
@@ -57,7 +33,9 @@ AFTER NEW YEAR
 
 
 DESCOPED 
-* set current event (reason: always use latest. Fuck history :v)
-* assign activity location (reason: leaving this as manual labor for schedulers 4 now)
-* assign activity time/date/opening hours (reason: leaving this as manual labor for schedulers 4 now)
 * multi-language (reason: supporting swedish, too much work for very few potential visitors)
+* add point cost to point price
+* manage points
+* trade in points for things
+* achievement ui notification
+* purchase needs for groups?
