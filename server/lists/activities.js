@@ -2,6 +2,9 @@
 
 module.exports = (app) => {
 
+    app.listApi.build_list("activities", "list_team_leaders", ["admin", "team_admin.", "event_admin.", "crew_admin."], 
+        "MATCH (u:User)--(:Role)-[:MANAGED_BY]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,w order by w.name, u.nickname", ["u", "w"], {event:'inst.start_data.event_id'}, {event_list: true});
+
     app.listApi.build_list("activities", "admin_teams", ["admin", "team_admin.", "event_admin.", "crew_admin."], 
         "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w,SIZE(()-[:TEAM_MEMBER]-(w)) as q,SIZE((u)--(:Role)-[:MANAGED_BY]-(w))>0 as leader order by w.name, u.nickname", ["u", "m", "w", "q", "leader"], {event:'inst.start_data.event_id'}, {event_list: true, group_by: 'w.id'});
 

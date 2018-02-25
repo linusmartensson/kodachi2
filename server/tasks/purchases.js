@@ -198,7 +198,7 @@ module.exports = async (app) => {
 
 
     app.taskApi.create_task(
-        "purchase", "give_ticket", ["user"], [], app.taskApi.okcancel().concat({field:"recipient_name", type:"text", event_task:true}),
+        "purchase", "give_ticket", ["user"], [], app.taskApi.okcancel().concat({field:"recipient_name", type:"text", event_task:true, hide:true}),
         async (inst, ctx) => {
             let ticket = inst.data.start_data.ticket;
             let user = inst.origin;
