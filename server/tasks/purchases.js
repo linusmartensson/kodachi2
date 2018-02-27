@@ -53,6 +53,7 @@ module.exports = async (app) => {
             cancelUrl: app.paysonkey.returnurl,
             ipnNotificationUrl: `${app.paysonkey.serverurl}/task/respond_task/${trackId}`,
             memo: message,
+            guaranteeOffered:"NO",
             senderEmail: u.email,
             senderFirstName: u.givenName,
             senderLastName: u.lastName,
