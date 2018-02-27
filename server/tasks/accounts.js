@@ -127,6 +127,7 @@ module.exports = (app) => {
                     return "OK";
                 }
                 inst.error = "{tasks.account.noSuchUser}";
+                return "RETRY";
             }
             return "OK";
         }
