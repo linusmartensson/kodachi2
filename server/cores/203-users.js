@@ -152,6 +152,7 @@ module.exports = async (app) => {
     api.emailUser = async (userId, subject, text, html, immediate) => {
         let u = (await app.cypher("MATCH (u:User {id:{id}}) RETURN u", {id: userId})).records;
         if (u.length === 0) {
+            console.dir("No user for email");
             return false;
         }
         if (!html) {
@@ -159,6 +160,7 @@ module.exports = async (app) => {
         }
         u = u[0].get("u").properties;
         const lang = await app.userApi.getUserLanguage(u);
+        console.dir("Sending email "+subject+" to "+u.email);
         app.utils.email(u.email, app.stringApi.parse(subject, lang), app.stringApi.parse(text, lang), app.stringApi.parse(html, lang), immediate);
         return true;
     };

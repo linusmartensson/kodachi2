@@ -44,6 +44,7 @@ module.exports = (app) => {
         };
 
         setTimeout(() => {
+            console.log("Sending email "+subject+" now!");
             app.emailTransport.sendMail(opts, (error, info) => {
                 if (error) {
                     console.dir(error);
