@@ -1,5 +1,3 @@
-FEBRUARY
-* Update teams/activities/vendors/artistalley layout to make it more pretty
 
 MARCH
 * Remove team/activity/etc (Ta bort alla tasks som matchar .data =~ ".*objid.*")
