@@ -151,7 +151,7 @@ class Panel extends Component {
             case 'speechbubble': return <SpeechBubble position={elem.position} key={elem.id} text={elem.text} speaker={elem.image} />;
             case 'image': return <img className="Image" key={elem.id} alt={elem.text} src={elem.image} />;
             case 'editbutton': 
-                return (<Tool key={elem.id} task={elem.task} name={elem.text} data={elem.data} />)
+                return (elem.data.disabled===undefined||elem.data.disabled=="false")&&(elem.data.enabled===undefined||elem.data.enabled=="true")?(<Tool key={elem.id} task={elem.task} name={elem.text} data={elem.data} />):null;
             case 'button': return <input onKeyPress={ne} className="PanelButton" type="submit" onClick={(e)=>{e.target.clicked=true;}} key={elem.id} name={elem.id} value={elem.text} />
             case 'input_password': return <input onKeyPress={ne} className="PanelInput" type="password" key={elem.id} name={elem.id} defaultValue={elem.text} />
             case 'input_ssn': return <input onKeyPress={ne} placeholder='YYMMDD-NNNN' className="PanelInput" type="text" key={elem.id} name={elem.id} defaultValue={elem.text} />
