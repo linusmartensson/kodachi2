@@ -29,6 +29,9 @@ module.exports = async (app) => {
 
             let q = app.mapCypher(await app.cypher(query, filter), outputs);
             //assume each entry in q is a row to be displayed.
+            if(options.prepare){
+                q = options.prepare(q);
+            }
 
             let output = [];
             
@@ -37,6 +40,7 @@ module.exports = async (app) => {
             let pos = 0;
 
             let prev = null;
+
 
             for(let k in q){
                 let v = q[k];
