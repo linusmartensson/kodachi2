@@ -110,6 +110,12 @@
     border-color:#ddd;
     border-style:dotted;
 }
+.Panel .Surface:only-child .Panel:after {
+    display:none;
+}
+.Panel .Surface:only-child .Panel {
+    border-style:none !important;
+}
 .Panel .Image {
     width:100%;
     height:auto;
