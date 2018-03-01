@@ -151,7 +151,8 @@ module.exports = (app) => {
     s("list.purchases.sleepText", "Detta är dina sovsalsplatser! Du behöver normalt sett bara en plats, så flytta över resten till dina kompisar. ^_^");
     s("list.purchases.ticketText", "Detta är dina evenemangsbiljetter! En biljett används upp när du checkar in. Glöm inte att flytta över alla extra biljetter till de som ska ha dem!");
     s("list.show_activities.times", "Öppetdagar");
-    s("list.show_activities.title", "Aktiviteter!");
+    s("list.list_activities.title", "Aktiviteter!");
+    s("list.admin_budget.title", "Visa budgetöversikt");
     s("list.show_team.title", "Mitt team!");
     s("list.tasks.title", "TEST-lista TA BORT");
     s("list.tickets.title", "Dina biljetter!");
@@ -407,13 +408,24 @@ module.exports = (app) => {
     s('achievement.let_them_buy_cake', 'Jag säljer på Kodachicon!')
     s('role.base_activity_admin', 'Aktivitetsfisk')
     s('role.base_crew_admin', 'Crewdruid')
-    s('list.auto.header.my_team', "!Tjohej!\nHär kan du som gruppledare se alla dina medlemmars kontaktuppgifter och deras ansökningar! ^_^");
+
     s('list.auto.header.admin_teams', "!Tjohej!\nHär kan du som administratör se alla medlemmar i alla team!");
     s('list.auto.header.list_team_leaders', "!Tjohej!\nHär kan du se alla teamledare!");
     s('list.list_team_leaders.title', "Lista teamledare");
     
-    s('list.auto.group.my_team', "!{w.name}\nuniform: {{w.uniform}}");
-    s('list.auto.row.my_team', "{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}\n{|m.description}");
+    
+    s('list.auto.header.my_team', "!Tjohej!\nHär kan du se ditt team! ^_^");
+    s('list.auto.group.my_team', "!{w.name}\nuniform: {{w.uniform}}, medlemmar: {q}/{w.size}, Du leder teamet: {{is_leader}}\n[Maila teamet,email_team.{{{event}}},team:{{{w.id}}},enabled:{leader}]\n[Uppdatera teamprofil,update_team_desc.{{{event}}},team:{w.id},update_name:{w.name},update_desc:{w.desc},enabled:{is_leader}]");
+    s('list.auto.row.my_team', "{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nStorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Teamledare: {{leader}}\n{|m.description}\n[Ta bort medlem,remove_team_member.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{is_leader},disabled:{leader}]\n[Gör till teamledare,promote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{is_leader},disabled:{leader}]\n[Ta bort teamledare,demote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{deletable_leader}]");
+
+    s('competition', "Tävlingar");
+    s('team', "Team");
+    s("activity", "Aktiviteter");
+    s("vendor", "Försäljare");
+    s("artist_alley", "Konstnärer");
+    s('list.auto.header.list_activities', "Oooh! Nyfiken på vad som händer på Kodachicon? Det ser du här!");
+    s('list.auto.group.list_activities', "!{{w.type}}");
+    s('list.auto.row.list_activities', "!{w.name}\n@({w.image})\n_\n{|w.desc}");
 
     s('list.auto.group.admin_teams', "!{w.name}\nuniform: {{w.uniform}} - {q} / {w.size} medlemmar");
     s('list.auto.row.admin_teams', "{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Gruppledare: {{leader}}");
@@ -424,7 +436,7 @@ module.exports = (app) => {
     s('list.auto.row.list_team_leaders', "!{w.name}\nGrupptyp: {w.type}\n{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}");
 
     s('list.admin_teams.title', 'Administrera team')
-    s('list.my_team.title', 'Administrera mina team')
+    s('list.my_team.title', 'Mitt team')
 
     s("input.update_name.name", "Gruppnamn");
     s("input.update_name.desc", "Här fyller du i ditt gruppnamn!");
