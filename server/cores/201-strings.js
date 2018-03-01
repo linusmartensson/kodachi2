@@ -88,16 +88,15 @@ module.exports = async (app) => {
                 }
             },
             "[" (s) {
-                const c = s.search(/[^[]/);
-                let q = s.slice(c).split(',');
+                let q = s.slice(1,-1).split(',');
                 const text = q[0];
                 const task = q[1];
                 q = q.slice(2);
                 let data = {};
-                for(var w in q){
+                for(var w of q){
                     const m = w.split(":");
-                    const o = w.slice(1).join(":");
-                    data[m] = o;
+                    const o = m.slice(1).join(":");
+                    data[m[0]] = o;
                 }
                 panel.content.push({
                     id: pos++ + idbase,
