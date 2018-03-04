@@ -72,7 +72,7 @@ module.exports = (app) => {
     s("input.no.name", "Nej :(");
     s("input.ok.desc", "", true);
     s("input.ok.name", "Ok!");
-    s("input.password.desc", "Skriv in ditt helt egna jättecoola lösenord");
+    s("input.password.desc", "Skriv in ditt helt egna jättecoola lösenord!");
     s("input.password.name", "Ditt lösenord!");
     s("input.password_verify.desc", "Skriv in ditt lösenord en gång till, så att det säkert blev rätt!");
     s("input.password_verify.name", "En gång till!");
@@ -239,6 +239,8 @@ module.exports = (app) => {
     s("task.add_event_manager.desc", "Lägg in nya eventarrangörer. Dessa får en massa extra powers på eventet, och kommer att kunna se mycket av vad som händer för alla arrangörer inom sitt specifika område.");
     s("task.assign_location.desc", "Detta är en påminnelse! Du har ett ansvar att tilldela en plats till {application.name}! Tryck *inte* på OK förrän detta är färdigt, då försvinner påminnelsen permanent!");
     s("task.schedule_activity.desc", "Detta är en påminnelse! Du har ett ansvar att tilldela plats och schema till {application.name}! Tryck *inte* på OK förrän detta är färdigt, då försvinner påminnelsen permanent!");
+    s("task.change_password.title", "Fortsätt byta lösenord");
+    s("task.change_password.desc", "Här byter du lösenord. ^_^\nSe till att det är superhemligt och att du minns det!");
     s("task.assign_location.title", "Tilldela plats till team!");
     s("task.fill_user_details.title", "Fortsätt skapa konto");
     s("task.forgot_account_details.title", "Glömt kontouppgifter?");

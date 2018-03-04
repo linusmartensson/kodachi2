@@ -67,8 +67,12 @@ module.exports = (app) => {
                             panels:[
                                 {
                                     id:0,
-                                    content:[{id:0, type:"text", text:"Tjohej! Här kommer att dyka upp mer info inom kort, men tillsvidare kan du se vad du lyckats hitta på hittills här på kodachi.se!"}]
+                                    content:[
+                                        {id:0, type:"text", text:"Tjohej! Här kommer att dyka upp mer info inom kort, men tillsvidare kan du se vad du lyckats hitta på hittills här på kodachi.se!"},
+                                        {id:1, type:"editbutton", text:"Byt lösenord", task:"change_password", data:{}}
+                                    ]
                                 }
+
                             ]
                         },
                         {//tier 2

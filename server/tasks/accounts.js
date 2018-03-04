@@ -285,6 +285,28 @@ module.exports = (app) => {
         }
     );
     app.taskApi.create_task(
+        "account", "change_password", // for email, avatar, nickname & password
+        ["user"], [],
+        app.taskApi.okcancel().concat({hide:true},
+            {field: "password", type: "password"},
+            {field: "password_verify", type: "password"}
+        ),
+        async (inst, ctx) => {
+            if (inst.response.cancel) {
+                return "OK";
+            }
+            if (inst.response.password !== inst.response.password_verify) {
+                inst.error = "{tasks.account.verifyPassword}";
+                return "RETRY";
+            }
+
+
+            app.userApi.updatePassword(ctx, inst.response.password);
+
+            return "OK";
+        }
+    );
+    app.taskApi.create_task(
         "account", "forgot_account_details",
         [], [],
         [],

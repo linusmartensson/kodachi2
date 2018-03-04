@@ -96,6 +96,13 @@ module.exports = async (app) => {
         return (u.records.length > 0 ? u.records[0].get("u").properties.id : false);
     };
 
+    api.updatePassword = async (ctx, password) => {
+        let userId = await api.userId(ctx);
+
+        if(!userId) return;
+
+        await app.cypher("MATCH (u:User {id:{userId}}) SET u.password={password}", {userId, password:await hash(password)});
+    }
 
     api.session = async (ctx) => {
         // Return current session
