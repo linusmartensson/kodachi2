@@ -1,9 +1,8 @@
+IDAG
+* Warn before finishing dangerous tasks
 
 MARCH
-* Remove team/activity/etc (Ta bort alla tasks som matchar .data =~ ".*objid.*")
-* cleanup old sessions (every 24h, delete sessions not used for 24h)
 * email strings
-* Warn before finishing dangerous tasks
 * editor/selector doesn't show until change
 
 APRIL
@@ -18,7 +17,8 @@ APRIL
 
 
 
-
+//detta är läskigt
+* Remove team/activity/application/etc (Ta bort alla tasks som matchar .data =~ ".*objid.*")
 
 
 
