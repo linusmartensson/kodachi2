@@ -1,5 +1,6 @@
 
 const _ = require("lodash");
+const scheduler = require("node-schedule");
 
 module.exports = async (app) => {
 
@@ -15,6 +16,12 @@ module.exports = async (app) => {
     api.register = (f) => {
         app.sessionComponents.push(f);
     };
+
+
+    scheduler.scheduleJob("0 0 2 * * *", () => {
+        app.cypher("MATCH (s:Session) DETACH DELETE s;"); //Everyone's session is destroyed at 2am to allow for session cleanup. Note timezone diff between sweden & server will result in 4am in sweden.
+    });
+
 
     // Core function for updating live clients.
     api.notifySessions = async (ss, aux) => {
