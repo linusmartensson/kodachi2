@@ -77,6 +77,44 @@ module.exports = (app) => {
         }
     );
     app.taskApi.create_task(
+        "account", "switch_account",
+        ["admin", "base_admin"], [],
+        [].concat(
+            app.taskApi.okcancel(),
+            {field: "email_or_ssn", type: "text"},
+            {unique: true, autocancel: true}
+        ),
+        async (inst, ctx) => {
+            if (inst.response.ok) {
+                let d = inst.response.email_or_ssn;
+                if (!(d === "")) {
+                    d = d.replace(/\D/g, "");
+                    if (d.length === 10) {
+                        if (d[0] === "0" || d[0] === "1") {
+                            d = `20${d}`;
+                        } else {
+                            d = `19${d}`;
+                        }
+                    }
+                }
+                const user = await app.userApi.findAccount({ssn: d}) || await app.userApi.findAccount({email: inst.response.email_or_ssn});
+                if (user) {
+                    if (await app.userApi.switchAccount(ctx, user)) {
+                        return "OK";
+                    }
+                    inst.error = "{tasks.account.loginFailed}";
+                    return "RETRY";
+
+                }
+                inst.error = "{tasks.account.noSuchUser}";
+                return "RETRY";
+
+            }
+            return "OK";
+        }
+    );
+
+    app.taskApi.create_task(
         "account", "login",
         ["anonymous"], [],
         [{field: "forgotpassword", type:'button'}].concat(

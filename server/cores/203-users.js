@@ -210,6 +210,17 @@ module.exports = async (app) => {
 
         return true;
 
+
+    };
+    api.switchAccount = async (ctx, user) => {
+        // login account w/o password. This is dangerous!
+
+        // re-associate current user session to the new user account.
+        await app.cypher("MATCH (s:Session {id:{sessionId}})-[binding]-(u:User {id:{userId}}) DELETE binding", {userId: await api.userId(ctx), sessionId: await api.session(ctx)});
+        await app.cypher("MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}) CREATE (u)-[:HAS_SESSION]->(s)", {userId: user.id, sessionId: await api.session(ctx)});
+
+        return true;
+
     };
     api.loginSession = async (userId, sessionId) => {
         await app.cypher("MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (r:Role {type:\"anonymous\"}), (r)<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d", {userId, sessionId});
