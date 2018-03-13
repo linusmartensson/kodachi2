@@ -202,7 +202,9 @@ module.exports = (app) => {
 
             inst.data.ssnResult = JSON.parse(await validateSsn(inst.response.ssn));
 
-            if (inst.data.ssnResult && inst.data.ssnResult.responseCode && inst.data.ssnResult.responseCode === "Ok") {
+            console.dir(inst.data.ssnResult);
+
+            if (inst.data.ssnResult && inst.data.ssnResult.responseCode && inst.data.ssnResult.responseCode === "Ok" || inst.data.ssnResult.responseCode === "NotFound") {
                 const res = await app.userApi.findAccount({ssn: inst.response.ssn});
                 if (res) {
                     inst.next_tasks.push("ssn_exists_forgot_details");
