@@ -189,11 +189,11 @@ module.exports = async (app) => {
         }, async (inst, ctx) => "OK"
     );
     app.taskApi.create_task(
-        "purchase", "purchase_failed", [], [], [{field: "ok", autocancel: true, type: "button"}],
+        "purchase", "purchase_failed", [], [], [{field: "ok", type: "button"}],
         async (inst, ctx) => "OK", async (inst, ctx) => "OK"
     );
     app.taskApi.create_task(
-        "purchase", "purchase_complete", [], [], [{field: "ok", autocancel: true, type: "button"}],
+        "purchase", "purchase_complete", [], [], [{field: "ok", type: "button"}],
         async (inst, ctx) => "OK", async (inst, ctx) => "OK"
     );
 
