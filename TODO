@@ -1,24 +1,22 @@
 IDAG
-* Warn before finishing dangerous tasks
 
 MARCH
+* deltagarsidor för tävlingar & aktiviteter (Visa deltagarlista m.m.)
+* Warn before finishing dangerous tasks
 * email strings
 * editor/selector doesn't show until change
 
 APRIL
 * pay+register on-site ui
-* deltagarsidor för tävlingar & aktiviteter (Visa deltagarlista m.m.)
 * join specific activity timeslots (spökrundan, t.ex.)
 * update ticket page (Single QR code with checkin link?)
+
+
+
+LATER
 * user config - edit profile etc
 
 
-
-
-
-
-//detta är läskigt
-* Remove team/activity/application/etc (Ta bort alla tasks som matchar .data =~ ".*objid.*")
 
 
 
@@ -31,6 +29,9 @@ APRIL
 
 
 DESCOPED 
+//detta är läskigt
+* Remove team/activity/application/etc (Ta bort alla tasks som matchar .data =~ ".*objid.*")
+
 * multi-language (reason: supporting swedish, too much work for very few potential visitors)
 * add point cost to point price
 * manage points
