@@ -415,10 +415,21 @@ module.exports = (app) => {
     s('list.auto.header.list_team_leaders', "!Tjohej!\nHär kan du se alla teamledare!");
     s('list.list_team_leaders.title', "Lista teamledare");
     
+    s('list.auto.header.admin_compos', "!Tävlingslistor ^_^\n Detta är alla deltagare i tävlingar! ^.^\nNotera att tävlingar utan deltagare inte visas!");
+    s('list.auto.group.admin_compos', "!{w.name}\n{q}/{w.participants} Deltagare");
+    s('list.auto.row.admin_compos', "{u.givenName} `{u.nickname}` {u.lastName}\n{u.phone}\n{u.email}");
+    s('list.admin_compos.title', 'Administrera tävlingar')
+
+    s('list.auto.header.my_competition', "!Tävlingslistor ^_^\n Detta är alla deltagare i tävlingar du administrerar! ^.^\nKontakta dem via email eller telefon för att skicka ut information inför tävlingen! Notera att tävlingar utan deltagare inte visas!");
+    s('list.auto.group.my_competition', "!{w.name}\n{q}/{w.participants} Deltagare");
+    s('list.auto.row.my_competition', "{u.givenName} `{u.nickname}` {u.lastName}\n{u.phone}\n{u.email}");
+    s('list.my_competition.title', 'Dina tävlingsarrangemang')
     
     s('list.auto.header.my_team', "!Tjohej!\nHär kan du se ditt team! ^_^");
     s('list.auto.group.my_team', "!{w.name}\nuniform: {{w.uniform}}, medlemmar: {q}/{w.size}, Du leder teamet: {{is_leader}}\n[Maila teamet,email_team.{{{event}}},team:{{{w.id}}},enabled:{leader}]\n[Uppdatera teamprofil,update_team_desc.{{{event}}},team:{w.id},update_name:{w.name},update_desc:{w.desc},enabled:{is_leader}]");
     s('list.auto.row.my_team', "{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nStorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Teamledare: {{leader}}\n{|m.description}\n[Ta bort medlem,remove_team_member.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{is_leader},disabled:{leader}]\n[Gör till teamledare,promote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{is_leader},disabled:{leader}]\n[Ta bort teamledare,demote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{deletable_leader}]");
+
+    s('task.switch_account.title', 'Byta konto')
 
     s('competition', "Tävlingar");
     s('team', "Team");

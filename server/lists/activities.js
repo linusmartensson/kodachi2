@@ -2,7 +2,21 @@
 
 module.exports = (app) => {
 
+    //compo list
+    app.listApi.build_list(
+        "activities", 
+        "my_competition", 
+        ["competition_manager."], 
+        "MATCH (me:User {id:{user_id}})-[:TEAM_MEMBER]-(w:WorkGroup) WHERE (w)--(:Event {id:{event}}) WITH me, w MATCH (u:User)-[m:COMPETING_IN]-(w) WITH me, w, u,m RETURN u,m,w,SIZE(()-[:COMPETING_IN]-(w)) as q order by w.name, u.nickname", 
+        ["q", "u", "m", "w"], 
+        {event:'inst.start_data.event_id', user_id:app.listApi.remap(app.userApi.userId)}, 
+        {event_list: true, group_by: 'w.id'});
+    app.listApi.build_list("activities", "admin_compos", ["admin", "team_admin.", "event_admin.", "crew_admin."], 
+        "MATCH (u:User)-[m:COMPETING_IN]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w,SIZE(()-[:COMPETING_IN]-(w)) as q order by w.name, u.nickname", ["u", "m", "w", "q"], {event:'inst.start_data.event_id'}, {event_list: true, group_by: 'w.id'});
 
+
+
+    //------------
     //admin pages
     app.listApi.build_list("activities", "list_team_leaders", ["admin", "team_admin.", "event_admin.", "crew_admin."], 
         "MATCH (u:User)--(:Role)-[:MANAGED_BY]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,w order by w.name, u.nickname", ["u", "w"], {event:'inst.start_data.event_id'}, {event_list: true});

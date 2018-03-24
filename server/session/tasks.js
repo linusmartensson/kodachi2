@@ -17,7 +17,13 @@ module.exports = async (app) => {
             if(aux && aux.taskChanged === q.get("t").properties.id) task.updated = true;
             else task.updated = false;
 
+            task.dangerous = false;
+
             for (const v of task.type.inputs) {
+
+                if(v.dangerous){
+                    task.dangerous = true;
+                }
 
                 if (v.prepare) {
                     await v.prepare(v, ctx, task);
