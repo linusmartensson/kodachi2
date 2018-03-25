@@ -189,6 +189,7 @@ module.exports = (app) => {
     s("role.base_vendor_admin", "Butiksbärsärkare");
     s("role.base_artist_alley_admin", "Konstnärsshaman");
     s("role.base_admin", "Eventspaladin");
+    s("role.base_entrance", "Nyckelmästare");
     s("role.base_budget", "Budgetkrånglare");
     s("role.editor", "Sajtfifflare");
     s("role.base_team_member", "Kodachicreware");
