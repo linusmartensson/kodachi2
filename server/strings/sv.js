@@ -51,7 +51,7 @@ module.exports = (app) => {
     s("input.email_topic.name", "Ämne");
     s("input.email_verify.desc", "Skriv in den en gång extra så att det säkert blir rätt!");
     s("input.email_verify.name", "Din email, igen!");
-    s("input.emergencyphone.name", "Telefonnummer till någon vi kan kontakta om det händer dig något");
+    s("input.emergencyphone.name", "Telefonnummer till någon vi kan kontakta om det händer dig något (Bara siffror!)");
     s("input.ends.name", "När evenemanget slutar");
     s("input.event.name", "Är artikeln specifik för detta eventet?");
     s("input.event_description.name", "Ge evenemanget en tuff beskrivning!");
@@ -90,6 +90,33 @@ module.exports = (app) => {
     s("input.shop_type.desc", "", true);
     s("input.sleep.name", "Hur många sovplatser vill du köpa?");
     s("input.sleep_at_event.name", "Planerar du sova på eventet?");
+    s("input.sleep_ticket.name", "Planerar du sova på eventet?\nUtan sovplats blir priset 300kr.\nMed sovplats blir det 450kr.");
+
+    s('input.sleep_ticket.desc', '', true);
+    s('task.fast_account.desc', 'Här skapar du konto och säljer biljett till en person som har publikt svenskt personnummer! Detta är nästan alla svenska medborgare som är 16 eller äldre!\nNär du trycker OK nedan så sparas biljetten om alla fält är ifyllda korrekt! Se till att du tagit betalt!');
+    s('task.fast_account.title', 'Skapa konto och köp biljett');
+    s('task.fast_account.title.active', 'Fortsätt skapa & sälja');
+
+    s('input.has_account.desc', '', true)
+    s('input.has_account.name', 'Har konto')
+    s('input.no_ssn.desc', '', true)
+    s('input.no_ssn.name', 'Inget personnummer / under 16')
+    s('input.no_account.desc', '', true)
+    s('input.no_account.name', 'Har Personnummer & 16+')
+
+
+    s('task.fast_buy.desc', 'Dags för en besökare att köpa biljett! Rätt knapp ger snabbare registrering!\n!Viktigt!\nTänk på att förklara för personen att denne blir medlem i föreningen Kodachikai när de köper biljett, och att de kan komma att få något email från föreningen (det går såklart att avregistrera sig!)')
+    s('task.fast_buy.title', 'Sälja biljett')
+    s('task.fast_buy.title.active', 'Sälja biljett', true)
+
+    s('task.fast_pay.desc', 'Här säljer du en biljett till en person som redan har konto!\nNär du trycker OK nedan så sparas biljetten om alla fält är ifyllda korrekt! Se till att du tagit betalt!')
+    s('task.fast_pay.title', 'Sälja biljett')
+
+    s('task.fast_no_ssn.desc', 'Här skapar du konto och säljer biljett till en person som saknar konto, och inte har ett publikt svenskt personnummer.\nNär du trycker OK nedan så sparas biljetten om alla fält är ifyllda korrekt! Se till att du tagit betalt!')
+    s('task.fast_no_ssn.title', 'Sälja biljett')
+
+
+
     s("input.ssn.desc", "Först behöver vi ditt personnummer!\nDet använder vi i föreningen för att söka bidrag när du besöker våra event, men också för att hämta ut dina kontaktuppgifter!");
     s("input.ssn.name", "Ditt personnummer");
     s("input.stafftest_q1.desc", "!Fråga ett!\nNär du pratar om någon du inte känner med någon på en av våra evenemang, vilket pronomen ska du använda?");
@@ -419,6 +446,25 @@ module.exports = (app) => {
     s('list.auto.group.admin_compos', "!{w.name}\n{q}/{w.participants} Deltagare");
     s('list.auto.row.admin_compos', "{u.givenName} `{u.nickname}` {u.lastName}\n{u.phone}\n{u.email}");
     s('list.admin_compos.title', 'Administrera tävlingar')
+
+    s('task.switch_account.desc', 'Byt till ett annat konto. Du måste ladda om sidan efter att du tryckt OK!')
+
+    s('task.checkin_verify.desc', 'Checkar in {user.nickname}\nemail: {user.email}\npersonnummer (om något): {user.ssn}\ntelefonnummer: {user.phone}\nSovplats? {{hasSleep}} \nBiljett? {{hasTicket}}\nTänk på att alla biljetter på kontot kommer att checkas in, det finns {ticketCount} biljetter på kontot!\n!Viktigt!\nOm det är för många biljetter måste besökaren först flytta över resterande biljetter till kompisar, annars kommer de att förbrukas - för jag var lite lat när jag kodade! :o')
+
+    s("tasks.checkin.onlyHasSleep", "Denna personen har bara sovplatsbiljett!");
+    s("tasks.checkin.alreadyCheckedIn", "Personen är redan incheckad! :o");
+    s("tasks.checkin.noTickets", "Personen har inga biljetter!");
+
+    s('task.checkin_verify.title', '', true)
+    s('task.checkin_verify.title.active', 'Fortsätt incheckningen')
+
+    s('input.checkin_account.desc', 'Vem checkar in?')
+    s('input.checkin_account.name', 'Användarkonto')
+
+    s('task.checkin.desc', 'Dags att checka in! En besökare checkar in med sitt personnummer eller sin email. Tänk på att emailen är skiftlägeskänslig!');
+    s('task.checkin.title', 'Checka in besökare!')
+    s('task.checkin.title.active', 'Fortsätt incheckningen')
+
 
     s('list.auto.header.my_competition', "!Tävlingslistor ^_^\n Detta är alla deltagare i tävlingar du administrerar! ^.^\nKontakta dem via email eller telefon för att skicka ut information inför tävlingen! Notera att tävlingar utan deltagare inte visas!");
     s('list.auto.group.my_competition', "!{w.name}\n{q}/{w.participants} Deltagare");
