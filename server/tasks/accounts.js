@@ -254,13 +254,7 @@ module.exports = (app) => {
             {field: "country", type: "text"}
         ),
         async (inst) => {
-            if (inst.response.cancel) {
-                return "OK";
-            }
-
-            if (app.taskApi.emptyFields(inst)) {
-                return "RETRY";
-            }
+            
             inst.data.givenName = inst.response.givenName;
             inst.data.lastName = inst.response.lastName;
             inst.data.street = inst.response.street;
