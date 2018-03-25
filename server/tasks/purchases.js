@@ -197,6 +197,236 @@ module.exports = async (app) => {
         async (inst, ctx) => "OK", async (inst, ctx) => "OK"
     );
 
+    app.taskApi.create_task(
+        "purchase", "checkin_verify", [], [], app.taskApi.okcancel().concat({event_task:true}),
+        async (inst,ctx) => {
+
+            let tasks = [];
+            for(let t of inst.data.tickets){
+                tasks.push(app.cypher("MATCH (:User {id:{id}})-[t:TICKET]-(:Event {id:{event}}) SET t.used=true", {event: inst.data.start_data.event_id, id: inst.data.user.id}));
+            }
+            await Promise.all(tasks);
+            return 'OK';
+        });
+
+    //Initiate an on-site register+pay event
+    app.taskApi.create_task(
+        "purchase", "fast_buy", ["entrance.", "admin.", "crew_admin.", "team_admin."], [], [].concat({event_task:true},
+            {field:"cancel", type:'button'},
+            {field:"has_account", type:'button'},   //user just wants to pay and go
+            {field:"no_ssn", type:'button'},        //Needs an account, but not swedish
+            {field:"no_account", type:'button'}),   //Needs an account
+        async (inst, ctx) => {
+            if(inst.response.has_account) {
+                inst.next_tasks.push("fast_pay");
+            } else if(inst.response.no_account) {
+                inst.next_tasks.push("fast_account");
+            } else if(inst.response.no_ssn) {
+                inst.next_tasks.push("fast_no_ssn");
+            }
+            return "OK";
+        });
+
+    let initCheckin = async (inst, res) => {
+        inst.data.user = res;
+        let tickets = app.mapCypher(await app.cypher("MATCH (:User {id:{id}})-[t:TICKET]-(:Event {id:{event}}) RETURN t", {event: inst.data.start_data.event_id, id: res.id}), ["t"]);
+        inst.data.tickets = tickets;
+        inst.data.ticketCount = tickets.length;
+        inst.data.hasSleep = inst.data.hasTicket = inst.data.hasUsedSleep = inst.data.hasUsedTicket = false;
+        for(let t of tickets){
+            let q = t['t'];
+            if(q.type == 'sleep' && q.used == true) inst.data.hasUsedSleep = true;
+            if(q.type == 'ticket' && q.used == true) inst.data.hasUsedTicket = true;
+            if(q.type == 'sleep' && q.used == false) inst.data.hasSleep = true;
+            if(q.type == 'ticket' && q.used == false) inst.data.hasTicket = true;
+        }
+        inst.next_tasks.push("checkin_verify");
+        return 'OK';
+    }
+    let fastAccount = async (inst) => {
+        if(inst.response.ssn){
+            inst.data.ssnResult = JSON.parse(await validateSsn(inst.response.ssn));
+
+            if (inst.data.ssnResult && inst.data.ssnResult.responseCode && inst.data.ssnResult.responseCode === "Ok" || inst.data.ssnResult.responseCode === "NotFound") {
+                const res = await app.userApi.findAccount({ssn: inst.response.ssn, email: inst.response.email});
+                if (res) {//User filled in all details, but already has account. prepopulate fields, goto fast_pay.
+                    inst.data.ssn = inst.response.ssn || inst.response.email;
+                    inst.data.sleep_ticket = inst.response.sleep_ticket;
+                    inst.next_tasks.push("fast_pay");
+                    return 'OK';
+                } else if (!inst.data.ssnResult.basic) {//User filled in all details, but lacks public ssn. Prepop & goto fast_no_ssn
+                    inst.data.country = "Sverige";
+                    inst.data.email = inst.response.email;
+                    inst.data.phone = inst.response.phone;
+                    inst.data.emergencyphone = inst.response.emergencyphone;
+                    inst.data.nickname = inst.response.nickname;
+                    inst.data.sleep_ticket = inst.response.sleep_ticket;
+                    inst.data.ssn = inst.response.ssn; //Save it anyways, why not?
+                    inst.next_tasks.push("fast_no_ssn");
+                    return 'OK';
+                } else {    //User checks out. Register account, buy ticket & goto verify_checkin
+                    inst.data.ssn = inst.response.ssn;
+                    inst.data.givenName = inst.data.ssnResult.basic.givenName;
+                    inst.data.lastName = inst.data.ssnResult.basic.lastName;
+                    inst.data.street = inst.data.ssnResult.basic.street;
+                    inst.data.zipCode = inst.data.ssnResult.basic.zipCode;
+                    inst.data.city = inst.data.ssnResult.basic.city;
+                    inst.data.email = inst.response.email;
+                    inst.data.phone = inst.response.phone;
+                    inst.data.emergencyphone = inst.response.emergencyphone;
+                    inst.data.nickname = inst.response.nickname;
+                    inst.data.sleep_ticket = inst.response.sleep_ticket;
+                    inst.data.country = "Sverige";
+                    inst.data.password = app.uuid();
+
+                    if ((await app.userApi.findAccount({email: inst.response.email})) !== false) {
+                        inst.error = "{tasks.account.emailTaken}";
+                        return "RETRY";
+                    }
+                    if ((await app.userApi.findAccount({nickname: inst.response.nickname})) !== false) {
+                        inst.error = "{tasks.account.nickNameTaken}";
+                        return "RETRY";
+                    }
+
+                    let res = await app.userApi.createUser(false, inst.data);
+                    
+                    await markPaid(0, "", res.id, 1, inst.response.sleep_ticket?1:0, 0, inst.data.start_data.event_id);
+
+                    return await initCheckin(inst, res);
+                }
+            } else {
+                //Couldn't autoload ssn, register using alt. pipe
+                inst.data.country = "Sverige";
+                inst.data.email = inst.response.email;
+                inst.data.phone = inst.response.phone;
+                inst.data.emergencyphone = inst.response.emergencyphone;
+                inst.data.nickname = inst.response.nickname;
+                inst.data.sleep_ticket = inst.response.sleep_ticket;
+                inst.data.ssn = inst.response.ssn; //Save it anyways, why not?
+                inst.next_tasks.push("fast_no_ssn");
+                return 'OK';
+            }
+        } else {
+ 
+            inst.data.ssn = inst.data.ssn?inst.data.ssn:"";
+            inst.data.givenName = inst.response.givenName;
+            inst.data.lastName = inst.response.lastName;
+            inst.data.street = inst.response.street;
+            inst.data.zipCode = inst.response.zipCode;
+            inst.data.city = inst.response.city;
+            inst.data.country = inst.response.country;
+            inst.data.email = inst.response.email;
+            inst.data.phone = inst.response.phone;
+            inst.data.emergencyphone = inst.response.emergencyphone;
+            inst.data.nickname = inst.response.nickname;
+            inst.data.sleep_ticket = inst.response.sleep_ticket;
+            inst.data.password = app.uuid();
+
+            if ((await app.userApi.findAccount({email: inst.response.email})) !== false) {
+                inst.error = "{tasks.account.emailTaken}";
+                return "RETRY";
+            }
+            if ((await app.userApi.findAccount({nickname: inst.response.nickname})) !== false) {
+                inst.error = "{tasks.account.nickNameTaken}";
+                return "RETRY";
+            }
+
+            let res = await app.userApi.createUser(false, inst.data);
+                
+            await markPaid(0, "", res.id, 1, inst.response.sleep_ticket?1:0, 0, inst.data.start_data.event_id);
+
+            return await initCheckin(inst, res);
+        }
+        
+    }
+
+    app.taskApi.create_task(
+        "purchase", "fast_pay", [], [], app.taskApi.okcancel().concat({event_task:true},
+            {field:'checkin_account', type:'text'},
+            {field:'sleep_ticket', type:'bool'}),
+        async (inst, ctx) => {
+            const res = await app.userApi.findAccount({any: inst.response.checkin_account});
+            if(!res){
+                inst.error = "{tasks.account.noSuchUser}";
+                return 'RETRY';
+            } else {
+                await markPaid(0, "", res.id, 1, inst.response.sleep_ticket?1:0, 0, inst.data.start_data.event_id);
+            }
+            return await initCheckin(inst, res); 
+        });
+
+    app.taskApi.create_task(
+        "purchase", "fast_no_ssn", [], [], app.taskApi.okcancel().concat({event_task:true},
+            {field:'email', type:'email'},
+            {field:'phone', type:'phone'},
+            {field:'emergencyphone', type:'phone'},
+            {field:'nickname', type:'simpletext'},
+            {field: "givenName", type: "text"},
+            {field: "lastName", type: "text"},
+            {field: "street", type: "text"},
+            {field: "zipCode", type: "text"},
+            {field: "city", type: "text"},
+            {field: "country", type: "text"},
+            {field:'sleep_ticket', type:'bool'}),
+        async (inst, ctx) => {
+            return fastAccount(inst); 
+        });
+
+
+    app.taskApi.create_task(
+        "purchase", "fast_account", [], [], app.taskApi.okcancel().concat({event_task:true},
+            {field:'ssn', type:'ssn'},
+            {field:'email', type:'email'},
+            {field:'phone', type:'phone'},
+            {field:'emergencyphone', type:'phone'},
+            {field:'nickname', type:'simpletext'},
+            {field:'sleep_ticket', type:'bool'}),
+        async (inst, ctx) => {
+            return fastAccount(inst);
+        });
+
+
+    app.taskApi.create_task(
+        "purchase", "checkin", ["entrance.", "admin", "admin.", "crew_admin.", "team_admin."], [], app.taskApi.okcancel().concat({event_task:true},
+            {field:"checkin_account", type:"text"}),
+        async (inst, ctx) => {
+            
+            const res = await app.userApi.findAccount({any: inst.response.checkin_account});
+            if(!res){
+                inst.error = "{tasks.account.noSuchUser}";
+                return 'RETRY';
+            } else {
+
+                inst.data.user = res;
+                let tickets = app.mapCypher(await app.cypher("MATCH (:User {id:{id}})-[t:TICKET]-(:Event {id:{event}}) RETURN t", {event: inst.data.start_data.event_id, id: res.id}), ["t"]);
+                inst.data.tickets = tickets;
+                inst.data.ticketCount = tickets.length;
+                inst.data.hasSleep = inst.data.hasTicket = inst.data.hasUsedSleep = inst.data.hasUsedTicket = false;
+                for(let t of tickets){
+                    let q = t['t'];
+                    if(q.type == 'sleep' && q.used == true) inst.data.hasUsedSleep = true;
+                    if(q.type == 'ticket' && q.used == true) inst.data.hasUsedTicket = true;
+                    if(q.type == 'sleep' && q.used == false) inst.data.hasSleep = true;
+                    if(q.type == 'ticket' && q.used == false) inst.data.hasTicket = true;
+                }
+                if(inst.data.hasTicket == false) {
+                    if(inst.data.hasSleep) {
+                        if(!inst.data.hasUsedTicket){
+                            inst.error = "{tasks.checkin.onlyHasSleep}";
+                            return 'RETRY';
+                        } // else allow checkin with just sleep ticket.
+                    } else if(inst.data.hasUsedSleep || inst.data.hasUsedTicket){
+                        inst.error = "{tasks.checkin.alreadyCheckedIn}";
+                        return 'RETRY';
+                    } else {
+                        inst.error = "{tasks.checkin.noTickets}"
+                        return 'RETRY';
+                    }
+                }
+                inst.next_tasks.push("checkin_verify");
+                return 'OK';
+            }
+        });
 
     app.taskApi.create_task(
         "purchase", "give_ticket", ["user"], [], app.taskApi.okcancel().concat({field:"recipient_name", type:"text", event_task:true, hide:true}),
