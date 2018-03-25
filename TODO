@@ -1,17 +1,13 @@
 IDAG
 
 MARCH
-* deltagarsidor för tävlingar & aktiviteter (Visa deltagarlista m.m.)
 * Warn before finishing dangerous tasks
 * email strings
 * editor/selector doesn't show until change
 
 APRIL
-* pay+register on-site ui
 * join specific activity timeslots (spökrundan, t.ex.)
 * update ticket page (Single QR code with checkin link?)
-
-
 
 LATER
 * user config - edit profile etc
