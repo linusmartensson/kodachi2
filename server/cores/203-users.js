@@ -61,7 +61,7 @@ module.exports = async (app) => {
     api.getUserRoles = async (ctx) => api.getRoles(await api.userId(ctx));
     api.getActiveEvent = async (ctx) => {
         let e = false;
-        if (await api.hasAnyRole(await api.userId(ctx), ["admin"])) {
+        if (ctx && await api.hasAnyRole(await api.userId(ctx), ["admin"])) {
             e = await app.cypher("MATCH (e:Event) RETURN e ORDER BY e.publish DESC LIMIT 1");
         } else {
             e = await app.cypher("MATCH (e:Event) WHERE e.publish < {now} RETURN e ORDER BY e.publish DESC LIMIT 1", {now: Date.now()});
@@ -143,7 +143,9 @@ module.exports = async (app) => {
         await app.cypher("CREATE (:User {verified:false, verifyCode:{code}, id:{userId}, email:{email}, password:{password}, ssn:{ssn}, givenName:{givenName}, lastName:{lastName}, street:{street}, zipCode:{zipCode}, city:{city}, country:{country}, nickname:{nickname}, phone:{phone}, emergencyphone:{emergencyphone}, points:0})", p);
 
         // Ensure new user and session are associated.
-        await app.cypher("MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (:Role {type:\"anonymous\"})<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d", {userId: p.userId, sessionId: await api.session(ctx)});
+        if(ctx){
+            await app.cypher("MATCH (u:User {id:{userId}}), (s:Session {id:{sessionId}}), (:Role {type:\"anonymous\"})<-[d:HAS_ROLE]-(s) CREATE (u)-[:HAS_SESSION]->(s) DELETE d", {userId: p.userId, sessionId: await api.session(ctx)});
+        }
 
         await app.roleApi.addRole(p.userId, "user", 1500);
 
@@ -155,6 +157,10 @@ module.exports = async (app) => {
 
         await app.roleApi.addAchievement(p.userId, "welcome_home", 1, api.getActiveEvent(ctx), 1, 0);
 
+        let q = await app.cypher("MATCH (u:User) WHERE u.id={id} RETURN u", {id:p.userId});
+        const res = q.records[0].get("u").properties;
+        delete res.verifyCode;
+        return res;
     };
     api.emailUser = async (userId, subject, text, html, immediate) => {
         let u = (await app.cypher("MATCH (u:User {id:{id}}) RETURN u", {id: userId})).records;
