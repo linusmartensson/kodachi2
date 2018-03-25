@@ -11,16 +11,16 @@ module.exports = (app) => {
         ["q", "u", "m", "w"], 
         {event:'inst.start_data.event_id', user_id:app.listApi.remap(app.userApi.userId)}, 
         {event_list: true, group_by: 'w.id'});
-    app.listApi.build_list("activities", "admin_compos", ["admin", "team_admin.", "event_admin.", "crew_admin."], 
+    app.listApi.build_list("activities", "admin_compos", ["admin", "team_admin.", "admin.", "crew_admin."], 
         "MATCH (u:User)-[m:COMPETING_IN]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w,SIZE(()-[:COMPETING_IN]-(w)) as q order by w.name, u.nickname", ["u", "m", "w", "q"], {event:'inst.start_data.event_id'}, {event_list: true, group_by: 'w.id'});
 
 
 
     //------------
     //admin pages
-    app.listApi.build_list("activities", "list_team_leaders", ["admin", "team_admin.", "event_admin.", "crew_admin."], 
+    app.listApi.build_list("activities", "list_team_leaders", ["admin", "team_admin.", "admin.", "crew_admin."], 
         "MATCH (u:User)--(:Role)-[:MANAGED_BY]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,w order by w.name, u.nickname", ["u", "w"], {event:'inst.start_data.event_id'}, {event_list: true});
-    app.listApi.build_list("activities", "admin_teams", ["admin", "team_admin.", "event_admin.", "crew_admin."], 
+    app.listApi.build_list("activities", "admin_teams", ["admin", "team_admin.", "admin.", "crew_admin."], 
         "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w,SIZE(()-[:TEAM_MEMBER]-(w)) as q,SIZE((u)--(:Role)-[:MANAGED_BY]-(w))>0 as leader order by w.name, u.nickname", ["u", "m", "w", "q", "leader"], {event:'inst.start_data.event_id'}, {event_list: true, group_by: 'w.id'});
     //------------
 
