@@ -186,6 +186,22 @@ module.exports = async (app) => {
         }
 
         if (p.ssn) {
+
+            let d = p.ssn.replace(/\D/g, "");
+            if (d.length === 10) {
+                if (d[0] === "0" || d[0] === "1") {
+                    d = `20${d}`;
+                } else {
+                    d = `19${d}`;
+                }
+            } else if (d.length === 12) {
+                p.ssn = d;
+            } else {
+                d = "-";
+                //gonna fail!
+            }
+            p.ssn = d;
+
             q = await app.cypher("MATCH (u:User) WHERE u.ssn={ssn} RETURN u", p);
             delete p.ssn;
         } else if (p.email) {
