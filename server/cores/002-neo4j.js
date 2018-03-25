@@ -7,6 +7,7 @@ module.exports = async (app) => {
 
     app.cypher = async (q, p) => {
         try {
+            if(p && typeof p !== 'object') throw 'Erroneous input type';
             return await app.dbSession.run(q, p);
         } catch (e) {
             console.log("Query failed:");
