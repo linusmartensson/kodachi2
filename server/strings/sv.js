@@ -106,7 +106,7 @@ module.exports = (app) => {
 
 
     s('task.fast_buy.desc', 'Dags för en besökare att köpa biljett! Rätt knapp ger snabbare registrering!\n!Viktigt!\nTänk på att förklara för personen att denne blir medlem i föreningen Kodachikai när de köper biljett, och att de kan komma att få något email från föreningen (det går såklart att avregistrera sig!)')
-    s('task.fast_buy.title', 'Sälja biljett')
+    s('task.fast_buy.title', 'Sälj biljett')
     s('task.fast_buy.title.active', 'Sälja biljett', true)
 
     s('task.fast_pay.desc', 'Här säljer du en biljett till en person som redan har konto!\nNär du trycker OK nedan så sparas biljetten om alla fält är ifyllda korrekt! Se till att du tagit betalt!')
