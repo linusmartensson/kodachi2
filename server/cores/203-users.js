@@ -180,6 +180,11 @@ module.exports = async (app) => {
     api.findAccount = async (m) => {
         let p = _.cloneDeep(m);
         let q = [];
+        if(p.any){
+            p.ssn = p.email = p.nickname = p.any;
+            delete p.any;
+        }
+
         if (p.ssn) {
             q = await app.cypher("MATCH (u:User) WHERE u.ssn={ssn} RETURN u", p);
             delete p.ssn;
