@@ -15,6 +15,8 @@ module.exports = (app) => {
         "MATCH (u:User)-[m:COMPETING_IN]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w,SIZE(()-[:COMPETING_IN]-(w)) as q order by w.name, u.nickname", ["u", "m", "w", "q"], {event:'inst.start_data.event_id'}, {event_list: true, group_by: 'w.id'});
 
 
+    app.listApi.build_list("activities", "tshirts", ["admin", "team_admin.", "admin.", "crew_admin."], 
+        "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup {uniform:true})--(:Event {id:{event}}) RETURN u,m,w order by u.nickname", ["u", "m", "w"], {event:'inst.start_data.event_id'}, {event_list: true});
 
     //------------
     //admin pages

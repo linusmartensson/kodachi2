@@ -487,6 +487,10 @@ module.exports = (app) => {
     s('list.auto.group.list_activities', "!{{w.type}}");
     s('list.auto.row.list_activities', "!{w.name}\n@({w.image})\n_\n{|w.desc}");
 
+    s('list.tshirts.title', 'Mitt team')
+    s('list.auto.header.tshirts', "!T-shirtbeställningar");
+    s('list.auto.row.tshirts', "{u.givenName} \"{u.nickname}\" {u.lastName} - storlek: {m.tshirt}");
+
     s('list.auto.group.admin_teams', "!{w.name}\nuniform: {{w.uniform}} - {q} / {w.size} medlemmar");
     s('list.auto.row.admin_teams', "{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Gruppledare: {{leader}}");
     
