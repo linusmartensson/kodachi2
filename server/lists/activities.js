@@ -25,6 +25,9 @@ module.exports = (app) => {
     app.listApi.build_list("activities", "admin_teams", ["admin", "team_admin.", "admin.", "crew_admin."], 
         "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w,SIZE(()-[:TEAM_MEMBER]-(w)) as q,SIZE((u)--(:Role)-[:MANAGED_BY]-(w))>0 as leader order by w.name, u.nickname", ["u", "m", "w", "q", "leader"], {event:'inst.start_data.event_id'}, {event_list: true, group_by: 'w.id'});
     //------------
+    app.listApi.build_list("activities", "email_all_staff", ["admin", "team_admin.", "admin.", "crew_admin."], 
+        "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w,SIZE(()-[:TEAM_MEMBER]-(w)) as q,SIZE((u)--(:Role)-[:MANAGED_BY]-(w))>0 as leader order by w.name, u.nickname", ["u", "m", "w", "q", "leader"], {event:'inst.start_data.event_id'}, {event_list: true});
+    //------------
 
     //team page
     app.listApi.build_list("activities", "my_team", ["manager.", "team_member."], 
