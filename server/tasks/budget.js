@@ -3,7 +3,7 @@ module.exports = async (app) => {
 
     app.taskApi.create_task(
         "budget", "upload_receipt",
-        ["receipt_submitter."], [],
+        ["receipt_submitter.", "admin.", "budget.", "admin"], [],
         app.taskApi.okcancel().concat(
             {event_task: true, autocancel: true},
             {field: "purchase", type: "text"},
