@@ -357,7 +357,7 @@ module.exports = (app) => {
     s("task.goto_payson.desc", "", true);
     s("task.join_competition.desc", "Jaså! Du är pigg på att tävla? Bara fyll i vilken tävling du vill anmäla dig till så kontaktar vi dig om vi behöver mer information, annars är det bara att dyka upp!");
     s("task.join_work.desc", "Jaså? Det är dags att jobba på event? Härligt! Välj vilket team du vill söka till och fyll i världens bästa ansökan, så kör vi!");
-    s("task.pay_receipt.desc", "Detta är en påminnelse! Tryck *inte* OK förrän följande kvitto är utbetalt!\nKontonr:{receipt.account_no}\nClearingnr:{receipt.clearing_no}\nSumma:{receipt.total}\nMottagare:{user.givenName} {user.lastName}");
+    s("task.pay_receipt.desc", "Detta är en påminnelse! Tryck *inte* OK förrän följande kvitto är utbetalt!\nKontonr:{receipt.account_no}\nClearingnr:{receipt.clearing_no}\nSumma:{receipt.total}\nMottagare:{user.nickname} {user.lastName}");
     s("input.country.desc", "", true);
     s("input.shop_available_days.desc", "", true);
     s("task.report_competition_result.desc", "Här rapporterar du in hur en tävling gick. Gör en rapport för varje vinnare som har fått pris!");
@@ -368,13 +368,13 @@ module.exports = (app) => {
     s("true", "Ja");
     s("false", "Nej");
 
-    s("task.review_activity.desc", "Tjohej! Det har kommit in en ansökan från {user.givenName} `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nAktivitet: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\nSchemadagar:{application.schedule}\nSchematider:{application.avail_times}\nLängd:{application.length}\nDeltagartal:{application.participants}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
+    s("task.review_activity.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nAktivitet: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\nSchemadagar:{application.schedule}\nSchematider:{application.avail_times}\nLängd:{application.length}\nDeltagartal:{application.participants}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
     s("task.review_team.desc", "Tjohej! Det har kommit in en ansökan från {user.nickname} som du behöver ta ställning till!\nTeamnamn: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\nSchemadagar:{application.schedule}\nSchematider:{application.avail_times}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
 
 
-    s("task.review_artist_alley.desc", "Tjohej! Det har kommit in en ansökan från {user.givenName} `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nArtistAlley: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
-    s("task.review_vendor.desc", "Tjohej! Det har kommit in en ansökan från {user.givenName} `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\Försäljare: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
-    s("task.review_team_application.desc", "Tjohej! Det har kommit in en ansökan från {user.givenName} `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nGrupp: {application.team.label}\nStädar söndag: {{application.can_cleanup_sunday}}\nTillgänglig onsdag: {{application.can_work_wednesday}}\nSover på eventet: {{application.sleep_at_event}}\n{|application.app_description}\n");
+    s("task.review_artist_alley.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nArtistAlley: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
+    s("task.review_vendor.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\Försäljare: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
+    s("task.review_team_application.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nGrupp: {application.team.label}\nStädar söndag: {{application.can_cleanup_sunday}}\nTillgänglig onsdag: {{application.can_work_wednesday}}\nSover på eventet: {{application.sleep_at_event}}\n{|application.app_description}\n");
 
     s("task.review_receipt.desc", "Tjohej! Det har kommit in ett kvitto du behöver ta ställning till! \n@({receipt.image})\nSumma:{receipt.total}\nMottagare:{user.nickname}\nBudgetpost:{receipt.group}\nInköp:{receipt.purchase}");
     s("input.role.desc", "");
@@ -445,7 +445,7 @@ module.exports = (app) => {
     
     s('list.auto.header.admin_compos', "!Tävlingslistor ^_^\n Detta är alla deltagare i tävlingar! ^.^\nNotera att tävlingar utan deltagare inte visas!");
     s('list.auto.group.admin_compos', "!{w.name}\n{q}/{w.participants} Deltagare");
-    s('list.auto.row.admin_compos', "{u.givenName} `{u.nickname}` {u.lastName}\n{u.phone}\n{u.email}");
+    s('list.auto.row.admin_compos', "`{u.nickname}` \n{u.phone}\n{u.email}");
     s('list.admin_compos.title', 'Administrera tävlingar')
 
     s('task.switch_account.desc', 'Byt till ett annat konto. Du måste ladda om sidan efter att du tryckt OK!')
@@ -469,7 +469,7 @@ module.exports = (app) => {
 
     s('list.auto.header.my_competition', "!Tävlingslistor ^_^\n Detta är alla deltagare i tävlingar du administrerar! ^.^\nKontakta dem via email eller telefon för att skicka ut information inför tävlingen! Notera att tävlingar utan deltagare inte visas!");
     s('list.auto.group.my_competition', "!{w.name}\n{q}/{w.participants} Deltagare");
-    s('list.auto.row.my_competition', "{u.givenName} `{u.nickname}` {u.lastName}\n{u.phone}\n{u.email}");
+    s('list.auto.row.my_competition', "`{u.nickname}` \n{u.phone}\n{u.email}");
     s('list.my_competition.title', 'Dina tävlingsarrangemang')
     
     s('list.auto.header.my_team', "!Tjohej!\nHär kan du se ditt team! ^_^");
@@ -489,16 +489,16 @@ module.exports = (app) => {
 
     s('list.tshirts.title', 'Tshirtbeställningar')
     s('list.auto.header.tshirts', "!Tshirtbeställningar");
-    s('list.auto.row.tshirts', "{u.givenName} \"{u.nickname}\" {u.lastName} - storlek: {m.tshirt}");
+    s('list.auto.row.tshirts', "\"{u.nickname}\" {u.lastName} - storlek: {m.tshirt}");
 
     s('list.auto.group.admin_teams', "!{w.name}\nuniform: {{w.uniform}} - {q} / {w.size} medlemmar");
-    s('list.auto.row.admin_teams', "{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Gruppledare: {{leader}}");
+    s('list.auto.row.admin_teams', "\"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Gruppledare: {{leader}}");
     s('list.auto.row.email_all_staff', "{u.email}");
     
     s('list.auto.group.admin_budget', "!Budgetposter för {w.type}\nTotal: {total}");
     s('list.auto.row.admin_budget', "{w.name}\nBudget: {w.budget}");
 
-    s('list.auto.row.list_team_leaders', "!{w.name}\nGrupptyp: {w.type}\n{u.givenName} \"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}");
+    s('list.auto.row.list_team_leaders', "!{w.name}\nGrupptyp: {w.type}\n\"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}");
 
     s('list.admin_teams.title', 'Administrera team')
     s('list.my_team.title', 'Mitt team')

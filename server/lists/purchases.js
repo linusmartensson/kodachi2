@@ -27,7 +27,7 @@ module.exports = (app) => {
 
                 const rows = [];
                 rows.push({id: rows.length, panels: [
-                    {id: 0, content: [{id: 0, type: "text", text: `${user.givenName} "${user.nickname}" ${user.lastName}`}]}
+                    {id: 0, content: [{id: 0, type: "text", text: `"${user.nickname}" ${user.lastName}`}]}
                 ]});
                 for (const w in tickets) {
                     const ticket = tickets[w];
