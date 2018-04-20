@@ -1,4 +1,5 @@
 {
-    "presets": [["env", {targets:{node:true}}], "react"],
-    "plugins": ["transform-object-rest-spread"]
+    "presets": [["env", {targets:{node:true}}], "react", "es2015"],
+    "plugins": ["transform-object-rest-spread", "transform-runtime"],
+    "ignore": ["babel/**/*.js", "node_modules/**/*.js"]
 }

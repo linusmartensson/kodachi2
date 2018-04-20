@@ -4,7 +4,6 @@
 require("babel-register");
 
 import cluster from "cluster";
-import winston from "winston";
 import os from "os";
 
 process.on("unhandledRejection", r => {
@@ -14,15 +13,14 @@ process.on("unhandledRejection", r => {
 
 var tools = require("./tools/core");
 
-winston.level = "info";
 
 var app = {};
 var reload = () => {
-	winston.info("is master: "+cluster.isMaster);
+	console.log("is master: "+cluster.isMaster);
 	if(cluster.isMaster){
 		var numCPUs = os.cpus().length;
 
-		winston.info("num CPUs: "+numCPUs);
+		console.log("num CPUs: "+numCPUs);
 		for(var i = 0; i<1; ++i){
 			cluster.fork();
 		}
@@ -32,15 +30,15 @@ var reload = () => {
 	}
 
 	var start = async () => {
-		winston.info("Starting...");
-		tools.loader("cores", app, ()=>{}).catch((e)=>{winston.error(e);});
+		console.log("Starting...");
+		tools.loader("cores", app, ()=>{}).catch((e)=>{console.dir(e);});
 	};
 
-	start().catch((e) => {winston.error(e);});
+	start().catch((e) => {console.dir(e);});
 };
 
-winston.info("Setting up watchers...");
+console.log("Setting up watchers...");
 tools.watch(__dirname, reload);
 
-winston.info("Starting cores!");
+console.log("Starting cores!");
 reload();

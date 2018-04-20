@@ -1,6 +1,5 @@
 import IO from "koa-socket-2";
 import cookie from "cookie";
-import winston from "winston";
 const tools = require("../tools/core");
 
 module.exports = async (app) => {
@@ -9,5 +8,5 @@ module.exports = async (app) => {
 
     tools.loader("socketio-middleware", app);
 
-    winston.info("SocketIO loaded!");
+    console.log("SocketIO loaded!");
 };

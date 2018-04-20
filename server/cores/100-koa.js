@@ -1,17 +1,16 @@
 import Koa from "koa";
-import winston from "winston";
 const tools = require("../tools/core");
 
 module.exports = async (app) => {
-    winston.info("Starting koa...");
+    console.log("Starting koa...");
 
     app.koa = new Koa();
     require("../config/koa")(app);
     app.koa.on("error", (err, ctx) => {
-        winston.error("koa-onerror", err);
+        console.log("koa-onerror", err);
     });
     require("koa-onerror")(app.koa);
-    winston.info("Configured koa...");
+    console.log("Configured koa...");
     await tools.loader("koa-middleware", app);
 
 

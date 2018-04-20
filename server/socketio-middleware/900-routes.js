@@ -1,4 +1,3 @@
-import winston from "winston";
 
 module.exports = (app) => {
 

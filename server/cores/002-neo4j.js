@@ -1,4 +1,3 @@
-import winston from "winston";
 const neo4j = require("neo4j-driver").v1;
 
 module.exports = async (app) => {
@@ -29,5 +28,5 @@ module.exports = async (app) => {
         }
         return rows;
     }
-    winston.info("Neo4j driver loaded!");
+    console.log("Neo4j driver loaded!");
 };

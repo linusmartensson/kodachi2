@@ -1,5 +1,4 @@
 
-import winston from "winston";
 
 module.exports = (app) => {
 
@@ -31,7 +30,7 @@ module.exports = (app) => {
 
             ctx.session.uuid = app.uuid();
 
-            winston.info("Connected", ctx.session.uuid);
+            console.log("Connected", ctx.session.uuid);
             if (!app.clients[token]) {
                 app.clients[token] = {};
             }
@@ -52,7 +51,7 @@ module.exports = (app) => {
             return;
         }
 
-        winston.info("Disconnected", ctx.session.uuid);
+        console.log("Disconnected", ctx.session.uuid);
         delete app.clients[ctx.session.localSession][ctx.session.uuid];
 
         if (!app.clients[ctx.session.localSession]) {

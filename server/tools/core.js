@@ -1,13 +1,12 @@
 import cluster from "cluster";
 import fs from "fs";
 import path from "path";
-import winston from "winston";
 
 const loader = async (dir, app) => {
     const mw = [],
         npath = path.join(__dirname, "..", dir);
 
-    winston.info(`loading ${dir}`);
+    console.log(`loading ${dir}`);
     fs.readdirSync(npath).forEach((file) => {
         if (!file.match(/\.js$/)) {
             return;
@@ -16,7 +15,7 @@ const loader = async (dir, app) => {
     });
     const v = mw.sort();
     for (const elem of v) {
-        winston.info(elem);
+        console.log(elem);
         await require(elem)(app);
     }
 };
@@ -24,7 +23,7 @@ const loader = async (dir, app) => {
 // Watch for file changes
 let timeout = null;
 function watch (file, reload) {
-    winston.info(`watcher on ${file}`);
+    console.log(`watcher on ${file}`);
     fs.readdirSync(file).forEach((f) => {
         if (f.match(/^\./)) {
             return;
