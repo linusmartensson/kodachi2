@@ -181,7 +181,7 @@ module.exports = async (app) => {
         let p = _.cloneDeep(m);
         let q = [];
         if(p.any){
-            p.ssn = p.email = p.nickname = p.any;
+            p.ssn = p.email = p.any;
             delete p.any;
         }
 
@@ -205,11 +205,9 @@ module.exports = async (app) => {
             q = await app.cypher("MATCH (u:User) WHERE u.ssn={ssn} RETURN u", p);
             delete p.ssn;
         } else if (p.email) {
+            p.email = p.email.toLowerCase();
             q = await app.cypher("MATCH (u:User) WHERE u.email={email} RETURN u", p);
             delete p.email;
-        } else if (p.nickname) {
-            q = await app.cypher("MATCH (u:User) WHERE u.nickname={nickname} RETURN u", p);
-            delete p.nickname;
         } else {
             return false;
         }

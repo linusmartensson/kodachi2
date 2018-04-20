@@ -68,7 +68,7 @@ module.exports = async (app) => {
         if (!validateEmail(d)) {
             throw "Invalid Email";
         }
-        return `${d}`;
+        return (`${d}`).toLowerCase();
     });
     api.add_filter("file", (d) => (d.path!==undefined?{file: d.path, mimeType: d.mimeType}:""));
     api.add_filter("image", (d) => (d.path!==undefined?{file: d.path, mimeType: d.mimeType}:""));

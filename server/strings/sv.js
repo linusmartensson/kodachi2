@@ -66,7 +66,7 @@ module.exports = (app) => {
     s("input.lang.name", "Vilket språk är denna text på?");
     s("input.lastName.name", "Vilket är ditt efternamn?");
     s("input.limit.name", "Vad är kostnadsgränsen för denna budgetpost?");
-    s("input.nickname.desc", "Ditt namn, smeknamn, eller något helt annat som du känner passar dig unikt bra när vi ska prata med dig! Detta namnet kommer vi använda överallt på sajten för att kommunicera med dig. Tänk på att det bara får innehålla små och stora bokstäver, samt siffror och bindestreck eller understreck.");
+    s("input.nickname.desc", "Ditt namn, smeknamn, eller något helt annat som du känner passar dig unikt bra när vi ska prata med dig! Detta namnet kommer vi använda överallt på sajten för att kommunicera med dig! Försök att inte göra det för långt!");
     s("input.nickname.name", "Vad vill du att vi ska kalla dig? ^_^");
     s("input.no.desc", "", true);
     s("input.no.name", "Nej :(");
@@ -235,7 +235,7 @@ module.exports = (app) => {
     s("task.join_staff.desc", "!Välkommen!\nDet finns många olika sätt att bli en del av Kodachicon! Förhoppningsvis ska du kunna hitta något som passar dig extraspecielltmycket bra!\n|\nVissa är intresserade av att sälja saker på en av våra försäljningsytor, som till exempel i vår jättetuffa Artist Alley!\n#\nAndra är mer intresserade av att vara med och bygga upp eventet i sig och bli en helt egen magisk del av Kodachicon!\n#\nSen finns det hjältar också som driver sina egna aktiviteter, såsom föreläsningar, workshops eller tävlingar!\n_\nVad skulle just du vilja göra på Kodachicon?");
     s("task.join_staff.title", "Påbörja en ansökan!");
     s("task.join_staff.title.active", "Din pågående ansökan");
-    s("task.login.desc", "Fyll i ditt konto och lösenord här så loggar vi in dig på direkten! ^_^");
+    s("task.login.desc", "Fyll i din email (eller ditt personnummer) och ditt lösenord här så loggar vi in dig på direkten! ^_^");
     s("task.login.title.active", "Fortsätt logga in!");
     s("task.logout.desc", "Är du säker på att du vill logga ut?");
     s("task.manual_ssn_details.desc", "\nAlrajt! Vi kunde inte hämta dina uppgifter automagiskt, så det betyder att vi måste fylla i dem för hand, men det löser vi!\nNär du blir medlem i Kodachikai samlar vi in dehär uppgifterna för att kunna söka bidrag för våra evenemang och föreningsaktiviteter, så att det är rätt ifyllt är jätteviktigt för oss! För att allt ska bli bra så hoppas vi att ni är jättenoga!");
@@ -302,7 +302,7 @@ module.exports = (app) => {
     s("input.email_or_ssn.desc", "", true);
     s("input.email_text.desc", "", true);
     s("input.email_topic.desc", "", true);
-    s("input.emergencyphone.desc", "Ibland sker det olyckor, och då räcker det inte alltid med bara ditt eget telefonnummer för att vi ska kunna hjälpa till. Därför ber vi dig att skriva in ett extra nummer här till en familjemedlem eller annan närstående som vi kan kontakta om det skulle behövas.");
+    s("input.emergencyphone.desc", "Ibland sker det olyckor, och då räcker det inte alltid med bara ditt eget telefonnummer för att vi ska kunna hjälpa till. Därför ber vi dig att skriva in ett extra nummer här till en familjemedlem eller annan närstående som vi kan kontakta om det skulle behövas. Tänk på att detta fältet bara får innehålla siffror och plus!");
     s("input.ends.desc", "", true);
     s("input.event.desc", "Bestäm dig för om denna texten är specifik för eventet, eller ska visas för alla!");
     s("input.event_description.desc", "Se till att beskrivningen är utförlig och kan användas som en första presentation när en ny besökare halkar in på kodachi.se");

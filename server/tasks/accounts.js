@@ -276,7 +276,7 @@ module.exports = (app) => {
         "account", "fill_user_details", // for email, avatar, nickname & password
         [], [],
         app.taskApi.okcancel().concat(
-            {field: "nickname", type: "simpletext"},
+            {field: "nickname", type: "text"},
             {field: "phone", type: "phone"},
             {field: "emergencyphone", type: "phone"},
             {field: "email", type: "email"},
@@ -298,10 +298,6 @@ module.exports = (app) => {
             }
             if ((await app.userApi.findAccount({email: inst.response.email})) !== false) {
                 inst.error = "{tasks.account.emailTaken}";
-                return "RETRY";
-            }
-            if ((await app.userApi.findAccount({nickname: inst.response.nickname})) !== false) {
-                inst.error = "{tasks.account.nickNameTaken}";
                 return "RETRY";
             }
 
