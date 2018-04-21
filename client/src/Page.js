@@ -7,8 +7,8 @@ import './Page.css'
 class Page extends Component{
   render() {
 
-    const tiers = this.props.tiers.map((tier) => 
-        <Tier key={tier.id} panels={tier.panels} />
+    const tiers = this.props.tiers.map((tier, index) => 
+        <Tier key={tier.id} panels={tier.panels} classKey={"t"+index} />
     );
 
     return (<div className="Page">{tiers}</div>);

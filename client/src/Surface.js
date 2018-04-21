@@ -4,9 +4,9 @@ import Page from './Page'
 class Surface extends Component {
   render() {
     const pages = this.props.pages.map((page) =>
-            <Page key={page.id} tiers={page.tiers} />
+            <Page key={page.id} tiers={page.tiers}/>
             );
-    return (<div className="Surface">{pages}</div>);
+    return (<div className="Surface" id={this.props.id} >{pages}</div>);
   }
 }
 export default Surface;

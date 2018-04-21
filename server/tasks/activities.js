@@ -591,4 +591,54 @@ module.exports = async (app) => {
         [{event_task: true}, {field: "ok", type: "button"}],
         async (inst, ctx) => "OK", async (inst) => "OK"
     );
+
+    app.taskApi.create_task(
+        "activity", "crew_checkin", ["admin", "admin.", "crew_admin.", "team_admin."], [], app.taskApi.okcancel().concat({event_task:true},
+            {field:"checkin_account", type:"text"}),
+        async (inst, ctx) => {
+            
+            const res = await app.userApi.findAccount({any: inst.response.checkin_account});
+            if(!res){
+                inst.error = "{tasks.account.noSuchUser}";
+                return 'RETRY';
+            } else {
+                inst.data.user = res;
+                let teams = app.mapCypher(await app.cypher("MATCH (u:User {id:{id}})-[t:TEAM_MEMBER]-(w:WorkGroup)-(:Event {id:{event}}) RETURN t", {event: inst.data.start_data.event_id, id: res.id}), ["t"]);
+                inst.data.teams = teams;
+                inst.data.teamCount = teams.length;
+                for(let t of teams){
+                    let q = t['t'];
+
+                    inst.data.sleep = q.sleep || inst.data.sleep;
+                    inst.data.wednesday = q.wednesday || inst.data.wednesday;
+                    inst.data.sunday = q.sunday || inst.data.sunday;
+                    inst.data.tshirt = q.tshirt + ", " + inst.data.tshirt;
+                    inst.data.checkedIn = q.checkedIn || q.checkedIn;
+                }
+                
+                if(inst.data.checkedIn) {
+                    inst.error = "{tasks.checkin.alreadyCheckedIn}";
+                    return 'RETRY';
+                } else if(inst.data.teamCount < 1) {
+                    inst.error = "{tasks.checkin.noTickets}"
+                    return 'RETRY';
+                }
+
+                inst.next_tasks.push("crew_checkin_verify");
+                return 'OK';
+            }
+        });
+    app.taskApi.create_task(
+        "activity", "crew_checkin_verify", [], [], app.taskApi.okcancel().concat({event_task:true}),
+        async (inst,ctx) => {
+
+            let tasks = [];
+            for(let t of inst.data.teams){
+                tasks.push(app.cypher("MATCH (:User {id:{id}})-[t:TEAM_MEMBER]-(w:WorkGroup)-(:Event {id:{event}}) SET t.checkedIn=true", {event: inst.data.start_data.event_id, id: inst.data.user.id}));
+            }
+            await Promise.all(tasks);
+            return 'OK';
+        });
+
+
 };

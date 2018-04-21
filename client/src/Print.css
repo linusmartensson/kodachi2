@@ -1,0 +1,70 @@
+@media print {
+    .Drawer{display:none !important;}
+    .Workspace{
+
+        position:relative;
+        width:100%;
+	    background-position:0 0;
+        background-attachment:scroll;
+        background-color:white;
+        background-size:210mm 148.5mm;
+        background-repeat:repeat-y space;
+    }
+    .Workspace-head{display:none !important;}
+    .Surface{
+        border:0 !important; margin:0 !important; padding:0 !important;
+        position:relative;
+    }
+    .Tier {
+        margin:0 !important; padding:0 !important;
+        overflow:hidden !important;
+
+        position:relative;
+        background:rgba(255,255,255,0.9);
+        display:table-row;
+        height:74mm;
+        width:210mm;
+    }
+    .Page {
+        border:0 !important; margin:0 !important; padding:0 !important;
+        overflow:hidden !important;
+
+        position:relative;
+        background:transparent;
+        box-shadow:none;
+        page-break-inside:avoid;
+        height:148mm;
+        width:210mm;
+    }
+    #badge_generator img{
+        margin:0;padding:0;
+        margin-top:5mm;
+        margin-bottom:5mm;
+
+        transform:rotate(-5deg);
+    }
+
+    #badge_generator .Panel {
+        border:0 !important; margin: 0 !important; padding: 5mm !important;
+        overflow:hidden !important;
+        
+        position:relative;
+        background:transparent;
+        width:110mm;
+        height:64mm;
+        display:table-cell;
+        border:1px solid #aaa !important;
+    }
+    #badge_generator .PanelText {
+        padding:0;
+        margin:1mm;
+    }
+    #badge_generator .Caption {
+        margin:5mm;
+        border:0;
+        background:transparent;
+        box-shadow:none;
+        left:0;
+        text-size:1.1em;
+    }
+}

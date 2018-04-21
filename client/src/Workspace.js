@@ -20,6 +20,7 @@ import TaskPopup from './TaskPopup';
 import Loader from './Loader';
 
 import './Workspace.css'
+import './Print.css'
 import {connect} from 'react-redux'
 import InfoPopup from './InfoPopup';
 
@@ -74,18 +75,22 @@ var SurfaceRouteBase = (props) => {
 
     var matches = [];
     var match = props.match;
+    var id = "";
 
     switch(match.params.type){
         case 'book':
             const books = props.books || [];
             matches = books.filter(b => (b.path === match.params.path));
+            id = match.params.path.split(".")[0];
             if(matches.length > 0) matches = matches[0].content; else matches = false;
             break;
         case 'list':
             const lists = props.lists || [];
             if(lists[match.params.path]) {
-                matches = lists[match.params.path].content; }
-            else{
+                matches = lists[match.params.path].content; 
+            
+                id = match.params.path.split(".")[0];
+            }else{
                 matches = false;
                 setTimeout(()=>{props.tryFetch(match.params.path)},0);
             }
@@ -98,7 +103,7 @@ var SurfaceRouteBase = (props) => {
     }
 
     if(matches)
-        return <Surface pages={matches} />;
+        return <Surface id={id} pages={matches} />;
     else
         return null;
 }

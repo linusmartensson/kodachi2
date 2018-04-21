@@ -1,6 +1,7 @@
 module.exports = (app) => {
     const s = app.stringApi.add_string.bind(null, "sv");
 
+    s("list.auto.row.badge_generator", "@(/img/kodachicon_new.png)\n!{u.nickname} - Team {w.name}\n#\nTorsdag - Frukost | Middag\nFredag - Frukost | Middag\nLördag - Frukost | Middag\nSöndag - Frukost\n_\nMia: xx\nMumma: yy\nSara: zz\nJohanna: zz\nDet brinner! 112\n#\nBild på Linus här (Egna Anteckningar ^,^)");
 
     s("fri", "Fredag");
     s("input.access.desc", "Markera alla användargrupper som ska ha tillgång till detta");

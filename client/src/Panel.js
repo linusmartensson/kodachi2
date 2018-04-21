@@ -188,7 +188,7 @@ class Panel extends Component {
 
 
     var v = (
-            <div style={panelStyle} className={panelConfig}><div className="Panel-inside">
+            <div style={panelStyle} className={panelConfig + " " + this.props.classKey}><div className="Panel-inside">
             {content}
             </div></div>);
 
