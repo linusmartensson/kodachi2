@@ -78,7 +78,7 @@ module.exports = async (app) => {
     api.add_filter("checkbox", (d) => d === "true" || d === true);
     api.add_filter("dropdown", (d, q) => { // Index of values-list.
         d = JSON.parse(d);
-        if (q.values.length === 0) {
+        if (!q.values || q.values.length === 0) {
             return "";
         }
         if (!Array.isArray(d) || d.length < 1) {
