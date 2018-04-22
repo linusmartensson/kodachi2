@@ -593,15 +593,67 @@ module.exports = async (app) => {
     );
 
     app.taskApi.create_task(
+        "activity", "crew_checkin_select", [], [], app.taskApi.okcancel().concat({event_task:true},
+        {field: "target", type: "dropdown", prepare: async (v, ctx, task) => {
+                console.dir(task);
+                console.dir(task.data);
+                if(!task.data.accs) return;
+                const w = task.data.accs;
+                v.values = [];
+                for (const r of w) {
+                    v.values.push({label: r.u.email + " - " + r.u.ssn + " - " + r.u.phone, id: r.u.id});
+                }
+            }}),
+        async (inst, ctx) => {
+            let res = "";
+            for(var v of inst.data.accs){
+                if(v.u.id == inst.response.target.id) res = inst.data.user = v.u;
+            }
+            let teams = app.mapCypher(await app.cypher("MATCH (u:User {id:{id}})-[t:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,t", {event: inst.data.start_data.event_id, id: res.id}), ["u", "t"]);
+            inst.data.teams = teams;
+            inst.data.teamCount = teams.length;
+            for(let t of teams){
+                let q = t['t'];
+                let u = t['u'];
+                inst.data.user = u;
+
+                inst.data.sleep = q.sleep || inst.data.sleep;
+                inst.data.wednesday = q.wednesday || inst.data.wednesday;
+                inst.data.sunday = q.sunday || inst.data.sunday;
+                inst.data.tshirt = q.tshirt + ", " + inst.data.tshirt;
+                inst.data.checkedIn = q.checkedIn || q.checkedIn;
+            }
+
+            if(inst.data.checkedIn) {
+                inst.error = "{tasks.checkin.alreadyCheckedIn}";
+                return 'RETRY';
+            } else if(inst.data.teamCount < 1) {
+                inst.error = "{tasks.checkin.notInCrew}"
+                return 'RETRY';
+            }
+
+            inst.next_tasks.push("crew_checkin_verify");
+            return 'OK';
+
+
+        })
+
+    app.taskApi.create_task(
         "activity", "crew_checkin", ["admin", "admin.", "crew_admin.", "team_admin."], [], app.taskApi.okcancel().concat({event_task:true},
             {field:"checkin_account", type:"text"}),
         async (inst, ctx) => {
             
             const res = await app.userApi.findAccount({any: inst.response.checkin_account});
-            if(!res){
+            const mres = await app.userApi.findAccounts(inst.response.checkin_account);
+            if(!res && !mres){
                 inst.error = "{tasks.account.noSuchUser}";
                 return 'RETRY';
+            } else if(mres) {
+                inst.data.accs = mres;
+                inst.next_tasks.push("crew_checkin_select");
+                return 'OK';
             } else {
+
                 inst.data.user = res;
                 let teams = app.mapCypher(await app.cypher("MATCH (u:User {id:{id}})-[t:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,t", {event: inst.data.start_data.event_id, id: res.id}), ["u", "t"]);
                 inst.data.teams = teams;

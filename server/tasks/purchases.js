@@ -198,6 +198,55 @@ module.exports = async (app) => {
     );
 
     app.taskApi.create_task(
+        "purchase", "checkin_select", [], [], app.taskApi.okcancel().concat({event_task:true},
+        {field: "target", type: "dropdown", prepare: async (v, ctx, task) => {
+                console.dir(task);
+                console.dir(task.data);
+                if(!task.data.accs) return;
+                const w = task.data.accs;
+                v.values = [];
+                for (const r of w) {
+                    v.values.push({label: r.u.email + " - " + r.u.ssn + " - " + r.u.phone, id: r.u.id});
+                }
+            }}),
+        async (inst, ctx) => {
+            let res = "";
+            for(var v of inst.data.accs){
+                if(v.u.id == inst.response.target.id) res = inst.data.user = v.u;
+            }
+            
+            let tickets = app.mapCypher(await app.cypher("MATCH (:User {id:{id}})-[t:TICKET]-(:Event {id:{event}}) RETURN t", {event: inst.data.start_data.event_id, id: res.id}), ["t"]);
+            inst.data.tickets = tickets;
+            inst.data.ticketCount = tickets.length;
+            inst.data.hasSleep = inst.data.hasTicket = inst.data.hasUsedSleep = inst.data.hasUsedTicket = false;
+            for(let t of tickets){
+                let q = t['t'];
+                if(q.type == 'sleep' && q.used == true) inst.data.hasUsedSleep = true;
+                if(q.type == 'ticket' && q.used == true) inst.data.hasUsedTicket = true;
+                if(q.type == 'sleep' && q.used == false) inst.data.hasSleep = true;
+                if(q.type == 'ticket' && q.used == false) inst.data.hasTicket = true;
+            }
+            if(inst.data.hasTicket == false) {
+                if(inst.data.hasSleep) {
+                    if(!inst.data.hasUsedTicket){
+                        inst.error = "{tasks.checkin.onlyHasSleep}";
+                        return 'RETRY';
+                    } // else allow checkin with just sleep ticket.
+                } else if(inst.data.hasUsedSleep || inst.data.hasUsedTicket){
+                    inst.error = "{tasks.checkin.alreadyCheckedIn}";
+                    return 'RETRY';
+                } else {
+                    inst.error = "{tasks.checkin.noTickets}"
+                    return 'RETRY';
+                }
+            }
+            inst.next_tasks.push("checkin_verify");
+            return 'OK';
+
+        })
+
+
+    app.taskApi.create_task(
         "purchase", "checkin_verify", [], [], app.taskApi.okcancel().concat({event_task:true}),
         async (inst,ctx) => {
 
@@ -392,9 +441,14 @@ module.exports = async (app) => {
         async (inst, ctx) => {
             
             const res = await app.userApi.findAccount({any: inst.response.checkin_account});
-            if(!res){
+            const mres = await app.userApi.findAccounts(inst.response.checkin_account);
+            if(!res && !mres){
                 inst.error = "{tasks.account.noSuchUser}";
                 return 'RETRY';
+            } else if(mres) {
+                inst.data.accs = mres;
+                inst.next_tasks.push("checkin_select");
+                return 'OK';
             } else {
 
                 inst.data.user = res;
