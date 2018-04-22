@@ -1,6 +1,16 @@
+@page {
+    size: A4 portrait;
+    margin: 0;
+}
+
 @media print {
     .Drawer{display:none !important;}
+    .Root{
+        
+        border:0 !important; margin:0 !important; padding:0 !important;
+    }
     .Workspace{
+        border:0 !important; margin:0 !important; padding:0 !important;
 
         position:relative;
         width:100%;
@@ -23,7 +33,7 @@
         background:rgba(255,255,255,0.9);
         display:table-row;
         height:74mm;
-        width:210mm;
+        width:210mm !important;
     }
     .Page {
         border:0 !important; margin:0 !important; padding:0 !important;
@@ -34,7 +44,7 @@
         box-shadow:none;
         page-break-inside:avoid;
         height:148mm;
-        width:210mm;
+        width:210mm !important;
     }
     #badge_generator img{
         margin:0;padding:0;
@@ -50,8 +60,11 @@
         
         position:relative;
         background:transparent;
-        width:110mm;
-        height:64mm;
+        box-sizing:border-box;
+        min-width:105mm !important;
+        max-width:105mm !important;
+        width:105mm !important;
+        height:64mm !important;
         display:table-cell;
         border:1px solid #aaa !important;
     }
@@ -65,6 +78,19 @@
         background:transparent;
         box-shadow:none;
         left:0;
-        text-size:1.1em;
+        font-size:1.1em;
+        line-height:1em;
+        display:block;
+        margin-bottom:0;
+        padding:0;
+    }
+    #badge_generator .Caption ~ .Caption {
+        padding:0;
+        font-size:0.9em;
+        line-height:1em;
+    }
+    #badge_generator .Caption ~ .Caption:first-letter {
+        font-size:1.1em;
+        line-height:1em;
     }
 }
