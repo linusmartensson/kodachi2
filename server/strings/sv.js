@@ -1,6 +1,8 @@
 module.exports = (app) => {
     const s = app.stringApi.add_string.bind(null, "sv");
 
+    s("task.crew_checkin_verify.desc", "Checkar in {user.nickname}!\nÖnskat T-Shirt i {tshirt}.\nKommer onsdag: {{wednesday}}\nLovat att städa på söndag: {{sunday}}\nSover på plats: {{sleep}}");
+
     s("list.auto.row.badge_generator", "@(/img/kodachicon_new.png)\n!{u.nickname} - Team {w.name}\n#\nTorsdag - Frukost | Middag\nFredag - Frukost | Middag\nLördag - Frukost | Middag\nSöndag - Frukost\n_\nMia: xx\nMumma: yy\nSara: zz\nJohanna: zz\nDet brinner! 112\n#\nBild på Linus här (Egna Anteckningar ^,^)");
 
     s("fri", "Fredag");

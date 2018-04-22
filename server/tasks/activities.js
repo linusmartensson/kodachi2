@@ -603,11 +603,13 @@ module.exports = async (app) => {
                 return 'RETRY';
             } else {
                 inst.data.user = res;
-                let teams = app.mapCypher(await app.cypher("MATCH (u:User {id:{id}})-[t:TEAM_MEMBER]-(w:WorkGroup)-(:Event {id:{event}}) RETURN t", {event: inst.data.start_data.event_id, id: res.id}), ["t"]);
+                let teams = app.mapCypher(await app.cypher("MATCH (u:User {id:{id}})-[t:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,t", {event: inst.data.start_data.event_id, id: res.id}), ["u", "t"]);
                 inst.data.teams = teams;
                 inst.data.teamCount = teams.length;
                 for(let t of teams){
                     let q = t['t'];
+                    let u = t['u'];
+                    inst.data.user = u;
 
                     inst.data.sleep = q.sleep || inst.data.sleep;
                     inst.data.wednesday = q.wednesday || inst.data.wednesday;
@@ -634,7 +636,7 @@ module.exports = async (app) => {
 
             let tasks = [];
             for(let t of inst.data.teams){
-                tasks.push(app.cypher("MATCH (:User {id:{id}})-[t:TEAM_MEMBER]-(w:WorkGroup)-(:Event {id:{event}}) SET t.checkedIn=true", {event: inst.data.start_data.event_id, id: inst.data.user.id}));
+                tasks.push(app.cypher("MATCH (:User {id:{id}})-[t:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) SET t.checkedIn=true", {event: inst.data.start_data.event_id, id: inst.data.user.id}));
             }
             await Promise.all(tasks);
             return 'OK';
