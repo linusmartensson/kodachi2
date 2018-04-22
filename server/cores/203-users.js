@@ -177,6 +177,18 @@ module.exports = async (app) => {
         app.utils.email(u.email, app.stringApi.parse(subject, lang), app.stringApi.parse(text, lang), app.stringApi.parse(html, lang), immediate);
         return true;
     };
+    api.findAccounts = async (m) => {
+
+        let q = app.mapCypher(await app.cypher("MATCH (u:User) WHERE toLower(u.nickname)={nick} RETURN u", {nick: m.toLowerCase()}), ["u"]);
+        if (q.length > 0) {
+            for(var v in q){
+                delete q[v].u.verifyCode;
+            }
+            console.dir(q);
+            return q;
+        }
+        return false;
+    }
     api.findAccount = async (m) => {
         let p = _.cloneDeep(m);
         let q = [];
