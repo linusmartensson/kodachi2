@@ -80,7 +80,7 @@ class Selector extends Component {
             elem.content.values = [0,1,2,3,4,5,6,7,8,9,10];
         } 
         var pos = -1;
-        values = elem.content.values.map((p) => {
+        values = elem.content && elem.content.values ? elem.content.values.map((p) => {
             pos++;
 
             if(typeof p === 'object'){
@@ -88,12 +88,12 @@ class Selector extends Component {
             } else {
                 return <option className="PanelSelectOption" key={p} value={elem.type==='input_dropdown'||elem.type==='input_staticselect'?pos:p}>{p}</option>
             }
-        });
+        }) : [];
 
         var extra = null;
         var selected = -1;
         if(!this.props.selectors[elem.id]){
-            selected = elem.content.values.length>0?0:-1;
+            selected = elem.content&&elem.content.values&&elem.content.values.length>0?0:-1;
         } else selected = this.props.selectors[elem.id];
 
         if(selected >= 0){
