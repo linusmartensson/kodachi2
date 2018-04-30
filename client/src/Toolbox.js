@@ -59,11 +59,17 @@ class Toolbox extends Component {
         return (<ListContainer key={list.id} list={list} />)        
     });
 
+
+    const externs = [ 
+          <div className="Tool"><a href="https://kai.kodachi.se/kai">Besök Kodachikai!</a></div>,
+          <div className="Tool"><a href="https://schema.kodachi.se">Schema för Kodachicon!</a></div>
+    ];
       var taskbox = tcount>0?<div className="Taskbox">{tasks}</div>:null;
       var listbox = lcount>0?<div className="Listbox">{lists}</div>:null;
       var toolbox = tools.length>0?<div className="Toolbox">{tools}</div>:null;
+      var extern = externs.length>0?<div className="Externbox">{externs}</div>:null;
 
-    return (<div>{taskbox}{toolbox}{listbox}</div>);
+    return (<div>{taskbox}{toolbox}{listbox}{extern}</div>);
   }
 }
 

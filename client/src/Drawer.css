@@ -20,12 +20,12 @@
 
     width:235px !important;
     }
-    .Drawer .Tool input, .Pages a {
+    .Drawer .Tool input, .Pages a, .Drawer .Tool a {
            text-align:left !important;
            padding-left:20px !important;
            margin:5px 0 !important;
     }
-    .Drawer .Tool input{
+    .Drawer .Tool input, .Drawer .Tool a{
            margin-right:-15px !important;
     }
     
@@ -94,7 +94,7 @@
  display:block !important;
  width:100%;
 }
-.Drawer .Tool input, .Pages .StoredPage a {
+.Drawer .Tool input, .Pages .StoredPage a, .Externbox a {
  background:none;
  border:0px;
  margin:0;
@@ -109,7 +109,7 @@
  width:100%;
 }
 
-.Tool input:hover, .Pages a:hover {
+.Tool input:hover, .Pages a:hover, .Externbox a:hover {
  color:red;
  background:rgba(128,128,128,0.5);
  cursor:pointer;
