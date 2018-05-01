@@ -3,7 +3,7 @@ module.exports = (app) => {
 
     s("task.crew_checkin_verify.desc", "Checkar in {user.nickname}!\nÖnskat T-Shirt i {tshirt}.\nKommer onsdag: {{wednesday}}\nLovat att städa på söndag: {{sunday}}\nSover på plats: {{sleep}}");
 
-    s("list.auto.row.badge_generator", "@(/img/kodachicon_new.png)\n!{u.nickname}\n!Team {w.name}\n#\nTorsdag - Frukost | Middag\nFredag - Frukost | Middag\nLördag - Frukost | Middag\nSöndag - Frukost\n_\nMia: xx\nMumma: yy\nSara: zz\nJohanna: zz\nDet brinner! 112\n#\nSjälvporträtt här (Eller Anteckningar ^,^)");
+    s("list.auto.row.badge_generator", "@(/img/kodachicon_new.png)\n!{u.nickname}\n!Team {w.name}\n#\nTorsdag - Frukost | Middag\nFredag - Frukost | Middag\nLördag - Frukost | Middag\nSöndag - Frukost\n_\nMia, act: 0703 - 74 96 09\nEmil, team: 0733 - 31 04 44\nSara, info: 0727 - 15 23 33\nJulia, värd: 0739 - 81 34 04\nVid nödfall, ring 112\n#\nÖppettider\nEndagsbesökare: 08.00-02.00\nInfo & Garderob: 08.00-22.00\nKiosken: 08.00-02.00\nFrukost 08.00-10.00");
 
     s("fri", "Fredag");
     s("input.access.desc", "Markera alla användargrupper som ska ha tillgång till detta");
