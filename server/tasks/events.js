@@ -53,12 +53,11 @@ module.exports = async (app) => {
                 return "RETRY";
             }
 
-            const u = await app.userApi.findAccount({email: inst.response.user});
-            if (!u) {
-                return "RETRY";
-            }
+            for(var v of inst.response.user){
+                const u = await app.userApi.findAccount({email: v});
 
-            await app.roleApi.addRole(u.id, `${inst.response.type}.${inst.data.start_data.event_id}`, 10000);
+                await app.roleApi.addRole(u.id, `${inst.response.type}.${inst.data.start_data.event_id}`, 10000);
+            }
 
             return "OK";
         }, (inst) => "OK"
