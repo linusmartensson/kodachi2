@@ -51,7 +51,7 @@ module.exports = (app) => {
     app.taskApi.create_task(
         "account", "add_super_role",
         ["admin"], [],
-        app.taskApi.okcancel().concat({hide: true, autocancel: true, field: "role", type: "simpletext"}),
+        app.taskApi.okcancel().concat({hide: true, autocancel: true, field: "role", type: "text"}),
         async (inst, ctx) => {
             if (inst.response.cancel) {
                 return "OK";
