@@ -34,7 +34,7 @@ module.exports = async (app) => {
 
             await app.roleApi.addAchievement(inst.origin, "gimme_my_money", 1, app.userApi.getActiveEvent(ctx), 1, 0);
 
-            inst.response.image = app.utils.upload(inst.response.image);
+            inst.response.image = await app.utils.upload(inst.response.image);
 
             inst.data.event = (await app.userApi.getActiveEvent(ctx)).id;
 
