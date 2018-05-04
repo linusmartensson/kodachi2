@@ -44,6 +44,7 @@ module.exports = async (app) => {
 
             const u = inst.data.start_data.user;
             await app.roleApi.addRole(inst.data.start_data.user, `manager.${inst.data.start_data.team}`, 1000);
+            await app.roleApi.addRole(inst.data.start_data.user, `manager.${inst.data.start_data.event_id}`, 1000);
             // Only the original manager gets extra points for now
 
             return "OK";
@@ -68,6 +69,11 @@ module.exports = async (app) => {
             }
 
             await app.roleApi.removeRole(inst.data.start_data.user, `manager.${inst.data.start_data.team}`, 1000);
+
+            const team2 = await app.cypher("MATCH (u:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup)--(e:Event {id:{event}}) return u", {user:inst.data.start_data.user, event:inst.data.start_data.event_id});
+            if(!team2.records || team2.records.length < 1) {
+                await app.roleApi.removeRole(inst.data.start_data.user, `manager.${inst.data.start_data.event_id}`, 1000);
+            }
 
             return "OK";
 
