@@ -10,6 +10,12 @@ module.exports = async (app) => {
                 return "FAIL";
             }
 
+            //Can't delete manager
+            const team2 = await app.cypher("MATCH (u:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: inst.data.start_data.user, team: inst.data.start_data.team});
+            if (team2.records && team2.records.length > 0) {
+                return "FAIL";
+            }
+
             await app.roleApi.removeRole(inst.data.start_data.user, `team_member.${inst.data.start_data.team}`, 3900);
             await app.cypher("MATCH (:User {id:{user}})-[t:TEAM_MEMBER]-(:WorkGroup {id:{team}}) DETACH DELETE t;", {user: inst.data.start_data.user, team: inst.data.start_data.team});
 
