@@ -45,6 +45,47 @@ module.exports = async (app) => {
         });
     }
 
+    function querySsn (target) {
+        return new Promise((resolve, reject) => {
+            const options = {
+                hostname: app.ratsitkey.endpoint,
+                port: 443,
+                path: `/api/v1/personinformation?SSN=${target}`,
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": app.ratsitkey.auth,
+                    "Package": "personadress"
+                }
+            };
+            console.dir(options);
+            const req = https.request(options, (res) => {
+                console.log("statusCode:", res.statusCode);
+                console.log("headers:", res.headers);
+
+                const body = [];
+                res.on("data", (d) => {
+                    body.push(d);
+                });
+                res.on("end", () => {
+                    resolve(Buffer.concat(body).toString());
+                });
+                res.on("error", (e) => {
+                    reject(e);
+                });
+            });
+            req.on("error", (e) => {
+                reject(e);
+            });
+            req.end();
+        });
+    }
+
+    async function validateSsn (ssn) {
+        return await querySsn(ssn);
+    }
+
+
     async function queryToken (ctx, trackId, sum, message) {
         const u = (await app.userApi.getUser(await app.userApi.userId(ctx)));
         console.dir(u);
@@ -254,7 +295,6 @@ module.exports = async (app) => {
             for(let t of inst.data.tickets){
                 tasks.push(app.cypher("MATCH (:User {id:{id}})-[t:TICKET]-(:Event {id:{event}}) SET t.used=true", {event: inst.data.start_data.event_id, id: inst.data.user.id}));
             }
-            await Promise.all(tasks);
             return 'OK';
         });
 
