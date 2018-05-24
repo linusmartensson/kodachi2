@@ -439,10 +439,10 @@ module.exports = async (app) => {
 
             inst.result = result;
 
-            await updateTaskInstance(inst.id, inst);
 
             switch (result) {
             case "OK":
+                await updateTaskInstance(inst.id, inst);
                 break;
             case "RETRY":
                 await finishChildren(inst);
@@ -454,6 +454,7 @@ module.exports = async (app) => {
                 return result;
             case "FAIL":
             default:
+                await updateTaskInstance(inst.id, inst);
                 inst.next_tasks = [];
                 break;
             }
@@ -532,17 +533,19 @@ module.exports = async (app) => {
         inst.error = "no error message :(";
         console.log(`Found ${task_id}. Processing response!`);
 
-        await updateTaskInstance(task_id, inst);
+        //await updateTaskInstance(task_id, inst);
 
         // Find the task
         const task = api.getTask(inst.task_name);
 
         try {
+            let awaits = [];
             for (const v of task.inputs) {
                 if (v.prepare) {
-                    await v.prepare(v, ctx, inst);
+                    awaits.push(v.prepare(v, ctx, inst));
                 }
             }
+            await Promise.all(awaits);
             if (!api.externalTask(task)) {
                 response = api.filterResponse(response, task.inputs);
             }
@@ -568,7 +571,6 @@ module.exports = async (app) => {
 
         // Store the result
         inst.result = result;
-        await updateTaskInstance(task_id, inst);
 
         switch (result) {
         case "OK":
