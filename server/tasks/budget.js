@@ -81,7 +81,7 @@ module.exports = async (app) => {
         "budget", "pay_receipt",
         [], ["budget."], [{event_task: true, field: "ok", type: "button"}],
         async (inst) => {
-            await app.cypher("MATCH (r:Receipt id:{id}) SET r.paid=1", {id: inst.data.receipt.id});
+            await app.cypher("MATCH (r:Receipt {id:{id}}) SET r.paid=1", {id: inst.data.receipt.id});
             return "OK";
         }, async (inst) => "OK"
     );
