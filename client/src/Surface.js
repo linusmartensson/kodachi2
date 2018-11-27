@@ -1,6 +1,6 @@
-
 import React, { Component } from 'react';
 import Page from './Page'
+
 class Surface extends Component {
   render() {
     const pages = this.props.pages.map((page) =>

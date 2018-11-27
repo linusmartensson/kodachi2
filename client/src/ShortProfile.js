@@ -17,7 +17,6 @@ class ShortProfile extends Component {
 
 const ShortProfileContainer = connect(
         state => {
-            console.dir(state.session.profile);
             var mainRole = state.session.profile&&state.session.profile.mainRole?state.session.profile.mainRole:{role:'Konventare', xp:0, level:1};
             var nickname = state.session.profile&&state.session.profile.user?state.session.profile.user.nickname?state.session.profile.user.nickname:state.session.profile.user.givenName:"Främling";
             return {
