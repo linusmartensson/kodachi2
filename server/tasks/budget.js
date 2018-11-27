@@ -12,6 +12,7 @@ module.exports = async (app) => {
             {field: "account_no", type: "text"},
             {field: "clearing_no", type: "simpletext"},
             {field: "group", type: "dropdown", prepare: async (v, ctx) => {
+                if(!await app.userApi.getActiveEvent(ctx)) return;
                 const r = await app.cypher("MATCH (r:BudgetGroup)-->(e:Event {id:{event}}) RETURN r", {event: (await app.userApi.getActiveEvent(ctx)).id});
                 v.values = [];
                 for (const q of r.records) {
