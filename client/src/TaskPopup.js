@@ -32,11 +32,11 @@ class TaskPopup extends Component{
 
 
     componentDidMount() {
-        document.addEventListener('mousedown', this.handleClickOutside);
+        //document.addEventListener('mousedown', this.handleClickOutside);
     }
 
     componentWillUnmount() {
-        document.removeEventListener('mousedown', this.handleClickOutside);
+        //document.removeEventListener('mousedown', this.handleClickOutside);
     }
     handleClickOutside(event) {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {

@@ -43,11 +43,11 @@ class Toolbox extends Component {
     var tcount = 0, lcount = 0;
     const tasks = _.cloneDeep(this.props.tasks).sort(sortfn).map((task) => {
 
-        for(var v of task.type.inputs) {
+        /*for(var v of task.type.inputs) {
             //Hide tasks that finish automatically, as long as they're showing.
            
             if(v.autocancel && this.props.currentTask && this.props.currentTask.task) return null;
-        }
+        }*/
         if(task.result !== 'WAIT_RESPONSE') return null;
 
         tcount++;

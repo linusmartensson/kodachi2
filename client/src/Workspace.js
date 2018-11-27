@@ -102,6 +102,8 @@ var SurfaceRouteBase = (props) => {
             matches = false;
     }
 
+    setTimeout(()=>{props.close()}, 0);
+
     if(matches)
         return <Surface id={id} pages={matches} />;
     else
@@ -117,6 +119,7 @@ const SurfaceRoute = connect(
     }},
     dispatch => {return {
         tryFetch: (q) => {dispatch(actions.app.list.show(q, history))}
+        ,close: () => {dispatch(actions.app.task.close())}
     }},
 )(SurfaceRouteBase);
 
