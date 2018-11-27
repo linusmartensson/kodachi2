@@ -11,6 +11,9 @@ module.exports = (app) => {
     r.get("/data/:target", async (ctx, next) => {
         ctx.response.body = await app.listApi.fetch_list(ctx, ctx.params.target, ctx.params);
     });
+    r.get("/state", async (ctx) => {
+        ctx.body = await app.sessionApi.buildSession(ctx);
+    });
 
     // Handle tasks
     r.use("/task", require("../router/task")(app).routes());
