@@ -2,14 +2,14 @@
 
 import {createActions, handleActions} from 'redux-actions'
 import fetch from 'isomorphic-fetch'
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
 var _ = require('lodash');
 
-var patcher = require('jsondiffpatch').create({
+/*var patcher = require('jsondiffpatch').create({
     objectHash: (obj) => {
         return obj.id || obj._id;
     }
-});
+});*/
 var host = 'https://'+window.location.hostname+':3001/';
 
 var initialState = {session:{}, ui:{selectors:{}, editors:{}}, currentTask:{}, lists:{}};
@@ -19,7 +19,7 @@ export const actions = createActions({
     APP: {
         REFRESH: ()=>({}),
         SERVER: {
-            UPDATE: diff => ({ diff }),
+            /*UPDATE: diff => ({ diff }),*/
             STATE: state => ({ state }),
             START: () => {
                 return async dispatch => {
@@ -122,6 +122,7 @@ export const actions = createActions({
 });
 
 function getTask(state, id){
+    if(!state || !state.session || !state.session.tasks) return undefined;
     for(let i of state.session.tasks){
         if(i.id === id) return i;
     }
@@ -132,7 +133,7 @@ export const reducer = handleActions({
     APP: {
         REFRESH: (state)=>({...state}),
         SERVER: {
-            UPDATE: (state, action) => {
+            /*UPDATE: (state, action) => {
                 let v = _.cloneDeep(state);  
                 patcher.patch(v.session, action.payload.diff)
                 
@@ -157,7 +158,7 @@ export const reducer = handleActions({
                 }
                 
                 return v;
-            },
+            },*/
             STATE: (state, action) => {
                 let v = _.cloneDeep(state);
                 v.session = action.payload.state;
