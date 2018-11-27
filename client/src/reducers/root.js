@@ -23,7 +23,12 @@ export const actions = createActions({
             STATE: state => ({ state }),
             START: () => {
                 return async dispatch => {
-                    fetch(host+'session', {credentials:'include'})
+                    fetch(host+'state', {credentials:'include'})
+                        .then(r=>{return r.json()})
+                        .then(data=>{
+                            dispatch(actions.app.server.state(data))
+                        });
+                    /*fetch(host+'session', {credentials:'include'})
                         .then(r=>{return r.text()})
                         .then(t=>{
                             var sio = io(host+"?token="+t);
@@ -33,7 +38,7 @@ export const actions = createActions({
                             sio.on('update', (data) => {
                                 dispatch(actions.app.server.update(data));
                             });
-                        });
+                        });*/
                 }
             }
         },
@@ -69,8 +74,10 @@ export const actions = createActions({
                     return dispatch => {
                         dispatch(actions.app.task.start.request());
                         fetch(host+'task/start_task/'+task,
-                            {credentials:'include', method:'POST', body:new URLSearchParams(data)}).then(()=>{
+                            {credentials:'include', method:'POST', body:new URLSearchParams(data)}).then(r=>{return r.json()}).then((data)=>{
+                                dispatch(actions.app.server.state(data.state));
                                 dispatch(actions.app.task.start.success())   
+                                dispatch(actions.app.task.show(data.response))
                             });
                     }
                 }
@@ -83,13 +90,18 @@ export const actions = createActions({
                     return dispatch => {
                         var q = setTimeout(()=>{dispatch(actions.app.task.respond.request())},200);
                         fetch(host+'task/respond_task/'+task.id,
-                            {credentials:'include', method:'POST', body:form}).then(r=>{return r.text()}).then((data)=>{
+                            {credentials:'include', method:'POST', body:form}).then(r=>{return r.json()}).then((data)=>{
                                 clearTimeout(q);
-                                if(data !== 'OK'){
-                                    dispatch(actions.app.task.error.show(data));
+                                if(data.response.result !== 'OK'){
+                                    if(data.response.message) 
+                                        dispatch(actions.app.task.error.show(data.response.message));
                                     setTimeout(()=>{dispatch(actions.app.task.error.hide())}, 10000);
                                 }
+                                dispatch(actions.app.server.state(data.state));
                                 dispatch(actions.app.task.respond.success());
+                                
+                                if(data.response.id)
+                                    dispatch(actions.app.task.show(data.response.id))
                             });
                     }
                 }
@@ -147,7 +159,30 @@ export const reducer = handleActions({
                 return v;
             },
             STATE: (state, action) => {
-                return {...state, session:action.payload.state};
+                let v = _.cloneDeep(state);
+                v.session = action.payload.state;
+
+                //Close any old or deleted currentTask
+                let found = false;
+                if(v.currentTask && v.currentTask.task) for(let m of v.session.tasks) {
+                    if(m.result === 'WAIT_RESPONSE' && m.id === v.currentTask.task.id){
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found){
+                    v.currentTask = undefined;
+                }
+                
+                for(let m of v.session.tasks){
+                    //Open any updated task
+                    if(m.result === 'WAIT_RESPONSE' && m.updated){
+                        let w = _.cloneDeep(m);
+                        return {...v, currentTask:{task:w}};
+                    }
+                }
+
+                return v;
             }
         },
         LIST: {

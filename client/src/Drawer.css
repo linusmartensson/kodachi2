@@ -94,7 +94,7 @@
  display:block !important;
  width:100%;
 }
-.Drawer .Tool input, .Pages .StoredPage a, .Externbox a {
+.Drawer .Tool input, .Drawer .Taskbox a, .Pages .StoredPage a, .Externbox a {
  background:none;
  border:0px;
  margin:0;
