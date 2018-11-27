@@ -12,7 +12,7 @@
 
 }
 
-.TaskPopup{
+.-TaskPopup{
     position:fixed;
     left:0;
     top:0;
@@ -28,7 +28,7 @@
 }
 .TaskPopup-item{
     display:block;
-    position:absolute;
+    position:-absolute;
     overflow-y:visible;
     overflow-x:visible;
     margin:0 auto;
@@ -39,6 +39,10 @@
     top:10%;
     bottom:10%;
     font-family:"OpenDyslexic";
+}
+
+.TaskPopup + .Surface {
+    display:none;
 }
 
 

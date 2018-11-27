@@ -50,10 +50,10 @@ class Workspace extends Component {
                             <Drawer/>
                             <div className="Workspace-inner">
                                 <div className="Workspace-head"><img src={headerImage} alt=""/></div>
+                                <TaskPopup />
                                 <Route path="/:type/:path" component={SurfaceRoute}/>
                                 <Route exact path="/" component={Redir} />
                             </div>
-                            <TaskPopup />
                             <InfoPopup />
                         </div>
                     </Router>
@@ -110,7 +110,6 @@ var SurfaceRouteBase = (props) => {
 
 const SurfaceRoute = connect(
     state => {
-        console.dir(state.session.profile);
         return {
         books:state.session.books,
         lists:state.lists,
