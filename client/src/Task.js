@@ -18,7 +18,7 @@ const TaskContainer = connect(
     state => {return {}},
     dispatch => {
         return {onTaskClick: (task, data)=>{
-            dispatch(actions.app.task.show(task.id, data))
+            dispatch(actions.app.task.showasync(task.id, data))
         }}
     }
 )(Task);

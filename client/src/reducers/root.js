@@ -2,6 +2,7 @@
 
 import {createActions, handleActions} from 'redux-actions'
 import fetch from 'isomorphic-fetch'
+import history from '../history'
 //import io from 'socket.io-client';
 var _ = require('lodash');
 
@@ -77,7 +78,7 @@ export const actions = createActions({
                             {credentials:'include', method:'POST', body:new URLSearchParams(data)}).then(r=>{return r.json()}).then((data)=>{
                                 dispatch(actions.app.server.state(data.state));
                                 dispatch(actions.app.task.start.success())   
-                                setTimeout(()=>{dispatch(actions.app.task.show(data.response))}, 10);
+                                setTimeout(()=>{dispatch(actions.app.task.showasync(data.response))}, 10);
                             });
                     }
                 }
@@ -101,9 +102,15 @@ export const actions = createActions({
                                 dispatch(actions.app.task.respond.success());
                                 
                                 if(data.response.id)
-                                    dispatch(actions.app.task.show(data.response.id))
+                                    dispatch(actions.app.task.showasync(data.response.id))
                             });
                     }
+                }
+            },
+            SHOWASYNC: (id) => {
+                return dispatch => {
+                   history.push('/task') 
+                   dispatch(actions.app.task.show(id));
                 }
             },
             SHOW: (id) => ({id}),

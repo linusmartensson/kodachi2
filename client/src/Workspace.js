@@ -83,6 +83,7 @@ var SurfaceRouteBase = (props) => {
             matches = books.filter(b => (b.path === match.params.path));
             id = match.params.path.split(".")[0];
             if(matches.length > 0) matches = matches[0].content; else matches = false;
+            setTimeout(()=>{props.close()}, 0);
             break;
         case 'list':
             const lists = props.lists || [];
@@ -94,15 +95,16 @@ var SurfaceRouteBase = (props) => {
                 matches = false;
                 setTimeout(()=>{props.tryFetch(match.params.path)},0);
             }
+            setTimeout(()=>{props.close()}, 0);
             break;
         case 'profile':
             matches = props.profile ? props.profile.content : false;
+            setTimeout(()=>{props.close()}, 0);
             break;
         default:
             matches = false;
     }
 
-    setTimeout(()=>{props.close()}, 0);
 
     if(matches)
         return <Surface id={id} pages={matches} />;
