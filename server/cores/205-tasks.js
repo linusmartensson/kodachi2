@@ -306,6 +306,7 @@ module.exports = async (app) => {
     }
     async function setupTask (ctx, inst, task) {
         let onSession = false;
+        let toSelf = false;
         for (const v of task.inputs) {
             if (v.onSession) {
                 onSession = v.onSession;
@@ -315,14 +316,23 @@ module.exports = async (app) => {
             const user = await app.userApi.getUser(inst.origin);
             if (!onSession && user) {
                 await addTaskToUser(inst);
+                if(inst.origin == await app.userApi.userId(ctx))
+                    toSelf = true;
             } else {
                 await addTaskToSession(inst);
+                if(inst.origin == await app.userApi.session(ctx))
+                    toSelf = true;
             }
         } else {
             await addTaskToRoles(inst, inst.handler_roles ? inst.handler_roles : task.handler_roles);
+
+            if (await app.userApi.hasAnyRole(await app.userApi.userId(ctx), inst.handler_roles ? inst.handler_roles : task.handler_roles)) {
+                toSelf = true;
+            }
         }
 
         await notifyTask(inst.id);
+        return toSelf;
     }
     // -----------------------------------
 
@@ -413,8 +423,8 @@ module.exports = async (app) => {
         }
         const inst = {task_name: task.task_name, id: app.uuid(), data: {private: {}, start_data}, next_tasks: [], origin, result: "WAIT_RESPONSE", response: {}};
 
-        setupTask(ctx, inst, task);
-        return true;
+        await setupTask(ctx, inst, task);
+        return inst.id;
     };
 
     async function trickleTask (ctx, inst, child_inst) {
@@ -510,11 +520,13 @@ module.exports = async (app) => {
                 cinsts.push({child_inst, child_task});
             }
             await updateTaskInstance(inst.id, inst);
+            let toSelf = false;
             for (const v of cinsts) {
-                await setupTask(ctx, v.child_inst, v.child_task);
+                if(await setupTask(ctx, v.child_inst, v.child_task))
+                    toSelf = toSelf ? toSelf : v.child_inst.id;
             }
             notifyTask(inst.id);
-            return inst.result;
+            return {result:inst.result, id:toSelf};
         }
         // Reached end of chain, so trickle the task handler upwards.
         return await trickleTask(ctx, inst);
@@ -528,7 +540,7 @@ module.exports = async (app) => {
         const inst = await updateTaskInstance(task_id);
 
         if (!inst || inst.result !== "WAIT_RESPONSE" || !await secureTask(ctx, task_id, inst)) {
-            return app.stringApi.parse("{task.error.noSuchTask}", await app.userApi.getLanguage(ctx));
+            return {result:'ERROR', message:app.stringApi.parse("{task.error.noSuchTask}", await app.userApi.getLanguage(ctx))};
         } // There is no matching task instance.
         inst.error = "no error message :(";
         console.log(`Found ${task_id}. Processing response!`);
@@ -555,7 +567,7 @@ module.exports = async (app) => {
             inst.result = "WAIT_RESPONSE";
             await updateTaskInstance(task_id, inst);
             console.log(`Task processing error: ${inst.error}`);
-            return app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx));
+            return {result:'ERROR', message:app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx))};
         }
 
         // Process the response
@@ -574,18 +586,17 @@ module.exports = async (app) => {
 
         switch (result) {
         case "OK":
-            result = await nextTask(ctx, inst, task);
-            return result;
+            return await nextTask(ctx, inst, task);
         case "RETRY":
             inst.result = "WAIT_RESPONSE";
             await updateTaskInstance(task_id, inst);
             notifyTask(task_id);
-            return app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx));
+            return {result:'ERROR', message:app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx))};
         case "FAIL":
         default:
             inst.next_tasks = [];
             await nextTask(ctx, inst, task);
-            return app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx));
+            return {result:'ERROR', message:app.stringApi.parse(inst.error, await app.userApi.getLanguage(ctx))};
         }
 
     };
