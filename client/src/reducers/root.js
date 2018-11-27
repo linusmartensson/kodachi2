@@ -78,6 +78,8 @@ export const actions = createActions({
                                 dispatch(actions.app.server.state(data.state));
                                 dispatch(actions.app.task.start.success())   
                                 dispatch(actions.app.task.show(data.response))
+                                console.dir(data.state);
+                                console.dir(data.response);
                             });
                     }
                 }
