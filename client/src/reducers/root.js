@@ -77,9 +77,7 @@ export const actions = createActions({
                             {credentials:'include', method:'POST', body:new URLSearchParams(data)}).then(r=>{return r.json()}).then((data)=>{
                                 dispatch(actions.app.server.state(data.state));
                                 dispatch(actions.app.task.start.success())   
-                                dispatch(actions.app.task.show(data.response))
-                                console.dir(data.state);
-                                console.dir(data.response);
+                                setTimeout(()=>{dispatch(actions.app.task.show(data.response))}, 10);
                             });
                     }
                 }
