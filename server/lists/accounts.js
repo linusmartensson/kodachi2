@@ -29,4 +29,13 @@ module.exports = (app) => {
         }
     );
 
+    app.listApi.build_list(
+        "members", 
+        "all_members", 
+        ["admin"], 
+        "MATCH (u:User) WHERE (u)-[:TICKET]-(:Event {id:{event}}) or (u)-[:TEAM_MEMBER]-(:WorkGroup)--(:Event {id:{event}}) return u",
+        ["u"],
+        {event:'inst.start_data.event_id'}, 
+        {event_list:true});
+
 };
