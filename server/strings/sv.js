@@ -469,8 +469,8 @@ module.exports = (app) => {
     s('task.checkin.title', 'Checka in besökare!')
     s('task.checkin.title.active', 'Fortsätt incheckningen')
 
-    s('list.auto.header.all_members', "Land\tFörnamn\tEfternamn\tPostnummer\tStad\tPersonnummer\tTelefonnummer\tAdresss\tEmail")
-    s('list.auto.row.all_members', "{u.country}\t{u.givenName}\t{u.lastName}\t{u.zipCode}\t{u.city}\t{u.ssn}\t{u.phone}\t{u.street}\t{u.email}")
+    s('list.auto.header.all_members', "Land;Förnamn;Efternamn;Postnummer;Stad;Personnummer;Telefonnummer;Adresss;Email")
+    s('list.auto.row.all_members', "{u.country};{u.givenName};{u.lastName};{u.zipCode};{u.city};{u.ssn};{u.phone};{u.street};{u.email}")
 
     s('list.auto.header.my_competition', "!Tävlingslistor ^_^\n Detta är alla deltagare i tävlingar du administrerar! ^.^\nKontakta dem via email eller telefon för att skicka ut information inför tävlingen! Notera att tävlingar utan deltagare inte visas!");
     s('list.auto.group.my_competition', "!{w.name}\n{q}/{w.participants} Deltagare");
