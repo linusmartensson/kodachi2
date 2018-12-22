@@ -1,0 +1,49 @@
+Bugg:
+Går inte att fylla i innehåll på sidor
+Task-chain misslyckas av samma anledning
+
+Prio 1:
+1. Skapa ett team som event-admin och ge det till 3e part
+2. Skapa ett team med paxxade platser som inte dyker upp i ansökningslistan
+3. Gruppledare ska kunna lägga till gruppmedlemmar
+4. Ev. ändringar av ordning och innehåll i formulär enl spec
+5. Stöd för köp av matkuponger på hemsidan - uthämtn i samband med incheck (ej prissatt ännu)
+
+Prio 2:
+1. Profilsida med stöd för redigering av användaruppgifter
+2. Verifiering av sidlayout innan en grupp/aktivitetansökan skickas in
+3. Ny sidlayout för aktiviteter med bild bredvid text
+4. Vid sovsalsbokning - välja salstyp eller område
+5. Ta bort val för tröjor baserat på aktivitetstyp - Korttidsaktiviteter ska inte få tröjor, minst 1 dag & alla team ska alltid få
+6. Möjlighet att redigera en ansökan innan godkännande
+7. Tillgång till ansökningsinnehåll (för t.ex. artist alley) efter godkännande av ansökan
+8. Kopplat till formulär 7, ta bort budgetöversikt & lägg in kvittolista
+9. Generellt kompaktare sidlayout
+
+(Prio 3) Formulär & Listor:
+1. Omformulera Påbörja ansökan-menyvalen till tydligare texter (enl dokument)
+2. Besökarorienterat syfte med team i teamansökan - vad gör teamet? - Ska synas vid publik teaminfo
+3. Separat ansökningstext för ansökningssidan i "jobba på konventet" + kravspec till admin/ansökningsmottagare
+4. Förtydligande att antal medlemmar inkluderar ego
+5. Arbetsdagar för team som kryssrutor istället
+6. Max antal tecken i ansökningstext för besökarorienterad info
+7. Hantera budgetinfo som textfält
+8. Under "Mitt team" - Visa ansökningtext
+9. Ändra format på mitt team så att det är mer kompakt
+10.Se uppladdade kvitton för alla/individ
+11.Tydligare aktivitetstyp
+12.Ta bort tid/dag för event - låt det vara i beskrivning & via mailkonversation
+13.Separat ansökningstext för aktivitet med kravspec till admin/ansökningsmottagare
+14.Tydligare val av butik/artistalley på ansökning för butiker
+15.Vid ansökning till team - kategoriindelning
+
+Prio 4:
+1. Textformateringsguide på hemsidan (ink. bilder)
+2. Markering av felfält när formulär inte kan skickas in
+3. Fixa formulärutseende på mobillayout
+4. Information om tävlingsdeltagande för besökare
+5. Crewbadges som är personliga istället för aktivitetsbundna
+6. Tydligare menygruppering enl kategorier
+7. Expandera/Minimera menyer - öppen som standard (local storage?)
+
+
