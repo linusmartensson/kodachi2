@@ -2,7 +2,6 @@
 
 import {createActions, handleActions} from 'redux-actions'
 import {combineReducers} from 'redux'
-import reduceReducers from 'reduce-reducers'
 import { connectRouter, push } from 'connected-react-router'
 import fetch from 'isomorphic-fetch'
 //import io from 'socket.io-client';

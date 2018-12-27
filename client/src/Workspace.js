@@ -6,7 +6,6 @@ import Surface from './Surface'
 import Drawer from './Drawer'
 
 import {Route, Redirect} from 'react-router-dom';
-import { withRouter } from 'react-router-dom'
 
 import {Provider} from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
