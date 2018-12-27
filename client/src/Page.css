@@ -1,22 +1,5 @@
 
 .Page{
     margin:0px auto;
-    padding:2px 0;
-    -background:rgba(225,255,240,0.75);
-    -border-top:4px solid rgba(50,50,50,0.9);
-    -border-left:0;
-    -border-right:0;
-    -box-shadow:0 5px 30px 1px rgba(0,0,0,0.5);
-    -border-radius:5px;
-    
-}
-
-.Page + .Page {
-    border-top:0;
-}
-.Page:last-child{
-    -border-bottom:4px solid rgba(50,50,50,0.9);
-}
-.Panel .Page:last-child{
-    border:0;
+    padding:1px 0;
 }

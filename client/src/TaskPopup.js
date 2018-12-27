@@ -84,7 +84,7 @@ class TaskPopup extends Component{
 
             pages[pages.length-1].tiers = pages[pages.length-1].tiers.concat([
                 {id:v.field, panels:[
-                    {id:0, border:true, width:1, content:[
+                    {id:0, border:false, width:1, content:[
                         v.name.length>0?{
                             id:0,
                             type:'caption',
