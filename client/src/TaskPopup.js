@@ -59,10 +59,10 @@ class TaskPopup extends Component{
     render(){
         let hasTask = false;
         let task = null;
-        if(this.props.tasks == undefined) return null;
+        if(this.props.tasks === undefined) return null;
 
-        for(var v of this.props.tasks){
-            if(v.id == this.props.task){
+        for(let v of this.props.tasks){
+            if(v.id === this.props.task){
                 hasTask = true;
                 task = v;
             }
@@ -134,9 +134,9 @@ const TaskPopupContainer = connect(
                 },
                 submit:(task, tasks, node, cancel) => {
                     let hasTask = false;
-                    if(tasks == undefined) return;
-                    for(var v of tasks){
-                        if(v.id == task){
+                    if(tasks === undefined) return;
+                    for(let v of tasks){
+                        if(v.id === task){
                             hasTask = true;
                             task = v;
                         }

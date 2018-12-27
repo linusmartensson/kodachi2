@@ -150,7 +150,7 @@ class Panel extends Component {
                 } else return <p className="PanelText" key={elem.id}>{elem.text}</p>;
             case 'speechbubble': return <SpeechBubble position={elem.position} key={elem.id} text={elem.text} speaker={elem.image} />;
             case 'image': return <img className="Image" key={elem.id} alt={elem.text} src={elem.image} />;
-            case 'editbutton': 
+            case 'editbutton': // eslint-disable-next-line
                 return (elem.data.disabled===undefined||elem.data.disabled=="false")&&(elem.data.enabled===undefined||elem.data.enabled=="true")?(<Tool key={elem.id} task={elem.task} name={elem.text} data={elem.data} />):null;
             case 'button': return <input onKeyPress={ne} className="PanelButton" type="submit" onClick={(e)=>{e.target.clicked=true;}} key={elem.id} name={elem.id} value={elem.text} />
             case 'input_password': return <input onKeyPress={ne} className="PanelInput" type="password" key={elem.id} name={elem.id} defaultValue={elem.text} />
