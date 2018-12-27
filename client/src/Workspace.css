@@ -18,7 +18,7 @@
 }
 
 .Root{
-	background: linear-gradient(#211574 0%, #c3305d 100%);
+	background: linear-gradient(#931521 0%, #f3bd30 100%);
     background-attachment:fixed;
     margin:0;
     padding:0;
@@ -41,8 +41,8 @@
     transform:rotate(-3deg);
 }
 .Workspace-head img{
-    width:100%;
-    padding-bottom:1em;
+    width:75%;
+    padding-bottom:0.2em;
 
 }
 .Workspace-inner{

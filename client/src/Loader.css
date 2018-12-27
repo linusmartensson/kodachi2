@@ -6,9 +6,9 @@
     background-image:url("/img/Interwind.svg");
     background-size:25%;
     background-repeat:no-repeat;
-    background-position:center;
+    background-position:bottom right;
     
-    background-color:rgba(0,0,0,0.75);
+    background-color:rgba(0,0,0,0);
 
     
 }

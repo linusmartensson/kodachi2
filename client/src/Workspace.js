@@ -39,7 +39,7 @@ store.dispatch(actions.app.server.start());
 class Workspace extends Component {
     render() {
 
-        var backgroundConfig = {"backgroundImage":"url('/img/bg2018.png')"};
+        var backgroundConfig = {"backgroundImage":"url('/img/bg2019.png')"};
         var headerImage = "/img/kodachicon_new.png";
 
 
