@@ -115,9 +115,9 @@ var SurfaceRouteBase = (props) => {
 const SurfaceRoute = connect(
     state => {
         return {
-        books:state.session.books,
-        lists:state.lists,
-        profile:state.session.profile
+        books:state.app.session.books,
+        lists:state.app.lists,
+        profile:state.app.session.profile
     }},
     dispatch => {return {
         tryFetch: (q) => {dispatch(actions.app.list.show(q, history))}

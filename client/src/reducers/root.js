@@ -1,6 +1,7 @@
 //import {combineReducers} from 'redux';  
 
 import {createActions, handleActions} from 'redux-actions'
+import {combineReducers} from 'redux'
 import fetch from 'isomorphic-fetch'
 import history from '../history'
 //import io from 'socket.io-client';
@@ -128,15 +129,7 @@ export const actions = createActions({
     }
 });
 
-function getTask(state, id){
-    if(!state || !state.session || !state.session.tasks) return undefined;
-    for(let i of state.session.tasks){
-        if(i.id === id) return i;
-    }
-    return undefined;
-}
-
-export const reducer = handleActions({
+export const appReducer = handleActions({
     APP: {
         REFRESH: (state)=>({...state}),
         SERVER: {
@@ -257,3 +250,4 @@ export const reducer = handleActions({
     }
 }, initialState);
 
+export const reducer = combineReducers({app:appReducer})

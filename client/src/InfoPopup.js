@@ -15,4 +15,4 @@ class InfoPopup extends Component {
   }
 }
 
-export default connect(state => ({msg: state.currentMessage}),dispatch=>({}))(InfoPopup);
+export default connect(state => ({msg: state.app.currentMessage}),dispatch=>({}))(InfoPopup);

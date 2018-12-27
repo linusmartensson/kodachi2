@@ -31,7 +31,7 @@ class Pages extends Component {
 
 const PagesContainer = connect(
         state => {
-            return {books: state.session.books?state.session.books:[]};
+            return {books: state.app.session.books?state.app.session.books:[]};
         },
         dispatch => {
             return {}

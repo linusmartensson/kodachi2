@@ -38,7 +38,7 @@ class Editor extends Component {
 const EditorContainer = connect(
     state => {
     
-        return {editors: state.ui.editors};
+        return {editors: state.app.ui.editors};
     },
     dispatch => {
         return {
@@ -115,7 +115,7 @@ class Selector extends Component {
 const SelectorContainer = connect(
     state => {
     
-        return {selectors: state.ui.selectors};
+        return {selectors: state.app.ui.selectors};
     },
     dispatch => {
         return {
@@ -199,7 +199,7 @@ class Panel extends Component {
 }
 
 const PanelContainer = connect(
-    state => {return {tools:state.session?state.session.tools:{}}},
+    state => {return {tools:state.app.session?state.app.session.tools:{}}},
     dispatch => {
         return {}
     }

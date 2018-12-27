@@ -15,7 +15,7 @@ class Loader extends Component {
 
 const LoaderContainer = connect(
         state => {
-            return {loading:state.isFetching};
+            return {loading:state.app.isFetching};
         },
         dispatch => {
             return {};

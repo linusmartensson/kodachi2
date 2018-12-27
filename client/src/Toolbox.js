@@ -75,7 +75,7 @@ class Toolbox extends Component {
 
 const ToolboxContainer = connect(
         state => {
-            return {tools: state.session.tools?state.session.tools:[], tasks: state.session.tasks?state.session.tasks:[], lists: state.session.lists?state.session.lists:[], currentTask: state.currentTask}
+            return {tools: state.app.session.tools?state.app.session.tools:[], tasks: state.app.session.tasks?state.app.session.tasks:[], lists: state.app.session.lists?state.app.session.lists:[]}
         },
         dispatch => {
             return {};
