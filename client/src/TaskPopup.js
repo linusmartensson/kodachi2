@@ -16,7 +16,7 @@ class TaskPopup extends Component{
         this.setWrapperRef = this.setWrapperRef.bind(this);
         this.setFormRef = this.setFormRef.bind(this);
         this.setInnerRef = this.setInnerRef.bind(this);
-        this.handleClickOutside = this.handleClickOutside.bind(this);
+        //this.handleClickOutside = this.handleClickOutside.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -38,31 +38,42 @@ class TaskPopup extends Component{
     componentWillUnmount() {
         //document.removeEventListener('mousedown', this.handleClickOutside);
     }
-    handleClickOutside(event) {
+    /*handleClickOutside(event) {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
             if(this.innerRef && event.clientX > this.innerRef.getBoundingClientRect().right) return;
             var t = this.props.task.type.inputs; 
             for(var i of t){
                 if(i.autocancel){
-                    this.props.submit(this.props.task, this.formRef, true);
+                    this.props.submit(this.props.task, this.props.tasks, this.formRef, true);
                     return;
                 }
             }
             this.props.close();
         }
-    }
+    }*/
     handleSubmit(event){
         event.preventDefault();
-        this.props.submit(this.props.task, this.formRef, false);
+        this.props.submit(this.props.task, this.props.tasks, this.formRef, false);
     }
 
     render(){
-        if(!this.props.hasTask){
+        let hasTask = false;
+        let task = null;
+        if(this.props.tasks == undefined) return null;
+
+        for(var v of this.props.tasks){
+            if(v.id == this.props.task){
+                hasTask = true;
+                task = v;
+            }
+        }
+
+        if(!hasTask){
             return null;
         }
         var pages = [];
-        pages = pages.concat(_.cloneDeep(this.props.task.description));
-        for(var v of this.props.task.type.inputs){
+        pages = pages.concat(_.cloneDeep(task.description));
+        for(var v of task.type.inputs){
 
             if(v.redirect) window.location = v.redirect;
            
@@ -83,7 +94,7 @@ class TaskPopup extends Component{
                             id:v.field,
                             type:"input_"+v.type,
                             content:v,
-                            text:this.props.task.data[v.field]?this.props.task.data[v.field]:this.props.task.data.start_data[v.field]?this.props.task.data.start_data[v.field]:undefined
+                            text:task.data[v.field]?task.data[v.field]:task.data.start_data[v.field]?task.data.start_data[v.field]:undefined
                         }
                     ]}
                 ]}
@@ -91,7 +102,7 @@ class TaskPopup extends Component{
         }
 
         var buttons = {id:'_buttons', panels:[]};
-        for(var vv of this.props.task.type.inputs){
+        for(var vv of task.type.inputs){
             if(!vv.field || vv.type !== 'button') continue;
             buttons.panels.push({
                 id:vv.field,
@@ -103,7 +114,7 @@ class TaskPopup extends Component{
         if(buttons.panels.length > 0) pages.push({id:"_buttons", tiers:[buttons]});
         return (<div className="TaskPopup"><div ref={this.setInnerRef} className="TaskPopup-inner" ><form ref={this.setFormRef} onSubmit={this.handleSubmit}>
                 <div className="TaskPopup-item" ref={this.setWrapperRef}>
-                    <Surface key={this.props.id} pages={pages} />
+                    <Surface key={this.props.task} pages={pages} />
                 </div></form>
             </div></div>);
     }
@@ -111,12 +122,9 @@ class TaskPopup extends Component{
 
 const TaskPopupContainer = connect(
         state => {
-            var hasTask = !!state.currentTask && !!state.currentTask.task;
 
             return {
-                hasTask:hasTask,
-                task:hasTask?state.currentTask.task:null,
-                id:hasTask?state.currentTask.task.id:0,
+                tasks:state.app.session.tasks,
             }
         },
         dispatch => {
@@ -124,7 +132,16 @@ const TaskPopupContainer = connect(
                 close:() => {
                     dispatch(actions.app.task.close())
                 },
-                submit:(task, node, cancel) => {
+                submit:(task, tasks, node, cancel) => {
+                    let hasTask = false;
+                    if(tasks == undefined) return;
+                    for(var v of tasks){
+                        if(v.id == task){
+                            hasTask = true;
+                            task = v;
+                        }
+                    }
+                    if(!hasTask) return;
                     var q = new FormData();
                     var i = {};
                     for(var v of task.type.inputs){

@@ -2,8 +2,9 @@
 
 import {createActions, handleActions} from 'redux-actions'
 import {combineReducers} from 'redux'
+import reduceReducers from 'reduce-reducers'
+import { connectRouter, push } from 'connected-react-router'
 import fetch from 'isomorphic-fetch'
-import history from '../history'
 //import io from 'socket.io-client';
 var _ = require('lodash');
 
@@ -45,14 +46,14 @@ export const actions = createActions({
             }
         },
         LIST: {
-            SHOW: (list, history) => {
+            SHOW: (list) => {
                 return dispatch => {
                     dispatch(actions.app.list.start.request(list));
                     fetch(host+'data/'+list,{credentials:'include'})
                         .then(r=>{return r.json()})
                         .then(r=>{
                         dispatch(actions.app.list.load(list, r));
-                        history.push('/list/'+list);
+                        dispatch(push('/list/'+list));
                     });
                 }
             },
@@ -79,7 +80,7 @@ export const actions = createActions({
                             {credentials:'include', method:'POST', body:new URLSearchParams(data)}).then(r=>{return r.json()}).then((data)=>{
                                 dispatch(actions.app.server.state(data.state));
                                 dispatch(actions.app.task.start.success())   
-                                setTimeout(()=>{dispatch(actions.app.task.showasync(data.response))}, 10);
+                                dispatch(push('/task/'+data.response));
                             });
                     }
                 }
@@ -103,19 +104,11 @@ export const actions = createActions({
                                 dispatch(actions.app.task.respond.success());
                                 
                                 if(data.response.id)
-                                    dispatch(actions.app.task.showasync(data.response.id))
+                                    dispatch(push('/task/'+data.response.id));
                             });
                     }
                 }
-            },
-            SHOWASYNC: (id) => {
-                return dispatch => {
-                   history.push('/task') 
-                   dispatch(actions.app.task.show(id));
-                }
-            },
-            SHOW: (id) => ({id}),
-            CLOSE: () => ({}),
+            }
         },
         UI: {
             SELECTOR:{
@@ -222,14 +215,7 @@ export const appReducer = handleActions({
                 SUCCESS: (state, action) => ({...state, isFetching:false}),
                 FAILURE: (state, action) => ({...state, isFetching:false}),
                 DO: (state, action) => ({...state})
-            },
-            SHOW: (state, action) => {
-                var v = _.cloneDeep({task:getTask(state, action.payload.id)});
-                return {...state, currentTask: v}
-            },
-            CLOSE: (state, action) => ({
-                ...state, currentTask:undefined, ui:{editors:[], selectors:[]}
-            })
+            }
         },
         UI: {
             SELECTOR:{
@@ -250,4 +236,4 @@ export const appReducer = handleActions({
     }
 }, initialState);
 
-export const reducer = combineReducers({app:appReducer})
+export const reducer = (history) => combineReducers({app:appReducer, router:connectRouter(history)})

@@ -5,7 +5,8 @@ import React, { Component } from 'react';
 import Surface from './Surface'
 import Drawer from './Drawer'
 
-import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
+import {Route, Redirect} from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
 
 import {Provider} from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
@@ -23,13 +24,14 @@ import './Workspace.css'
 import './Print.css'
 import {connect} from 'react-redux'
 import InfoPopup from './InfoPopup';
+import {routerMiddleware, ConnectedRouter} from 'connected-react-router'
 
-const store = createStore(reducer, applyMiddleware(store => next => action => {
+const store = createStore(reducer(history), applyMiddleware(store => next => action => {
     var isfun = (obj) => {
         return typeof obj === 'function';
     };
     return next(isfun(action.payload)?action.payload:action);
-},thunkMiddleware, promiseMiddleware));
+},thunkMiddleware, promiseMiddleware, routerMiddleware(history)));
 require('es6-promise').polyfill()
 
 store.dispatch(actions.app.server.start());
@@ -45,18 +47,17 @@ class Workspace extends Component {
         return (
                 <Provider store={store}><div className="Root">
                     <Loader/>
-                    <Router history={history}>
+                    <ConnectedRouter history={history}>
                         <div className="Workspace" style={backgroundConfig}>
                             <Drawer/>
                             <div className="Workspace-inner">
                                 <div className="Workspace-head"><img src={headerImage} alt=""/></div>
-                                <TaskPopup />
                                 <Route path="/:type/:path" component={SurfaceRoute}/>
                                 <Route exact path="/" component={Redir} />
                             </div>
                             <InfoPopup />
                         </div>
-                    </Router>
+                    </ConnectedRouter>
                 </div></Provider>
                )
     }
@@ -83,7 +84,6 @@ var SurfaceRouteBase = (props) => {
             matches = books.filter(b => (b.path === match.params.path));
             id = match.params.path.split(".")[0];
             if(matches.length > 0) matches = matches[0].content; else matches = false;
-            setTimeout(()=>{props.close()}, 0);
             break;
         case 'list':
             const lists = props.lists || [];
@@ -95,12 +95,12 @@ var SurfaceRouteBase = (props) => {
                 matches = false;
                 setTimeout(()=>{props.tryFetch(match.params.path)},0);
             }
-            setTimeout(()=>{props.close()}, 0);
             break;
         case 'profile':
             matches = props.profile ? props.profile.content : false;
-            setTimeout(()=>{props.close()}, 0);
             break;
+        case 'task':
+            return <TaskPopup task={match.params.path} /> 
         default:
             matches = false;
     }
@@ -120,8 +120,7 @@ const SurfaceRoute = connect(
         profile:state.app.session.profile
     }},
     dispatch => {return {
-        tryFetch: (q) => {dispatch(actions.app.list.show(q, history))}
-        ,close: () => {dispatch(actions.app.task.close())}
+        tryFetch: (q) => {dispatch(actions.app.list.show(q))}
     }},
 )(SurfaceRouteBase);
 
