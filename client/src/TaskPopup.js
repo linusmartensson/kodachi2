@@ -62,7 +62,7 @@ class TaskPopup extends Component{
         if(this.props.tasks === undefined) return null;
 
         for(let v of this.props.tasks){
-            if(v.id === this.props.task){
+            if(v.id === this.props.task && v.result == 'WAIT_RESPONSE'){
                 hasTask = true;
                 task = v;
             }
