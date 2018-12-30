@@ -200,7 +200,7 @@ module.exports = async (app) => {
         app.taskApi.okcancel().concat(
             {event_task: true},
             {field: "team", type: "dropdown", prepare: async (v, ctx, task) => {
-                const w = (await app.cypher("MATCH (:Event {id:{eventId}})<-[:PART_OF]-(a) WITH a, SIZE((a)<-[:TEAM_MEMBER]-(:User)) AS member_count WHERE member_count < toInt(a.size) RETURN a, member_count", {eventId: task.data.start_data.event_id})).records;
+                const w = (await app.cypher("MATCH (:Event {id:{eventId}})<-[:PART_OF]-(a) WITH a, SIZE((a)<-[:TEAM_MEMBER]-(:User)) AS member_count WHERE member_count+toInt((case exists(a.booked) when true then a.booked else 0 end)) < toInt(a.size) RETURN a, member_count", {eventId: task.data.start_data.event_id})).records;
                 v.values = [];
                 for (const r of w) {
                     const team = r.get("a").properties;
@@ -322,6 +322,7 @@ module.exports = async (app) => {
             {field: "team_name", type: "text"},
             {field: "team_description", type: "editor"},
             {field: "team_size", type: "number"},
+            {field: "team_booked", type: "number"},
             {field: "team_image", type: "image"},
             {field: "team_schedule", type: "staticselect", translate: true, values: ["wed", "thu", "fri", "sat", "sun"]},
             // early: 06-08, morning: 08-10, day: 10-14, afternoon: 14-18, evening: 18-23, night:23-03, until_sunrise:03-06
@@ -335,6 +336,7 @@ module.exports = async (app) => {
             q.name = inst.response.team_name;
             q.desc = inst.response.team_description;
             q.size = inst.response.team_size;
+            q.booked = inst.response.team_booked;
             q.image = inst.response.team_image;
             q.image = await app.utils.upload(q.image);
             q.schedule = inst.response.team_schedule;
@@ -356,6 +358,7 @@ module.exports = async (app) => {
             {field: "act_format", type: "dropdown", values: ["competition", "activity"]},
             {field: "act_description", type: "editor"},
             {field: "act_size", type: "number"},
+            {field: "act_booked", type: "number"},
             {field: "act_image", type: "image"},
             {field: "act_available_days", type: "staticselect", translate: true, values: ["wed", "thu", "fri", "sat", "sun"]},
             // early: 06-08, morning: 08-10, day: 10-14, afternoon: 14-18, evening: 18-23, night:23-03, until_sunrise:03-06
@@ -371,6 +374,7 @@ module.exports = async (app) => {
             q.name = inst.response.act_name;
             q.desc = inst.response.act_description;
             q.size = inst.response.act_size;
+            q.booked = inst.response.act_booked;
             q.image = inst.response.act_image;
             q.image = await app.utils.upload(q.image);
             q.schedule = inst.response.act_available_days;
@@ -394,6 +398,7 @@ module.exports = async (app) => {
             {field: "shop_name", type: "text"},
             {field: "shop_description", type: "editor"},
             {field: "shop_size", type: "number"}, // How many working?
+            {field: "shop_booked", type: "number"},
             {field: "shop_image", type: "image"},
             {field: "shop_tables", type: "number"}, // How large?
             {field: "shop_available_days", type: "staticselect", translate: true, values: ["thu", "fri", "sat", "sun"]}
@@ -404,6 +409,7 @@ module.exports = async (app) => {
             q.name = inst.response.shop_name;
             q.desc = inst.response.shop_description;
             q.size = inst.response.shop_size;
+            q.booked = inst.response.shop_booked;
             q.image = inst.response.shop_image;
             q.image = await app.utils.upload(q.image);
             q.tables = inst.response.shop_tables;

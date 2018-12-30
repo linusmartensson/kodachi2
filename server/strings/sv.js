@@ -148,6 +148,13 @@ module.exports = (app) => {
     s("input.team_open.name", "När har ni öppet?");
     s("input.team_schedule.desc", "Vi fortsätter! Nu behöver vi ha koll på vilka dagar ditt team kommer att vara aktivt för att bestämma oss för hur mycket resurser vi ska prioritera.");
     s("input.team_schedule.name", "Vilka dagar jobbar teamet?");
+    s("input.team_booked.name", "", true);
+    s("input.team_booked.desc", "Om några av dina platser är förbokade, fyll i antalet förbokade platser nedan, så dyker dessa platserna inte upp på ansökningssidan.");
+    s("input.act_booked.name", "", true);
+    s("input.act_booked.desc", "Om några av dina platser är förbokade, fyll i antalet förbokade platser nedan, så dyker dessa platserna inte upp på ansökningssidan.");
+    s("input.shop_booked.name", "", true);
+    s("input.shop_booked.desc", "Om några av dina platser är förbokade, fyll i antalet förbokade platser nedan, så dyker dessa platserna inte upp på ansökningssidan.");
+
     s("input.team_size.desc", "Vi behöver ha reda på hur många som kommer att vara med i ditt team, inklusive dig själv!\n#\nDetta påverkar vår budget, en extra team-medlem som närvarar alla fem dagar kostar mellan 650 och 1000kr!\n_\nFundera genom teamets behov, strama åt lite, och sätt en gräns du är nöjd med, så försöker vi lösa det!");
     s("input.team_size.name", "Hur många ska vara med i ditt team?");
     s("input.tickets.name", "Hur många biljetter vill du köpa?");
