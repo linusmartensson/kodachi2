@@ -10,10 +10,25 @@ module.exports = async (app) => {
                 return "FAIL";
             }
 
-            //Can't delete manager
+            //Remove manager roles
             const team2 = await app.cypher("MATCH (u:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: inst.data.start_data.user, team: inst.data.start_data.team});
             if (team2.records && team2.records.length > 0) {
-                return "FAIL";
+
+                //Note: we only check for at least 2 managers on the client.
+                //If a team deletes all its managers by bypassing the client-side hiding of the button, they are stupid
+
+                if (inst.data.start_data.user === inst.origin) {
+                    await app.roleApi.addAchievement(inst.origin, "escaping_manager", 1, app.userApi.getActiveEvent(ctx), 1, 0);
+                }
+
+                //Remove the team manager role
+                await app.roleApi.removeRole(inst.data.start_data.user, `manager.${inst.data.start_data.team}`, 1000);
+
+                const team2 = await app.cypher("MATCH (u:User {id:{user}})-[:HAS_ROLE]->(:Role)<-[:MANAGED_BY]-(w:WorkGroup)--(e:Event {id:{event}}) return u", {user:inst.data.start_data.user, event:inst.data.start_data.event_id});
+                if(!team2.records || team2.records.length < 1) {
+                    //If this user no longer manages any team, remove the event manager role
+                    await app.roleApi.removeRole(inst.data.start_data.user, `manager.${inst.data.start_data.event_id}`, 1000);
+                }
             }
 
             await app.roleApi.removeRole(inst.data.start_data.user, `team_member.${inst.data.start_data.team}`, 3900);
@@ -236,6 +251,29 @@ module.exports = async (app) => {
             return "OK";
         }, async (inst) => "OK"
     );
+
+    app.taskApi.create_task("activity", "add_team_member", [], [], [
+        {event_task: true, hide:true},
+        {field: "email_or_ssn", type: "text"},
+        {field: "sleep_at_event", type: "bool"},
+        {field: "can_work_wednesday", type: "bool"},
+        {field: "can_cleanup_sunday", type: "bool"},
+        {field: "tshirt", type: "dropdown", values: ["S", "M", "L", "XL", "XXL"]}
+    ].concat(app.taskApi.okcancel()), async (inst, ctx) => {
+        if(inst.response.cancel) return "OK";
+        
+        const user = await app.userApi.findAccount({any: d});
+        const q = inst.response;
+        q.id = user.id;
+        q.team = inst.data.start_data.team;
+
+        await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}}]->(t)", q);
+        await app.roleApi.addRole(inst.origin, `team_member.${inst.data.start_data.event_id}`, 3000);
+        await app.roleApi.addRole(inst.origin, `team_member.${q.team}`);
+        await app.roleApi.addAchievement(q.id, "joined_a_team", 1, app.userApi.getActiveEvent(ctx), 1, 10);
+
+        return 'OK';
+    });
 
     app.taskApi.create_task("activity", "self_application", [], [], [
         {event_task: true},
