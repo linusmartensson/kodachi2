@@ -328,7 +328,6 @@ module.exports = async (app) => {
             // early: 06-08, morning: 08-10, day: 10-14, afternoon: 14-18, evening: 18-23, night:23-03, until_sunrise:03-06
             {field: "team_open", type: "staticselect", translate: true, values: ["early", "morning", "day", "afternoon", "evening", "night", "until_sunrise"]},
             {field: "team_budget", type: "number"},
-            {field: "team_needs_uniform", type: "bool"}
         ),
         async (inst, ctx) => {
             const q = {};
@@ -342,7 +341,7 @@ module.exports = async (app) => {
             q.schedule = inst.response.team_schedule;
             q.avail_times = inst.response.team_open;
             q.budget = inst.response.team_budget;
-            q.uniform = inst.response.team_needs_uniform;
+            q.uniform = true;
             await app.roleApi.addAchievement(inst.origin, "i_made_the_best_application", 1, app.userApi.getActiveEvent(ctx), 1, 10);
             inst.data.application = q;
             inst.next_tasks.push("review_team");
@@ -414,6 +413,7 @@ module.exports = async (app) => {
             q.image = await app.utils.upload(q.image);
             q.tables = inst.response.shop_tables;
             q.schedule = inst.response.shop_available_days;
+            q.uniform = false;
             await app.roleApi.addAchievement(inst.origin, "i_made_the_best_application", 1, app.userApi.getActiveEvent(ctx), 1, 10);
             inst.data.application = q;
             if (q.type === "artist_alley") {
