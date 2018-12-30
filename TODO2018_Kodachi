@@ -1,24 +1,20 @@
-Bugg:
-DONE Går inte att fylla i innehåll på sidor
-DONE Task-chain misslyckas av samma anledning
-
 Prio 1:
-1. Skapa ett team som event-admin och ge det till 3e part
-2. Skapa ett team med paxxade platser som inte dyker upp i ansökningslistan
-3. Gruppledare ska kunna lägga till gruppmedlemmar
-4. Ev. ändringar av ordning och innehåll i formulär enl spec
-5. Stöd för köp av matkuponger på hemsidan - uthämtn i samband med incheck (ej prissatt ännu)
+G. Stöd för köp av matkuponger
+H. Lista matkuponger i incheck
 
 Prio 2:
+
 1. Profilsida med stöd för redigering av användaruppgifter
-2. Verifiering av sidlayout innan en grupp/aktivitetansökan skickas in
-3. Ny sidlayout för aktiviteter med bild bredvid text
+
+6. Möjlighet för admin att redigera en ansökan innan godkännande
+C. Activity admin decides if activities get tshirts - remove option
+
+2. Verifiering av sidlayout (inklusive bild) innan en grupp/butik/aktivitetansökan skickas in
+
 4. Vid sovsalsbokning - välja salstyp eller område
-5. Ta bort val för tröjor baserat på aktivitetstyp - Korttidsaktiviteter ska inte få tröjor, minst 1 dag & alla team ska alltid få
-6. Möjlighet att redigera en ansökan innan godkännande
+8. Kopplat till formulär P3.7, ta bort budgetöversikt & lägg in kvittolista
 7. Tillgång till ansökningsinnehåll (för t.ex. artist alley) efter godkännande av ansökan
-8. Kopplat till formulär 7, ta bort budgetöversikt & lägg in kvittolista
-9. Generellt kompaktare sidlayout
+9. Ta bort kodachi från registreringssidan som text-komponent, blir dålig på android.
 
 (Prio 3) Formulär & Listor:
 1. Omformulera Påbörja ansökan-menyvalen till tydligare texter (enl dokument)
@@ -40,10 +36,27 @@ Prio 2:
 Prio 4:
 1. Textformateringsguide på hemsidan (ink. bilder)
 2. Markering av felfält när formulär inte kan skickas in
-3. Fixa formulärutseende på mobillayout
 4. Information om tävlingsdeltagande för besökare
 5. Crewbadges som är personliga istället för aktivitetsbundna
 6. Tydligare menygruppering enl kategorier
 7. Expandera/Minimera menyer - öppen som standard (local storage?)
+8. Fult fel vid ny artikel med redan existerande namn
 
+Finished
+P1.4 REMOVED, see P3: 4. Ev. ändringar av ordning och innehåll i formulär enl spec
+P2.9 DONE Generellt kompaktare sidlayout
+B.1 DONE Går inte att fylla i innehåll på sidor
+B.2 DONE Task-chain misslyckas av samma anledning
+P1.F. ALREADY_IMPLEMENTED Se till att fulla team döljs i anmälning
+P1.E. KLAR, otestad: Se till att lediga platser i team är size - paxxade
+P1.C. KLAR, otestad: Lägg till medlem i team
+P1.D. KLAR, otestad: Föranmälda platser i team (paxxade-1 för varje add. Lediga platser enl ui = size-paxxade)
+P1.A. ALREADY_IMPLEMENTED via create application & self-accept: Skapa team som admin
+P1.B. ALREADY_IMPLEMENTED via promote/demote/remove member: Ge bort team till annan gruppledare
+P1.Q. KLAR: Skapa kodachicon2019 och dölj utdaterat innehåll
+P1.M. KLAR, untested: strings för team_booked, act_booked, shop_booked
+P2.3. REMOVED, blir inte snyggt: Ny sidlayout för aktiviteter med bild bredvid text
+P2.A. KLAR: Teams always get tshirts - remove option
+P2.B. KLAR: Shops never get tshirts - remove option
 
+P4.3. REMOVED, det verkar fungera nu: Fixa formulärutseende på mobillayout
