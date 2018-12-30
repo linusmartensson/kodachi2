@@ -252,7 +252,7 @@ module.exports = async (app) => {
         }, async (inst) => "OK"
     );
 
-    app.taskApi.create_task("activity", "add_team_member", [], [], [
+    app.taskApi.create_task("activity", "add_team_member", ["manager."], [], [
         {event_task: true, hide:true},
         {field: "email_or_ssn", type: "text"},
         {field: "sleep_at_event", type: "bool"},
