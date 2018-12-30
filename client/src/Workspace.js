@@ -65,7 +65,7 @@ class Workspace extends Component {
 var Redir = (props) => {
 
    if(props.location.pathname==="/"){
-       return <Redirect to="/book/kodachicon2018" />
+       return <Redirect to="/book/kodachicon2019" />
     
    }
    return null;
