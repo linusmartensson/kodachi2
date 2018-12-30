@@ -363,7 +363,7 @@ module.exports = async (app) => {
             {field: "act_available_days", type: "staticselect", translate: true, values: ["wed", "thu", "fri", "sat", "sun"]},
             // early: 06-08, morning: 08-10, day: 10-14, afternoon: 14-18, evening: 18-23, night:23-03, until_sunrise:03-06
             {field: "act_available_times", type: "staticselect", translate: true, values: ["early", "morning", "day", "afternoon", "evening", "night", "until_sunrise"]},
-            {field: "act_length", type: "dropdown", translate: true, values: ["short", "medium", "long", "half_day", "day"]},
+            {field: "act_length", type: "dropdown", translate: true, values: ["short", "medium", "long", "half_day", "full_day"]},
             {field: "act_budget", type: "number"},
             {field: "act_participants", type: "number"},
             {field: "act_needs_uniform", type: "bool"}

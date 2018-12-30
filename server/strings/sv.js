@@ -375,6 +375,7 @@ module.exports = (app) => {
     s("input.value.medium", "Mellan (30-60min)");
     s("input.value.long", "Lång (1-3timmar)");
     s("input.value.half_day", "Halvdag (3-6timmar)");
+    s("input.value.full_day", "Heldag (Längre!)");
     s("true", "Ja");
     s("false", "Nej");
 
