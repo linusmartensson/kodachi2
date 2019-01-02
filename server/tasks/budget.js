@@ -70,7 +70,7 @@ module.exports = async (app) => {
             inst.data.receipt.group = inst.response.group;
             inst.data.receipt.total = inst.response.total;
 
-            await app.cypher("MATCH (r:BudgetGroup {type:{group}})-->(e:Event {id:{event}}) CREATE (r)-[:CONTAINS]->(:Receipt {image:{image}, purchase:{purchase}, total:{total}, id:{id}}) SET r.total = toInt(r.total) + toInt({total})", {...inst.data.receipt, event: inst.data.event});
+            await app.cypher("MATCH (r:BudgetGroup {type:{group}})-->(e:Event {id:{event}}), (u:User {id:{userid}}) CREATE (r)-[:CONTAINS]->(:Receipt {image:{image}, purchase:{purchase}, total:{total}, id:{id}})-[:GOT_PAID]->(u) SET r.total = toInt(r.total) + toInt({total})", {...inst.data.receipt, userid:inst.data.user.id, event: inst.data.event});
 
             inst.next_tasks.push("accept_receipt");
             inst.next_tasks.push("pay_receipt");
