@@ -163,7 +163,7 @@ module.exports = async (app) => {
     app.taskApi.create_task(
         "activity", "join_staff",
         ["done_staff_test"], [],
-        app.taskApi.okcancel().concat({autocancel: true, event_task: true}, [{translate: true, field: "work_type", type: "dropdown", values: ["create_team", "create_activity", "create_shop", "work"]}]),
+        app.taskApi.okcancel().concat({autocancel: true, event_task: true}, [{translate: true, field: "work_type", type: "dropdown", values: ["work", "create_activity", "create_shop", "create_team"]}]),
         async (inst, ctx) => {
             inst.data.user = await app.userApi.getUser(await app.userApi.userId(ctx));
             const teams = await app.cypher("MATCH (:Event {id:{eventId}})<-[:PART_OF]-(w:WorkGroup) RETURN w", {eventId: inst.data.start_data.event_id});
