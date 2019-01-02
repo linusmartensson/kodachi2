@@ -326,7 +326,7 @@ module.exports = async (app) => {
             {field: "team_size", type: "number"},
             {field: "team_booked", type: "number"},
             {field: "team_image", type: "image"},
-            {field: "team_budget", type: "number"},
+            {field: "team_budget", type: "text"},
         ),
         async (inst, ctx) => {
             const q = {};
@@ -356,7 +356,7 @@ module.exports = async (app) => {
             {field: "act_size", type: "number"},
             {field: "act_booked", type: "number"},
             {field: "act_image", type: "image"},
-            {field: "act_budget", type: "number"},
+            {field: "act_budget", type: "text"},
         ),
         async (inst, ctx) => {
             const q = {};
