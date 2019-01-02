@@ -200,12 +200,14 @@ module.exports = async (app) => {
         app.taskApi.okcancel().concat(
             {event_task: true},
             {field: "team", type: "dropdown", prepare: async (v, ctx, task) => {
-                const w = (await app.cypher("MATCH (:Event {id:{eventId}})<-[:PART_OF]-(a) WITH a, SIZE((a)<-[:TEAM_MEMBER]-(:User)) AS member_count WHERE member_count+toInt((case exists(a.booked) when true then a.booked else 0 end)) < toInt(a.size) RETURN a, member_count", {eventId: task.data.start_data.event_id})).records;
+                const w = (await app.cypher("MATCH (:Event {id:{eventId}})<-[:PART_OF]-(a) WITH a, SIZE((a)<-[:TEAM_MEMBER]-(:User)) AS member_count WHERE member_count+toInt((case exists(a.booked) when true then a.booked else 0 end)) < toInt(a.size) RETURN a, member_count, toFloat(member_count) as count", {eventId: task.data.start_data.event_id})).records;
                 v.values = [];
                 for (const r of w) {
                     const team = r.get("a").properties;
-                    v.values.push({label: team.name, id: team.id, desc: team.desc});
+                    const mc = r.get("count");
+                    v.values.push({label: app.stringApi.get_string(team.type, await app.userApi.getLanguage(ctx)) +" - "+team.name+"("+(team.size - (team.booked>0?team.booked:0) - mc)+"/"+team.size+" platser)", id: team.id, desc: team.desc});
                 }
+                v.values.sort((a,b)=>{return a.label<b.label})
             }},
             {field: "app_description", type: "editor"},
             {field: "sleep_at_event", type: "bool"},
