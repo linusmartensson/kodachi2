@@ -3,35 +3,17 @@ G. Stöd för köp av matkuponger
 H. Lista matkuponger i incheck
 
 Prio 2:
-
 1. Profilsida med stöd för redigering av användaruppgifter
-
-6. Möjlighet för admin att redigera en ansökan innan godkännande
-C. Activity admin decides if activities get tshirts - remove option
-
 2. Verifiering av sidlayout (inklusive bild) innan en grupp/butik/aktivitetansökan skickas in
-
 4. Vid sovsalsbokning - välja salstyp eller område
-8. Kopplat till formulär P3.7, ta bort budgetöversikt & lägg in kvittolista
 7. Tillgång till ansökningsinnehåll (för t.ex. artist alley) efter godkännande av ansökan
-9. Ta bort kodachi från registreringssidan som text-komponent, blir dålig på android.
 
 (Prio 3) Formulär & Listor:
-1. Omformulera Påbörja ansökan-menyvalen till tydligare texter (enl dokument)
 2. Besökarorienterat syfte med team i teamansökan - vad gör teamet? - Ska synas vid publik teaminfo
-3. Separat ansökningstext för ansökningssidan i "jobba på konventet" + kravspec till admin/ansökningsmottagare
-4. Förtydligande att antal medlemmar inkluderar ego
-5. Arbetsdagar för team som kryssrutor istället
+3. Separat ansökningssidetext för ansökningssidan i "jobba på konventet" + kravspec till admin/ansökningsmottagare
 6. Max antal tecken i ansökningstext för besökarorienterad info
-7. Hantera budgetinfo som textfält
-8. Under "Mitt team" - Visa ansökningtext
-9. Ändra format på mitt team så att det är mer kompakt
-10.Se uppladdade kvitton för alla/individ
-11.Tydligare aktivitetstyp
-12.Ta bort tid/dag för event - låt det vara i beskrivning & via mailkonversation
-13.Separat ansökningstext för aktivitet med kravspec till admin/ansökningsmottagare
-14.Tydligare val av butik/artistalley på ansökning för butiker
-15.Vid ansökning till team - kategoriindelning
+8. Under "Mitt team" - Visa ansökningssidetext
+13.Separat ansökningstext för aktivitet med kravspec till admin/ansökningsmottagare (Requirements: ...)
 
 Prio 4:
 1. Textformateringsguide på hemsidan (ink. bilder)
@@ -58,5 +40,19 @@ P1.M. KLAR, untested: strings för team_booked, act_booked, shop_booked
 P2.3. REMOVED, blir inte snyggt: Ny sidlayout för aktiviteter med bild bredvid text
 P2.A. KLAR: Teams always get tshirts - remove option
 P2.B. KLAR: Shops never get tshirts - remove option
-
 P4.3. REMOVED, det verkar fungera nu: Fixa formulärutseende på mobillayout
+P3.5. SUPERCEEDED, tog bort fältet: Arbetsdagar för team som kryssrutor istället
+P3.1. KLAR, fast orkade inte titta i dokumentet: Omformulera Påbörja ansökan-menyvalen till tydligare texter (enl dokument)
+P3.4. KLAR: Förtydligande att antal medlemmar inkluderar ego
+P3.7. KLAR, otestad: Hantera budgetinfo som textfält
+P3.9. REMOVED, auto på ny kompaktare layout: Ändra format på mitt team så att det är mer kompakt
+P2.8. KLAR: Ta bort budgetöversikt
+P2.10. KLAR: Lägg in kvittolista
+P2.6. KLAR, men inte allt: Möjlighet för admin att redigera en ansökan innan godkännande
+P2.C. KLAR: Activity admin decides if activities get tshirts - remove option
+P2.9. KLAR: Ta bort kodachi från registreringssidan som text-komponent, blir dålig på android.
+P2.10. KINDA IMPLEMENTED: Se uppladdade kvitton för alla/individ
+P3.11. ?????: Tydligare aktivitetstyp
+P3.12. KLAR: Ta bort tid/dag för event - låt det vara i beskrivning & via mailkonversation
+P3.14. KLAR: Tydligare val av butik/artistalley på ansökning för butiker
+P3.15. KLAR: Vid ansökning till team - kategoriindelning
