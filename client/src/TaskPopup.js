@@ -1,6 +1,5 @@
 
 import React, { Component } from 'react';
-import './TaskPopup.css'
 
 import {connect} from 'react-redux'
 
@@ -112,11 +111,10 @@ class TaskPopup extends Component{
             });
         }
         if(buttons.panels.length > 0) pages.push({id:"_buttons", tiers:[buttons]});
-        return (<div className="TaskPopup"><div ref={this.setInnerRef} className="TaskPopup-inner" ><form ref={this.setFormRef} onSubmit={this.handleSubmit}>
-                <div className="TaskPopup-item" ref={this.setWrapperRef}>
+        return (<form ref={this.setFormRef} onSubmit={this.handleSubmit}>
                     <Surface key={this.props.task} pages={pages} />
-                </div></form>
-            </div></div>);
+                </form>
+            );
     }
 }
 

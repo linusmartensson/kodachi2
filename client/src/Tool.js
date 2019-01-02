@@ -8,9 +8,7 @@ import {connect} from 'react-redux'
 class Tool extends Component {
   render() {
     return (<div className="Tool">
-                <p>
-                    <input type="button" onClick={() => this.props.onTaskClick(this.props.task, this.props.data)} value={this.props.name} />
-                </p>
+                <input type="button" onClick={() => this.props.onTaskClick(this.props.task, this.props.data)} value={this.props.name} />
             </div>);
   }
 }

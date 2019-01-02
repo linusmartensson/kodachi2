@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './Drawer.css'
 import Toolbox from './Toolbox'
-import Pages from './Pages'
 import ShortProfile from './ShortProfile'
 class Drawer extends Component {
   constructor(props) {
@@ -13,7 +12,6 @@ class Drawer extends Component {
     return (<div className="Drawer">
                 <ShortProfile />
                 <Toolbox />
-                <Pages />
             </div>);
   }
 }

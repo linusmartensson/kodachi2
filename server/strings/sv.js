@@ -165,7 +165,7 @@ module.exports = (app) => {
     s("input.user.name", "Vilka användare berörs av detta?");
     s("input.value.afternoon", "På eftermiddagen, 14-18");
     s("input.value.create_activity", "Arrangera en aktivitet");
-    s("input.value.create_shop", "Driv en försäljningsyta");
+    s("input.value.create_shop", "Driva en försäljningsyta");
     s("input.value.create_team", "Arrangera ett team");
     s("input.value.day", "Dagtid, 10-14");
     s("input.value.early", "Före öppning, 06-08");
@@ -178,7 +178,7 @@ module.exports = (app) => {
     s("input.value.thu", "Torsdag");
     s("input.value.until_sunrise", "Fram till soluppgången, 03-06");
     s("input.value.wed", "Onsdag");
-    s("input.value.work", "Ansök till Kodachicrew");
+    s("input.value.work", "Ansöka till Kodachicrew");
     s("input.work_type.name", "Jag skulle vilja...");
     s("input.yes.desc", "", true);
     s("input.yes.name", "Ja!");
@@ -247,7 +247,7 @@ module.exports = (app) => {
     s("task.join_staff.title.active", "Din pågående ansökan");
     s("task.login.desc", "Fyll i din email (eller ditt personnummer) och ditt lösenord här så loggar vi in dig på direkten! ^_^");
     s("task.login.title.active", "Fortsätt logga in!");
-    s("task.logout.desc", "Är du säker på att du vill logga ut?");
+    s("task.logout.desc", "#Logga ut\nÄr du säker på att du vill logga ut?");
     s("task.manual_ssn_details.desc", "\nAlrajt! Vi kunde inte hämta dina uppgifter automagiskt, så det betyder att vi måste fylla i dem för hand, men det löser vi!\nNär du blir medlem i Kodachikai samlar vi in dehär uppgifterna för att kunna söka bidrag för våra evenemang och föreningsaktiviteter, så att det är rätt ifyllt är jätteviktigt för oss! För att allt ska bli bra så hoppas vi att ni är jättenoga!");
     s("task.manual_ssn_details.title.active", "Fortsätt skapa konto!");
     s("task.new_competitor.desc", "Wohoo! Det är en ny tävlande med i {competition.name}!");

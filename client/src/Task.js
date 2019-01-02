@@ -1,5 +1,4 @@
 import React from 'react';
-import './Toolbox.css'
 import {connect} from 'react-redux'
 
 import {actions} from './reducers/root.js'

@@ -4,25 +4,26 @@ H. Lista matkuponger i incheck
 
 Prio 2:
 1. Profilsida med stöd för redigering av användaruppgifter
-2. Verifiering av sidlayout (inklusive bild) innan en grupp/butik/aktivitetansökan skickas in
-4. Vid sovsalsbokning - välja salstyp eller område
 7. Tillgång till ansökningsinnehåll (för t.ex. artist alley) efter godkännande av ansökan
+
+4. Vid sovsalsbokning - välja salstyp eller område
+2. Verifiering av sidlayout (inklusive bild) innan en grupp/butik/aktivitetansökan skickas in
 
 (Prio 3) Formulär & Listor:
 2. Besökarorienterat syfte med team i teamansökan - vad gör teamet? - Ska synas vid publik teaminfo
-3. Separat ansökningssidetext för ansökningssidan i "jobba på konventet" + kravspec till admin/ansökningsmottagare
 6. Max antal tecken i ansökningstext för besökarorienterad info
 8. Under "Mitt team" - Visa ansökningssidetext
+3. Separat ansökningssidetext för ansökningssidan i "jobba på konventet" + kravspec till admin/ansökningsmottagare
 13.Separat ansökningstext för aktivitet med kravspec till admin/ansökningsmottagare (Requirements: ...)
 
 Prio 4:
 1. Textformateringsguide på hemsidan (ink. bilder)
-2. Markering av felfält när formulär inte kan skickas in
 4. Information om tävlingsdeltagande för besökare
 5. Crewbadges som är personliga istället för aktivitetsbundna
-6. Tydligare menygruppering enl kategorier
-7. Expandera/Minimera menyer - öppen som standard (local storage?)
+2. Markering av felfält när formulär inte kan skickas in
+
 8. Fult fel vid ny artikel med redan existerande namn
+
 
 Finished
 P1.4 REMOVED, see P3: 4. Ev. ändringar av ordning och innehåll i formulär enl spec
@@ -56,3 +57,5 @@ P3.11. ?????: Tydligare aktivitetstyp
 P3.12. KLAR: Ta bort tid/dag för event - låt det vara i beskrivning & via mailkonversation
 P3.14. KLAR: Tydligare val av butik/artistalley på ansökning för butiker
 P3.15. KLAR: Vid ansökning till team - kategoriindelning
+P4.6. KLAR: Tydligare menygruppering enl kategorier
+P4.7. KLAR: Expandera/Minimera menyer - öppen som standard (local storage?)

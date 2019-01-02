@@ -11,24 +11,18 @@
     .Drawer{
         /*PC*/
         display:table-cell;
-        width:220px;
-        border-right:4px solid rgba(50,50,50,0.9);
-    width:225px;
+        border-right:2px solid rgba(50,50,50,0.9);
+        width:225px;
         text-align:left;
     }
     .Drawer:after{
-
-    width:235px !important;
+        width:235px !important;
     }
     .Drawer .Tool input, .Pages a, .Drawer .Tool a {
-           text-align:left !important;
-           padding-left:20px !important;
-           margin:5px 0 !important;
+        text-align:left !important;
+        padding-left:20px !important;
+        margin:5px 0 !important;
     }
-    .Drawer .Tool input, .Drawer .Tool a{
-           margin-right:-15px !important;
-    }
-    
     .Pages a{
         width:215px !important;
     }
@@ -37,7 +31,6 @@
 .Drawer{
     box-shadow: 10px 0 40px 0 rgba(0,0,0,0.5);
     
-    font-family:"OpenDyslexic";
     background:rgba(250,250,250,0.75);
     z-index:10000;
     //background:#6cbe45;
@@ -73,7 +66,6 @@
 }
 
 .Panel .Tool input {
- font-size:1.2em;
  background:#fcc;
  padding:1.2em;
  border:0;
@@ -94,13 +86,14 @@
  display:block !important;
  width:100%;
 }
-.Drawer .Tool input, .Drawer .Taskbox a, .Pages .StoredPage a, .Externbox a {
+.Drawer .Tool input, .Drawer .Tool a, .Drawer .Taskbox a, .Pages .StoredPage a, .Externbox a {
  background:none;
  border:0px;
  margin:0;
  padding:5px 0 5px 5px;
  margin:0;
  font-family:"OpenDyslexic";
+ font-size:11pt;
  text-decoration:none;
  color:black;
 }
@@ -109,9 +102,32 @@
  width:100%;
 }
 
-.Tool input:hover, .Pages a:hover, .Externbox a:hover {
- color:red;
- background:rgba(128,128,128,0.5);
+.Tool input:hover, .Tool a:hover, .Pages a:hover, .Externbox a:hover {
+ color:#f70;
+ #background:rgba(128,128,128,0.5);
  cursor:pointer;
 }
 
+.Drawer label {
+    display:block;
+ margin:0;padding:0;
+ padding-left:10px;
+ background-color:rgba(255,255,255,0.45);
+ color:#ed3093;
+}
+.Drawer input[type="checkbox"] {
+    display:none;
+}
+.Drawer input[type="checkbox"] + * {
+    display:none;
+}
+.Drawer input[type="checkbox"]:checked + *{
+ display:block;
+}
+
+.Toolbox{
+ border-bottom:1px dashed #ed3093;
+}
+.Externbox a{
+ display:block;
+}
