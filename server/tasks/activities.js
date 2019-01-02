@@ -390,7 +390,7 @@ module.exports = async (app) => {
         [], [],
         app.taskApi.okcancel().concat(
             {event_task: true},
-            {field: "shop_type", type: "dropdown", values: ["artist_alley", "vendor"]},
+            {field: "shop_type", type: "dropdown", values: [{label:"{shop.aa.name}", id:"artist_alley", desc:"{shop.aa.desc}"}, {label:"{shop.vendor.name}", id:"vendor", desc:"{shop.vendor.desc}"}]},
             {field: "shop_name", type: "text"},
             {field: "shop_description", type: "editor"},
             {field: "shop_size", type: "number"}, // How many working?
