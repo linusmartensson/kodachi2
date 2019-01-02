@@ -29,7 +29,7 @@ module.exports = (app) => {
     s("input.act_participants.desc", "Bestäm dig för hur många som kommer att kunna delta i er aktivitet! Det här är en av de viktigaste sakerna vi måste fundera på när vi bestämmer oss för om en aktivitet passar hos oss eller inte, och om vi har råd att lägga pengarna på det, så fundera noga!");
     s("input.act_participants.name", "Hur många har möjlighet att delta?");
     s("input.act_size.desc", "Här fyller du i hur många som ska vara med och jobba med din aktivitet, inklusive dig själv såklart! Kortare och mindre aktiviteter har ofta färre i personal, storslagna tävlingar kan ibland vara lite fler, men det finns undantag åt båda hållen såklart!");
-    s("input.act_size.name", "Hur många behövs i personalen?");
+    s("input.act_size.name", "Hur många ska jobba i aktivietetn? (inklusive dig själv!)");
     s("input.app_description.desc", "Här berättar du för oss varför vi ska välja just dig till teamet!");
     s("input.app_description.name", "Din ansökan!");
     s("input.budget_type.desc", "", true);
@@ -87,7 +87,7 @@ module.exports = (app) => {
     s("input.shop_description.name", "Beskriv din butik!");
     s("input.shop_image.name", "Ladda upp en butiksbild!");
     s("input.shop_name.name", "Vad heter butiken?");
-    s("input.shop_size.name", "Hur många kommer att jobba på plats?");
+    s("input.shop_size.name", "Hur många kommer att jobba på plats? (inklusive dig själv!)");
     s("input.shop_tables.name", "Hur många bord behöver ni?");
     s("input.shop_type.name", "Planerar du stå i Artist Alley eller försäljningen?");
     s("input.shop_type.desc", "", true);
@@ -149,14 +149,14 @@ module.exports = (app) => {
     s("input.team_schedule.desc", "Vi fortsätter! Nu behöver vi ha koll på vilka dagar ditt team kommer att vara aktivt för att bestämma oss för hur mycket resurser vi ska prioritera.");
     s("input.team_schedule.name", "Vilka dagar jobbar teamet?");
     s("input.team_booked.name", "", true);
-    s("input.team_booked.desc", "Om några av dina platser är förbokade, fyll i antalet förbokade platser nedan, så dyker dessa platserna inte upp på ansökningssidan.");
+    s("input.team_booked.desc", "Om några av dina platser är förbokade, fyll i antalet förbokade platser nedan, så dyker dessa platserna inte upp på ansökningssidan. (Tänk på att du själv också tar upp en plats som inte är förbokad)");
     s("input.act_booked.name", "", true);
-    s("input.act_booked.desc", "Om några av dina platser är förbokade, fyll i antalet förbokade platser nedan, så dyker dessa platserna inte upp på ansökningssidan.");
+    s("input.act_booked.desc", "Om några av dina platser är förbokade, fyll i antalet förbokade platser nedan, så dyker dessa platserna inte upp på ansökningssidan. (Tänk på att du själv också tar upp en plats som inte är förbokad)");
     s("input.shop_booked.name", "", true);
-    s("input.shop_booked.desc", "Om några av dina platser är förbokade, fyll i antalet förbokade platser nedan, så dyker dessa platserna inte upp på ansökningssidan.");
+    s("input.shop_booked.desc", "Om några av dina platser är förbokade, fyll i antalet förbokade platser nedan, så dyker dessa platserna inte upp på ansökningssidan. (Tänk på att du själv också tar upp en plats som inte är förbokad)");
 
     s("input.team_size.desc", "Vi behöver ha reda på hur många som kommer att vara med i ditt team, inklusive dig själv!\n#\nDetta påverkar vår budget, en extra team-medlem som närvarar alla fem dagar kostar mellan 650 och 1000kr!\n_\nFundera genom teamets behov, strama åt lite, och sätt en gräns du är nöjd med, så försöker vi lösa det!");
-    s("input.team_size.name", "Hur många ska vara med i ditt team?");
+    s("input.team_size.name", "Hur många ska vara med i ditt team? (inklusive dig själv!)");
     s("input.tickets.name", "Hur många biljetter vill du köpa?");
     s("input.title.name", "En titel för artikeln!");
     s("input.tshirt.name", "Vilken tshirt-storlek behöver du?");
@@ -164,9 +164,9 @@ module.exports = (app) => {
     s("input.type.name", "Vilken typ av manager vill du lägga till?");
     s("input.user.name", "Vilka användare berörs av detta?");
     s("input.value.afternoon", "På eftermiddagen, 14-18");
-    s("input.value.create_activity", "Arrangera en häftig aktivitet eller tävling!");
-    s("input.value.create_shop", "Sälja saker!");
-    s("input.value.create_team", "Skapa ett helt eget team på Kodachicon!");
+    s("input.value.create_activity", "Arrangera en aktivitet");
+    s("input.value.create_shop", "Driv en försäljningsyta");
+    s("input.value.create_team", "Arrangera ett team");
     s("input.value.day", "Dagtid, 10-14");
     s("input.value.early", "Före öppning, 06-08");
     s("input.value.evening", "Framåt kvällen, 18-23");
@@ -178,7 +178,7 @@ module.exports = (app) => {
     s("input.value.thu", "Torsdag");
     s("input.value.until_sunrise", "Fram till soluppgången, 03-06");
     s("input.value.wed", "Onsdag");
-    s("input.value.work", "Jobba någonstans!");
+    s("input.value.work", "Ansök till Kodachicrew");
     s("input.work_type.name", "Jag skulle vilja...");
     s("input.yes.desc", "", true);
     s("input.yes.name", "Ja!");
@@ -189,7 +189,7 @@ module.exports = (app) => {
     s("list.purchases.ticketText", "Detta är dina evenemangsbiljetter! En biljett används upp när du checkar in. Glöm inte att flytta över alla extra biljetter till de som ska ha dem!");
     s("list.show_activities.times", "Öppetdagar");
     s("list.list_activities.title", "Aktiviteter!");
-    s("list.admin_budget.title", "Visa budgetöversikt");
+    s("list.admin_budget.title", "Visa kvitton");
     s("list.show_team.title", "Mitt team!");
     s("list.tasks.title", "TEST-lista TA BORT");
     s("list.tickets.title", "Dina biljetter!");
@@ -252,7 +252,7 @@ module.exports = (app) => {
     s("task.manual_ssn_details.title.active", "Fortsätt skapa konto!");
     s("task.new_competitor.desc", "Wohoo! Det är en ny tävlande med i {competition.name}!");
     s("task.new_competitor.title", "Ny tävlande!");
-    s("task.register_account.desc", "!Tjohej och välkommen!\n((Aww yeah!)\nVi vill att det ska vara superlätt att registrera sig på Kodachikai, och därför har vi gjort den här nya, lite coolare registreringen!\n_Första steget!\nInnan vi kan börja så måste vi veta om du är svensk medborgare! För att vi ska kunna driva Kodachikai och Kodachicon så söker vi bidrag på olika sätt, bland annat genom Sverok Skåne och Lunds kommun. För att kunna söka de bidragen så måste vi visa vem som är med på våra aktiviteter, och för att det ska bli rätt så behöver vi personnummer från alla som deltar!\n_\nÄr du svensk medborgare?");
+    s("task.register_account.desc", "!Tjohej och välkommen!\nVi vill att det ska vara superlätt att registrera sig på Kodachikai, och därför har vi gjort den här nya, lite coolare registreringen!\n_Första steget!\nInnan vi kan börja så måste vi veta om du är svensk medborgare! För att vi ska kunna driva Kodachikai och Kodachicon så söker vi bidrag på olika sätt, bland annat genom Sverok Skåne och Lunds kommun. För att kunna söka de bidragen så måste vi visa vem som är med på våra aktiviteter, och för att det ska bli rätt så behöver vi personnummer från alla som deltar!\n_\nÄr du svensk medborgare?");
     s("task.register_account.title", "Skapa ett konto!");
     s("task.register_account.title.active", "Fortsätt skapa konto!");
     s("task.register_account_ssn.desc", "!Woot!\nSå trevligt! :D\nVälkommen till Kodachikai!");
@@ -379,8 +379,8 @@ module.exports = (app) => {
     s("true", "Ja");
     s("false", "Nej");
 
-    s("task.review_activity.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nAktivitet: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\nSchemadagar:{application.schedule}\nSchematider:{application.avail_times}\nLängd:{application.length}\nDeltagartal:{application.participants}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
-    s("task.review_team.desc", "Tjohej! Det har kommit in en ansökan från {user.nickname} som du behöver ta ställning till!\nTeamnamn: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\nSchemadagar:{application.schedule}\nSchematider:{application.avail_times}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
+    s("task.review_activity.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nAktivitet: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
+    s("task.review_team.desc", "Tjohej! Det har kommit in en ansökan från {user.nickname} som du behöver ta ställning till!\nTeamnamn: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
 
 
     s("task.review_artist_alley.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nArtistAlley: {application.name}\nTyp:{application.type}\nTeamstorlek:{application.size}\nTillgänglighet:{application.schedule}\nBord:{application.tables}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
@@ -508,8 +508,8 @@ module.exports = (app) => {
     s('list.auto.row.admin_teams', "\"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Gruppledare: {{leader}}");
     s('list.auto.row.email_all_staff', "{u.email}");
     
-    s('list.auto.group.admin_budget', "!Budgetposter för {w.type}\nTotal: {total}");
-    s('list.auto.row.admin_budget', "{w.name}\nBudget: {w.budget}");
+    s('list.auto.group.admin_budget', "");
+    s('list.auto.row.admin_budget', "#{r.purchase}\nTotalt: {r.total} kr\nBetalat/Betalas till: {u.nickname},{u.email},{u.phone}\n#\n@({r.image})");
 
     s('list.auto.row.list_team_leaders', "!{w.name}\nGrupptyp: {w.type}\n\"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}");
 
@@ -528,6 +528,10 @@ module.exports = (app) => {
     s('tasks.account.verifyPassword', 'Ett av lösenorden har nog blivit fel, skriv om dem för säkerhets skull!');
     s('task.error.noSuchTask', 'Det har blivit något fel! Ladda om sidan och prova igen.');
 
+    s('shop.aa.name', "Artist Alley")
+    s('shop.aa.desc', "Artist Alley är för dig som tillverkar dina egna saker och som driver en hobbyverksamhet eller liknande för att sälja dina egentillverkade varor.");
+    s('shop.vendor.name', "Försäljning")
+    s('shop.vendor.desc', "Försäljningen är för dig som har ett företag och säljer inköpta varor, eller kräver mycket plats och känner att beskrivningen på artist alley inte passar in på dig.");
 
 
 };
