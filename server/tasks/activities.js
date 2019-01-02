@@ -339,6 +339,11 @@ module.exports = async (app) => {
             q.image = await app.utils.upload(q.image);
             q.budget = inst.response.team_budget;
             q.uniform = true;
+            inst.data.name = q.name;
+            inst.data.desc = q.desc;
+            inst.data.size = q.size;
+            inst.data.booked = q.booked;
+            inst.data.budget = q.budget;
             await app.roleApi.addAchievement(inst.origin, "i_made_the_best_application", 1, app.userApi.getActiveEvent(ctx), 1, 10);
             inst.data.application = q;
             inst.next_tasks.push("review_team");
@@ -369,6 +374,11 @@ module.exports = async (app) => {
             q.image = await app.utils.upload(q.image);
             q.budget = inst.response.act_budget;
             q.uniform = false;
+            inst.data.name = q.name;
+            inst.data.desc = q.desc;
+            inst.data.size = q.size;
+            inst.data.booked = q.booked;
+            inst.data.budget = q.budget;
             await app.roleApi.addAchievement(inst.origin, "i_made_the_best_application", 1, app.userApi.getActiveEvent(ctx), 1, 10);
             inst.data.application = q;
             inst.next_tasks.push("review_activity");
@@ -401,6 +411,10 @@ module.exports = async (app) => {
             q.tables = inst.response.shop_tables;
             q.schedule = inst.response.shop_available_days;
             q.uniform = false;
+            inst.data.name = q.name;
+            inst.data.desc = q.desc;
+            inst.data.size = q.size;
+            inst.data.booked = q.booked;
             await app.roleApi.addAchievement(inst.origin, "i_made_the_best_application", 1, app.userApi.getActiveEvent(ctx), 1, 10);
             inst.data.application = q;
             if (q.type === "artist_alley") {
@@ -414,7 +428,12 @@ module.exports = async (app) => {
 
     app.taskApi.create_task(
         "activity", "review_team", [], ["admin.", "overseer.", "team_admin."],
-        app.taskApi.yesno().concat({event_task: true}),
+        app.taskApi.yesno().concat({event_task: true}, 
+            {field:'name', type:"text"}, 
+            {field:'desc', type:'editor'},
+            {field:'size', type:'number'},
+            {field:'booked', type:'number'},
+            {field:'budget', type:'text'}),
         async (inst, ctx) => {
             if (inst.response.no) {
                 inst.next_tasks.push("deny_application");
@@ -425,6 +444,11 @@ module.exports = async (app) => {
             const q = inst.data.application;
             const team = app.uuid();
             q.team = team;
+            q.name = inst.response.name;
+            q.desc = inst.response.desc;
+            q.size = inst.response.size;
+            q.booked = inst.response.booked;
+            q.budget = inst.response.budget;
             q.event_id = inst.data.start_data.event_id || (await app.userApi.getActiveEvent(ctx)).id;
             q.teamRole = `manager.${team}`;
 
@@ -445,7 +469,14 @@ module.exports = async (app) => {
 
     app.taskApi.create_task(
         "activity", "review_activity", [], ["admin.", "overseer.", "activity_admin."],
-        app.taskApi.yesno().concat({event_task: true}),
+        app.taskApi.yesno().concat({event_task: true}, 
+            {field:'name', type:"text"}, 
+            {field:'desc', type:'editor'},
+            {field:'size', type:'number'},
+            {field:'booked', type:'number'},
+            {field:'budget', type:'text'},
+            {field:'uniform', type:'bool'}
+            ),
         async (inst, ctx) => {
             if (inst.response.no) {
                 inst.next_tasks.push("deny_application");
@@ -456,6 +487,12 @@ module.exports = async (app) => {
             const q = inst.data.application;
             const activity = app.uuid();
             q.event_id = inst.data.start_data.event_id || (await app.userApi.getActiveEvent(ctx)).id;
+            q.name = inst.response.name;
+            q.desc = inst.response.desc;
+            q.size = inst.response.size;
+            q.booked = inst.response.booked;
+            q.budget = inst.response.budget;
+            q.uniform = inst.response.uniform;
             q.activity = activity;
             q.activityRole = `manager.${activity}`;
             await app.roleApi.addRole(inst.origin, `manager.${q.event_id}`, 3500);
@@ -526,7 +563,11 @@ module.exports = async (app) => {
 
     app.taskApi.create_task(
         "activity", "review_vendor", [], ["admin.", "overseer.", "vendor_admin."],
-        app.taskApi.yesno().concat({event_task: true}),
+        app.taskApi.yesno().concat({event_task: true},
+            {field:'name', type:"text"}, 
+            {field:'desc', type:'editor'},
+            {field:'size', type:'number'},
+            {field:'booked', type:'number'}),
         async (inst, ctx) => {
             if (inst.response.no) {
                 inst.next_tasks.push("deny_application");
@@ -537,6 +578,10 @@ module.exports = async (app) => {
             const q = inst.data.application;
             const shop = app.uuid();
             q.shop = shop;
+            q.name = inst.response.name;
+            q.desc = inst.response.desc;
+            q.size = inst.response.size;
+            q.booked = inst.response.booked;
             q.event_id = inst.data.start_data.event_id || (await app.userApi.getActiveEvent(ctx)).id;
             q.shopRole = `manager.${shop}`;
             await app.roleApi.addRole(inst.origin, `manager.${q.event_id}`, 1500);
