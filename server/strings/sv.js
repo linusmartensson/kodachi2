@@ -527,6 +527,7 @@ module.exports = (app) => {
     s('tasks.account.differentEmails', 'Dina emailadresser måste vara likadana!');
     s('tasks.account.verifyPassword', 'Ett av lösenorden har nog blivit fel, skriv om dem för säkerhets skull!');
     s('task.error.noSuchTask', 'Det har blivit något fel! Ladda om sidan och prova igen.');
+    s('task.error.createPage', 'Kunde inte skapa sidan! Det finns säkert redan en sida med samma ID!');
 
     s('shop.aa.name', "Artist Alley")
     s('shop.aa.desc', "Artist Alley är för dig som tillverkar dina egna saker och som driver en hobbyverksamhet eller liknande för att sälja dina egentillverkade varor.");
