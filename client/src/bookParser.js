@@ -11,64 +11,99 @@ var bookParser = (v, idbase) => {
         var pos = 0;
 
         var parsers = {
-            '!': function(s){
-                var c = s.search(/[^!]/);
-                if(c > 0) panel.content.push({
-                    id:pos++,
-                    type:'caption',
-                    strength:c,
-                    text:s.slice(c)
-                });
+            "!" (s) {
+                const c = s.search(/[^!]/);
+                if (c > 0) {
+                    panel.content.push({
+                        id: pos++ + idbase,
+                        type: "caption",
+                        strength: c,
+                        text: s.slice(c)
+                    });
+                }
             },
-            '(': function(s){
-                var c = s.search(/[^(]/);
-                var q = s.slice(c).split(')');
+            "[" (s) {
+                let q = s.slice(1,-1).split(',');
+                const text = q[0];
+                const task = q[1];
+                q = q.slice(2);
+                let data = {};
+                for(var w of q){
+                    const m = w.split(":");
+                    const o = m.slice(1).join(":");
+                    data[m[0]] = o;
+                }
                 panel.content.push({
-                    id:pos++,
-                    type:'speechbubble',
-                    position:c>1?'right':'left',
-                    text:q[0],
-                    image:q.length>1?q[1]:undefined
+                    id: pos++ + idbase,
+                    type: "editbutton",
+                    text,
+                    task,
+                    data
                 });
             },
-            '#': function(s){
-                tier.panels.push(panel);
-                panel = {id:pos++, content:[]};
-
-                parsers['!']('!'+s.slice(1));
+            "(" (s) {
+                const c = s.search(/[^(]/);
+                const q = s.slice(c).split(")");
+                panel.content.push({
+                    id: pos++ + idbase,
+                    type: "speechbubble",
+                    position: c > 1 ? "right" : "left",
+                    text: q[0],
+                    image: q.length > 1 ? q[1] : null
+                });
             },
-            '_': function(s){
+            "@" (s) {
+                const q = s.slice(2).split(")");
+                panel.content.push({
+                    id: pos++ + idbase,
+                    type: "image",
+                    image: q[0]
+                });
+            },
+            "#" (s) {
                 tier.panels.push(panel);
-                panel = {id:pos++, content:[]};
+                panel = {id: pos++ + idbase, content: []};
+
+                parsers["!"](`!${s.slice(1)}`);
+            },
+            "_" (s) {
+                tier.panels.push(panel);
+                panel = {id: pos++ + idbase, content: []};
 
                 page.tiers.push(tier);
-                tier = {id:pos++, panels:[]};
+                tier = {id: pos++ + idbase, panels: []};
 
-                parsers['!']('!'+s.slice(1));
+                parsers["!"](`!${s.slice(1)}`);
             },
-            '|': function(s){
+            "|" (s) {
                 tier.panels.push(panel);
-                panel = {id:pos++, content:[]};
+                panel = {id: pos++ + idbase, content: []};
 
                 page.tiers.push(tier);
-                tier = {id:pos++, panels:[]};
+                tier = {id: pos++ + idbase, panels: []};
 
                 pages.push(page);
-                page = {id:pos++, tiers:[]};
+                page = {id: pos++ + idbase, tiers: []};
+
+                parsers["!"](`!${s.slice(1)}`);
             },
-            '*': function(s){
-                if(s.length > 1) panel.content.push({
-                    id:pos++,
-                    type:'point',
-                    text:s.slice(1)
-                });
+            "*" (s) {
+                if (s.length > 1) {
+                    panel.content.push({
+                        id: pos++ + idbase,
+                        type: "point",
+                        text: s.slice(1)
+                    });
+                }
             },
-            '': function(s){
-                if(s.length > 0) panel.content.push({
-                    id:pos++,
-                    type:'text',
-                    text:s
-                });
+            "" (s) {
+                if (s.length > 0) {
+                    panel.content.push({
+                        id: pos++ + idbase,
+                        type: "text",
+                        text: s
+                    });
+                }
             }
         }
 
