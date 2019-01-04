@@ -12,19 +12,13 @@
         /*PC*/
         display:table-cell;
         border-right:2px solid rgba(50,50,50,0.9);
-        width:225px;
+        width:235px;
         text-align:left;
-    }
-    .Drawer:after{
-        width:235px !important;
     }
     .Drawer .Tool input, .Pages a, .Drawer .Tool a {
         text-align:left !important;
         padding-left:20px !important;
         margin:5px 0 !important;
-    }
-    .Pages a{
-        width:215px !important;
     }
     .Drawer input[type="checkbox"] + * {
         display:none;
@@ -67,9 +61,7 @@
 }
 
 .Panel .Tool {
- margin:-1em 0;
  padding:0;
- background:#fcc;
  position:relative;
  text-align:center;
  background:#fee;
