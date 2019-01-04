@@ -59,6 +59,8 @@ module.exports = (app) => {
                 })
             }
 
+            user.email_verify = user.email;
+
             state.profile.content = [
                 {//page 1
                     id:0,
@@ -69,7 +71,8 @@ module.exports = (app) => {
                                     id:0,
                                     content:[
                                         {id:0, type:"text", text:"Tjohej! Här kommer att dyka upp mer info inom kort, men tillsvidare kan du se vad du lyckats hitta på hittills här på kodachi.se!"},
-                                        {id:1, type:"editbutton", text:"Byt lösenord", task:"change_password", data:{}}
+                                        {id:1, type:"editbutton", text:"Byt lösenord", task:"change_password", data:{}},
+                                        {id:2, type:"editbutton", text:"Uppdatera profil", task:"edit_profile", data:user}
                                     ]
                                 }
 

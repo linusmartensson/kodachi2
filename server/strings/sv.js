@@ -318,7 +318,7 @@ module.exports = (app) => {
     s("input.event_description.desc", "Se till att beskrivningen är utförlig och kan användas som en första presentation när en ny besökare halkar in på kodachi.se");
     s("input.event_location.desc", "Här fyller du i platsen för evenemanget! Använd ett platsnamn, standard är \"Polhemskolan, Lund\" för Kodachicon ^_^");
     s("input.event_name.desc", "", true);
-    s("input.givenName.desc", "Här behöver vi ditt namn, precis som det är registrerat i folkbokföringen om du är svensk medborgare! För vissa som registrerar sig är detta jobbigt, och då ska du veta att detta används bara till bidragssökningar, och på nästa sida kommer du att få möjlighet att fylla i en annan identitet som du vill att vi använder för att prata med dig. ^_^");
+    s("input.givenName.desc", "Här behöver vi ditt namn, precis som det är registrerat i folkbokföringen om du är svensk medborgare! För vissa som registrerar sig är detta jobbigt, och då ska du veta att detta används bara till bidragssökningar och det är ditt nickname vi använder för att prata med dig. ^_^");
     s("input.group.desc", "Detta är den budgetpost som du tycker passar bäst in på ditt kvitto, välj noga!");
     s("input.image.desc", "", true);
     s("input.lang.desc", "Här väljer du vilka språk denna sida ska synas för. Det är inte alltid allt innehåll är lika vettigt för alla språk.");

@@ -337,6 +337,31 @@ module.exports = (app) => {
         }
     );
     app.taskApi.create_task(
+        "account", "edit_profile", 
+        ["user"], [],
+        app.taskApi.okcancel().concat({hide:true},
+            {field: "nickname", type: "text"},
+            {field: "phone", type: "phone"},
+            {field: "emergencyphone", type: "phone"},
+            {field: "email", type: "email"},
+            {field: "email_verify", type: "email"},
+            {field: "givenName", type: "text"},
+            {field: "lastName", type: "text"},
+            {field: "street", type: "text"},
+            {field: "zipCode", type: "text"},
+            {field: "city", type: "text"},
+            {field: "country", type: "text"}
+        ),
+        async (inst, ctx) => {
+            
+            if(!await app.userApi.updateUser(ctx, inst.response)){
+                return "RETRY";
+            }
+            
+            return "OK";
+        });
+
+    app.taskApi.create_task(
         "account", "forgot_account_details",
         [], [],
         [],

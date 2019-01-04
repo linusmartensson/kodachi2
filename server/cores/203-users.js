@@ -103,6 +103,19 @@ module.exports = async (app) => {
 
         await app.cypher("MATCH (u:User {id:{userId}}) SET u.password={password}", {userId, password:await hash(password)});
     }
+    api.updateUser = async(ctx, u) => {
+        let userId = await api.userId(ctx);
+
+        if(!userId) return false;
+
+        u.userId = userId;
+        u.code = app.uuid() + app.uuid();
+
+        await app.cypher("MATCH (u:User {id:{userId}}) SET u.verified=false, u.verifyCode={code}, u.email={email}, u.givenName={givenName}, u.lastName={lastName}, u.street={street}, u.zipCode={zipCode}, u.city={city}, u.country={country}, u.nickname={nickname}, u.phone={phone}, u.emergencyphone={emergencyphone}", u);
+        await api.emailUser(u.userId, "Verifiera om ditt Kodachikonto!", `Hej! Du har uppdaterat dina kontouppgifter, tryck på denna länken för att verifiera om ditt konto efter ändringarna: https://kodachi.se/__verifyEmail/${u.code}`);
+            
+        return true;
+    }
 
     api.session = async (ctx) => {
         // Return current session
