@@ -379,7 +379,7 @@ module.exports = (app) => {
     s("true", "Ja");
     s("false", "Nej");
 
-    s("task.review_activity.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nAktivitet: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
+    s("task.review_activity.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nAktivitet: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n|\nDetta är de behov som aktiviteten har:\n{|application.requirements}");
     s("task.review_team.desc", "Tjohej! Det har kommit in en ansökan från {user.nickname} som du behöver ta ställning till!\nTeamnamn: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
 
 
@@ -450,7 +450,7 @@ module.exports = (app) => {
     s('role.base_activity_admin', 'Aktivitetsfisk')
     s('role.base_crew_admin', 'Crewdruid')
 
-    s('list.auto.header.admin_teams', "!Tjohej!\nHär kan du som administratör se alla medlemmar i alla team!");
+    s('list.auto.header.admin_teams', "");
     s('list.auto.header.list_team_leaders', "!Tjohej!\nHär kan du se alla teamledare!");
     s('list.list_team_leaders.title', "Lista teamledare");
     
@@ -485,8 +485,8 @@ module.exports = (app) => {
     s('list.auto.row.my_competition', "`{u.nickname}` \n{u.phone}\n{u.email}");
     s('list.my_competition.title', 'Dina tävlingsarrangemang')
     
-    s('list.auto.header.my_team', "!Tjohej!\nHär kan du se ditt team! ^_^");
-    s('list.auto.group.my_team', "!{w.name}\nuniform: {{w.uniform}}, medlemmar: {q}/{w.size}, Du leder teamet: {{is_leader}}\n[Maila teamet,email_team.{{{event}}},team:{{{w.id}}},enabled:{leader}]\n[Lägg till medlem,add_team_member.{{{event}}},team:{w.id},enabled:{is_leader}]\n[Uppdatera teamprofil,update_team_desc.{{{event}}},team:{w.id},update_name:{w.name},update_desc:{w.desc},enabled:{is_leader}]");
+    s('list.auto.header.my_team', "!Tjohej!\nHär kan du se ditt (eller dina!) team! ^_^");
+    s('list.auto.group.my_team', "!{w.name}\nuniform: {{w.uniform}}, medlemmar: {q}/{w.size}, Du leder teamet: {{is_leader}}\n[Maila teamet,email_team.{{{event}}},team:{{{w.id}}},enabled:{leader}]\n[Lägg till medlem,add_team_member.{{{event}}},team:{w.id},enabled:{is_leader}]\n[Uppdatera teamprofil,update_team_desc.{{{event}}},team:{w.id},update_name:{w.name},update_desc:{w.desc},enabled:{is_leader}]\n{|w.app_desc}");
     s('list.auto.row.my_team', "\"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nStorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Teamledare: {{leader}}\n{|m.description}\n[Ta bort medlem,remove_team_member.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{deletable_leader}]\n[Gör till teamledare,promote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{is_leader},disabled:{leader}]\n[Ta bort teamledare,demote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{deletable_leader}]");
 
     s('task.switch_account.title', 'Byta konto')
@@ -504,7 +504,7 @@ module.exports = (app) => {
     s('list.auto.header.tshirts', "!Tshirtbeställningar");
     s('list.auto.row.tshirts', "\"{u.nickname}\" {u.lastName} - storlek: {m.tshirt}");
 
-    s('list.auto.group.admin_teams', "!{w.name}\nuniform: {{w.uniform}} - {q} / {w.size} medlemmar");
+    s('list.auto.group.admin_teams', "!{w.name}\n_Detaljer\nuniform: {{w.uniform}} - {q} / {w.size} medlemmar\n#Kravställning\n{|w.requirements}\n#Teambeskrivning\n{|w.app_desc}");
     s('list.auto.row.admin_teams', "\"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nstorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Gruppledare: {{leader}}");
     s('list.auto.row.email_all_staff', "{u.email}");
     

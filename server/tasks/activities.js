@@ -205,7 +205,7 @@ module.exports = async (app) => {
                 for (const r of w) {
                     const team = r.get("a").properties;
                     const mc = r.get("count");
-                    v.values.push({label: app.stringApi.get_string(team.type, await app.userApi.getLanguage(ctx)) +" - "+team.name+"("+(team.size - (team.booked>0?team.booked:0) - mc)+"/"+team.size+" platser)", id: team.id, desc: team.desc});
+                    v.values.push({label: app.stringApi.get_string(team.type, await app.userApi.getLanguage(ctx)) +" - "+team.name+"("+(team.size - (team.booked>0?team.booked:0) - mc)+"/"+team.size+" platser)", id: team.id, desc: team.app_desc});
                 }
                 v.values.sort((a,b)=>{return a.label<b.label})
             }},
@@ -323,6 +323,7 @@ module.exports = async (app) => {
             {event_task: true},
             {field: "team_name", type: "text"},
             {field: "team_description", type: "editor"},
+            {field: "team_app_description", type:"editor"},
             {field: "team_size", type: "number"},
             {field: "team_booked", type: "number"},
             {field: "team_image", type: "image"},
@@ -333,6 +334,7 @@ module.exports = async (app) => {
             q.type = "team";
             q.name = inst.response.team_name;
             q.desc = inst.response.team_description;
+            q.app_desc = inst.response.team_app_description;
             q.size = inst.response.team_size;
             q.booked = inst.response.team_booked;
             q.image = inst.response.team_image;
@@ -341,6 +343,7 @@ module.exports = async (app) => {
             q.uniform = true;
             inst.data.name = q.name;
             inst.data.desc = q.desc;
+            inst.data.app_desc = q.app_desc;
             inst.data.size = q.size;
             inst.data.booked = q.booked;
             inst.data.budget = q.budget;
@@ -358,6 +361,8 @@ module.exports = async (app) => {
             {field: "act_name", type: "text"},
             {field: "act_format", type: "dropdown", values: ["competition", "activity"]},
             {field: "act_description", type: "editor"},
+            {field: "act_app_description", type:"editor"},
+            {field: "act_requirements", type:"editor"},
             {field: "act_size", type: "number"},
             {field: "act_booked", type: "number"},
             {field: "act_image", type: "image"},
@@ -368,6 +373,8 @@ module.exports = async (app) => {
             q.type = inst.response.act_format;
             q.name = inst.response.act_name;
             q.desc = inst.response.act_description;
+            q.app_desc = inst.response.act_app_description;
+            q.requirements = inst.response.act_requirements;
             q.size = inst.response.act_size;
             q.booked = inst.response.act_booked;
             q.image = inst.response.act_image;
@@ -376,6 +383,7 @@ module.exports = async (app) => {
             q.uniform = false;
             inst.data.name = q.name;
             inst.data.desc = q.desc;
+            inst.data.app_desc = q.app_desc;
             inst.data.size = q.size;
             inst.data.booked = q.booked;
             inst.data.budget = q.budget;
@@ -431,6 +439,7 @@ module.exports = async (app) => {
         app.taskApi.yesno().concat({event_task: true}, 
             {field:'name', type:"text"}, 
             {field:'desc', type:'editor'},
+            {field:'app_desc', type:"editor"},
             {field:'size', type:'number'},
             {field:'booked', type:'number'},
             {field:'budget', type:'text'}),
@@ -446,6 +455,7 @@ module.exports = async (app) => {
             q.team = team;
             q.name = inst.response.name;
             q.desc = inst.response.desc;
+            q.app_desc = inst.response.app_desc;
             q.size = inst.response.size;
             q.booked = inst.response.booked;
             q.budget = inst.response.budget;
@@ -456,7 +466,7 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, "team_leader", 5500);
             await app.roleApi.addRole(inst.origin, q.teamRole);
             await app.roleApi.addRole(inst.origin, `receipt_submitter.${q.event_id}`);
-            await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{team}, type:{type} ,name:{name}, desc:{desc}, size:{size}, image:{image}, budget:{budget}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{team}, type:{type} ,name:{name}, desc:{desc}, app_desc:{app_desc}, size:{size}, image:{image}, budget:{budget}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
 
 
             await app.roleApi.addAchievement(inst.origin, "my_very_own_team", 1, app.userApi.getActiveEvent(ctx), 1, 100);
@@ -472,6 +482,7 @@ module.exports = async (app) => {
         app.taskApi.yesno().concat({event_task: true}, 
             {field:'name', type:"text"}, 
             {field:'desc', type:'editor'},
+            {field:'app_desc', type:'editor'},
             {field:'size', type:'number'},
             {field:'booked', type:'number'},
             {field:'budget', type:'text'},
@@ -489,6 +500,7 @@ module.exports = async (app) => {
             q.event_id = inst.data.start_data.event_id || (await app.userApi.getActiveEvent(ctx)).id;
             q.name = inst.response.name;
             q.desc = inst.response.desc;
+            q.app_desc = inst.response.app_desc;
             q.size = inst.response.size;
             q.booked = inst.response.booked;
             q.budget = inst.response.budget;
@@ -507,7 +519,7 @@ module.exports = async (app) => {
                 await app.roleApi.addAchievement(inst.origin, "my_activity_best_activity", 1, app.userApi.getActiveEvent(ctx), 1, 100);
 
             }
-            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{activity}, name:{name}, type:{type}, desc:{desc}, size:{size}, image:{image}, budget:{budget}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{activity}, name:{name}, type:{type}, desc:{desc}, app_desc:{app_desc}, requirements:{requirements}, size:{size}, image:{image}, budget:{budget}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
 
 
             inst.next_tasks.push("accept_application");
@@ -587,7 +599,7 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, `manager.${q.event_id}`, 1500);
             await app.roleApi.addRole(inst.origin, "vendor", 5500);
             await app.roleApi.addRole(inst.origin, q.shopRole);
-            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, tables:{tables}, type:{type}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, app_desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, tables:{tables}, type:{type}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
             await app.roleApi.addAchievement(inst.origin, "let_them_buy_cake", 1, app.userApi.getActiveEvent(ctx), 1, 100);
 
             inst.next_tasks.push("accept_application");
@@ -617,7 +629,7 @@ module.exports = async (app) => {
             await app.roleApi.addRole(inst.origin, "artist", 5500);
 
             await app.roleApi.addRole(inst.origin, q.shopRole);
-            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, type:{type}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, app_desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, type:{type}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
             await app.roleApi.addAchievement(inst.origin, "i_am_an_artist", 1, app.userApi.getActiveEvent(ctx), 1, 100);
 
             inst.next_tasks.push("accept_application");
