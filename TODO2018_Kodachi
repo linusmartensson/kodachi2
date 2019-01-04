@@ -1,20 +1,11 @@
-Prio 1:
-G. Stöd för köp av matkuponger
-H. Lista matkuponger i incheck
 
-Prio 2:
-1. Profilsida med stöd för redigering av användaruppgifter
-7. Tillgång till ansökningsinnehåll (för t.ex. artist alley) efter godkännande av ansökan
+P2.1. Profilsida med stöd för redigering av användaruppgifter
+P2.7. Tillgång till ansökningsinnehåll (för t.ex. artist alley) efter godkännande av ansökan
+P2.2. Verifiering av sidlayout (inklusive bild) innan en grupp/butik/aktivitetansökan skickas in
 
-4. Vid sovsalsbokning - välja salstyp eller område
-2. Verifiering av sidlayout (inklusive bild) innan en grupp/butik/aktivitetansökan skickas in
+P3.2. Besökarorienterat syfte med team i teamansökan - vad gör teamet? - Ska synas vid publik teaminfo
+P3.6. Max antal tecken i ansökningstext för besökarorienterad info
 
-(Prio 3) Formulär & Listor:
-2. Besökarorienterat syfte med team i teamansökan - vad gör teamet? - Ska synas vid publik teaminfo
-6. Max antal tecken i ansökningstext för besökarorienterad info
-8. Under "Mitt team" - Visa ansökningssidetext
-3. Separat ansökningssidetext för ansökningssidan i "jobba på konventet" + kravspec till admin/ansökningsmottagare
-13.Separat ansökningstext för aktivitet med kravspec till admin/ansökningsmottagare (Requirements: ...)
 
 Prio 4:
 1. Textformateringsguide på hemsidan (ink. bilder)
@@ -24,6 +15,10 @@ Prio 4:
 
 8. Fult fel vid ny artikel med redan existerande namn
 
+Kan inte införa innan det är klart hur det ska fungera, ink. priser & områden:
+P1.G. Stöd för köp av matkuponger
+P1.H. Lista matkuponger i incheck
+P2.4. Vid sovsalsbokning - välja salstyp eller område
 
 Finished
 P1.4 REMOVED, see P3: 4. Ev. ändringar av ordning och innehåll i formulär enl spec
@@ -59,3 +54,6 @@ P3.14. KLAR: Tydligare val av butik/artistalley på ansökning för butiker
 P3.15. KLAR: Vid ansökning till team - kategoriindelning
 P4.6. KLAR: Tydligare menygruppering enl kategorier
 P4.7. KLAR: Expandera/Minimera menyer - öppen som standard (local storage?)
+P3.8. KLAR: Under "Mitt team" - Visa ansökningssidetext
+P3.3. KLAR: Separat ansökningssidetext för ansökningssidan i "jobba på konventet" 
+P3.13.KLAR, visas vid review av ansökan: Separat ansökningstext för aktivitet med kravspec till admin/ansökningsmottagare (Requirements: ...)
