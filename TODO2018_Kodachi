@@ -2,9 +2,6 @@
 P2.7. Tillgång till ansökningsinnehåll (för t.ex. artist alley) efter godkännande av ansökan
 P2.2. Verifiering av sidlayout (inklusive bild) innan en grupp/butik/aktivitetansökan skickas in
 
-P4.5. Crewbadges som är personliga istället för aktivitetsbundna
-P4.8. Fult fel vid ny artikel med redan existerande namn
-
 P4.1. Textformateringsguide på hemsidan (ink. bilder)
 P4.4. Information om tävlingsdeltagande för besökare
 
@@ -54,3 +51,5 @@ P3.6. REMOVED, vi har ju aldrig nått upp i nåt sånt: Max antal tecken i ansö
 P3.2. REMOVED, Överlappar med nuvarande ansökningssida: Besökarorienterat syfte med team i teamansökan - vad gör teamet? - Ska synas vid publik teaminfo
 P4.2. KLAR: Markering av felfält när formulär inte kan skickas in
 P2.1. KLAR: Profilsida med stöd för redigering av användaruppgifter
+P4.8. KLAR: Fult fel vid ny artikel med redan existerande namn
+P4.5. KLAR: Crewbadges som är personliga istället för aktivitetsbundna
