@@ -141,8 +141,11 @@ class Panel extends Component {
 
     const content = this.props.content.map((elem) => {
         if(!elem.type) return null;
+
+        let error = elem.error?" ErrorField ":"";
+
         switch(elem.type){
-            case 'caption': return <Caption key={elem.id} content={elem.text} strength={elem.strength} />;
+            case 'caption': return <Caption classModifier={error} key={elem.id} content={elem.text} strength={elem.strength} />;
             case 'clear': return <div key={elem.id} style={{clear:'both'}}></div>
             case 'text': 
                 if(typeof elem.text === 'object') {

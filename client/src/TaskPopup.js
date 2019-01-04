@@ -86,11 +86,13 @@ class TaskPopup extends Component{
                     {id:0, border:false, width:1, content:[
                         v.name.length>0?{
                             id:0,
+                            error:task.error_field==v.field,
                             type:'caption',
-                            text:v.name
+                            text:v.name,
                         }:{},
                         {   
                             id:v.field,
+                            error:task.error_field==v.field,
                             type:"input_"+v.type,
                             content:v,
                             text:task.data[v.field]?task.data[v.field]:task.data.start_data[v.field]?task.data.start_data[v.field]:undefined

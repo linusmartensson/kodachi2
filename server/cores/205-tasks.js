@@ -126,7 +126,15 @@ module.exports = async (app) => {
             }
             if(!Object.prototype.hasOwnProperty.call(response, v.field)) 
                 continue;
-            out[v.field] = app.taskFilters[v.type](response[v.field], v);
+            try{
+                out[v.field] = app.taskFilters[v.type](response[v.field], v);
+            } catch (e){
+                throw {
+                    error: e,
+                    field: v.field,
+                    type: v.type
+                };
+            }
         }
         return out;
     };
@@ -209,6 +217,7 @@ module.exports = async (app) => {
         for (const v of task.inputs) {
             if (v.field && !(v.type === "bool") && !(v.type === "checkbox") && !v.nocheck && (!Object.prototype.hasOwnProperty.call(inst.response, v.field) || inst.response[v.field] === "")) {
                 inst.error = `{task.error.emptyFields.${v.field}}`;
+                inst.error_field = v.field;
                 return true;
             }
         }
@@ -563,7 +572,8 @@ module.exports = async (app) => {
             }
         } catch (e) {
             console.dir(e);
-            inst.error = "{task.error.filterFailure}";
+            inst.error = `{task.error.filterFailure.${e.field}}`;
+            inst.error_field = e.field;
             inst.result = "WAIT_RESPONSE";
             await updateTaskInstance(task_id, inst);
             console.log(`Task processing error: ${inst.error}`);
