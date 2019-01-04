@@ -24,7 +24,7 @@
     padding:2px 7px;
     clear:both;
 
-    box-shadow:2px 2px 3px 0px rgba(0,0,84,0.5);
+    #box-shadow:2px 2px 3px 0px rgba(0,0,84,0.5);
 }
 .Caption:only-child {
     width:100%;
@@ -36,11 +36,11 @@
     font-size:2.5em;
 }
 .Caption:only-child::first-letter{
-    text-shadow:3px 3px #555;
+    #text-shadow:3px 3px #555;
 }
 .Caption::first-letter{
     color:#ed3093;
-    font-size:3em;
+    font-size:2.5em;
     line-height:0em;
     font-weight:100;
     letter-spacing:-0.0em;
