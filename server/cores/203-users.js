@@ -184,7 +184,6 @@ module.exports = async (app) => {
             for(var v in q){
                 delete q[v].u.verifyCode;
             }
-            console.dir(q);
             return q;
         }
         return false;
@@ -223,11 +222,8 @@ module.exports = async (app) => {
         } else {
             return false;
         }
-        console.dir(p);
-        console.dir(q);
 
         if (q && q.records && q.records.length > 0) {
-            console.dir("res");
             const res = q.records[0].get("u").properties;
             delete res.verifyCode;
             return res;
