@@ -82,7 +82,7 @@ class Toolbox extends Component {
 
     const externs = [ 
           <div className="Tool" key="kaiLink"><a href="https://kai.kodachi.se/kai">Besök Kodachikai!</a></div>,
-          <div className="Tool" key="schemaLink"><a href="https://schema.kodachi.se">Schema för Kodachicon!</a></div>
+          //<div className="Tool" key="schemaLink"><a href="https://schema.kodachi.se">Schema för Kodachicon!</a></div>
     ];
       var taskbox = tcount>0?<div className="Toolbox"><label for="c1">Pågående uppgifter</label><input type="checkbox" id="c1" defaultChecked="true" /><div>{tasks}</div></div>:null;
       var listbox = lcount>0?<div className="Toolbox"><label for="c2">Sidor</label><input type="checkbox" id="c2" defaultChecked="true" /><div>{lists}</div></div>:null;
