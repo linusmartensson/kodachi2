@@ -298,6 +298,25 @@ module.exports = async (app) => {
     }, async (inst) => "OK");
 
     app.taskApi.create_task(
+        "activity", "update_team_image",
+        ["manager."], [],
+        app.taskApi.okcancel().concat(
+            {event_task:true, hide:true},
+            {field: "update_image", type: "image"},
+        ),
+        async (inst, ctx) => {
+
+            const q = {};
+            q.image = inst.response.update_image;
+            q.image = await app.utils.upload(q.image);
+            q.user = inst.origin;
+            q.team = inst.data.start_data.team;
+
+            await app.cypher("MATCH (s:WorkGroup {id:{team}})-[:MANAGED_BY]-(:Role)-[:HAS_ROLE]-(u:User {id:{user}}) SET s.image = {image}", q);
+
+            return "OK";
+        });
+    app.taskApi.create_task(
         "activity", "update_team_desc",
         ["manager."], [],
         app.taskApi.okcancel().concat(
