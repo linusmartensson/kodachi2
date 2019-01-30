@@ -18,7 +18,7 @@ module.exports = (app) => {
     s("input.act_description.name", "Beskriv din aktivitet! Detta kommer att synas för besökare och i din ansökan!");
     s("input.act_format.desc", "Här väljer du om denna aktiviteten är en tävling, eller en annan typ av aktivitet. Om du är osäker på vad det är du arrangerar, så tänk såhär: Alla tävlingar utser en vinnare!");
     s("input.act_format.name", "Är detta en aktivitet eller en tävling?");
-    s("input.act_image.desc", "!Nu behöver vi en bild!\nDenna bilden kommer att synas för besökare som vill se vad ni håller på med! Se till att den är COOL, det är jätteviktigt!\nBilden kommer att vara lika bred som denna rutan, och tillräckligt hög för att inte bli skev, så skicka inte en för liten bild, och se gärna till att den är liggande, till exempel som en banner!");
+    s("input.act_image.desc", "!Nu behöver vi en bild!\nDenna bilden kommer att synas för besökare som vill se vad ni håller på med! Se till att den är COOL, det är jätteviktigt!\nBilden kommer att vara lika bred som denna rutan och max 300 pixlar hög, så skicka inte en för liten bild, och se gärna till att den är liggande, till exempel som en banner!");
     s("input.act_image.name", "Ladda upp en bild!");
     s("input.act_length.desc", "Sen är det då dags att bestämma sig för hur länge er aktivitet pågår. Vissa kör en hel dag, andra håller bara på en kvart!");
     s("input.act_length.name", "Hur lång är aktiviteten?");
@@ -138,7 +138,7 @@ module.exports = (app) => {
     s("input.team_budget.name", "Hur mycket pengar behövs?");
     s("input.team_description.desc", "Nästa steg är att ge ditt team en beskrivning. Denna beskrivningen är underlag för om vi kommer att acceptera teamet eller inte, och kommer att synas både för besökare och i samband med att folk ska ansöka till ditt team.\nUndvik att gå in på detalj i vad som krävs för att vara med i teamet, fokusera istället på vad ni håller på med och varför ni är bäst! ^_^");
     s("input.team_description.name", "Beskriv teamet!");
-    s("input.team_image.desc", "!Nu behöver vi en bild!\nDenna bilden kommer att synas för besökare som vill se vad ni håller på med! Se till att den är COOL, det är jätteviktigt!\nBilden kommer att vara lika bred som denna rutan, och tillräckligt hög för att inte bli skev, så skicka inte en för liten bild, och se gärna till att den är liggande!");
+    s("input.team_image.desc", "!Nu behöver vi en bild!\nDenna bilden kommer att synas för besökare som vill se vad ni håller på med! Se till att den är COOL, det är jätteviktigt!\nBilden kommer att vara lika bred som denna rutan och max 300 pixlar hög, så skicka inte en för liten bild, och se gärna till att den är liggande!");
     s("input.team_image.name", "En tuff bild!");
     s("input.team_name.desc", "Ge ditt team ett namn! Gör det kort och snitsigt, alla kommer att se det!");
     s("input.team_name.name", "Vad ska teamet heta?");
@@ -344,7 +344,7 @@ module.exports = (app) => {
     s("input.shop_tables.desc", "När du sätter upp en större butik så behöver du ibland mer utrymme! För att vi ska kunna planera lite så önskar vi att du här fyller i hur mycket plats ni behöver specificerat i bordsyta, där ett bord är ungefär 2 meter långt.");
     s("input.shop_size.desc", "Nästa steg är att fylla i hur många som ska jobba i din butik under Kodachicon, inklusive dig själv. När din ansökan godkänts ska de som kommer att medverka på evenemanget anmäla sig under \"Påbörja en ansökan\"");
     s("input.shop_description.desc", "Nedan beskriver du din butik. Detta kommer att vara underlag för din ansökan, och sen även publiceras för användare här på hemsidan, så skriv en tuff beskrivning som får oss att vilja besöka just din butik!");
-    s("input.shop_image.desc", "!Nu behöver vi en bild!\nDenna bilden kommer att synas för besökare som vill se vad ni håller på med!\nBilden kommer att vara lika bred som denna rutan, och tillräckligt hög för att inte bli skev, så skicka inte en för liten bild, och se gärna till att den är liggande!");
+    s("input.shop_image.desc", "!Nu behöver vi en bild!\nDenna bilden kommer att synas för besökare som vill se vad ni håller på med!\nBilden kommer att vara lika bred som denna rutan och max 300 pixlar hög, så skicka inte en för liten bild, och se gärna till att den är liggande!");
     s("input.shop_name.desc", "Det första vi behöver är ditt butiksnamn, så att vi och alla besökare får reda på vem som kommer att sälja under evenemanget!");
     s("task.register_account_ssn.title", "Fortsätt skapa konto!");
     s("task.report_competition_result.title", "Rapportera tävlingsresultat");
@@ -492,6 +492,7 @@ module.exports = (app) => {
     s('task.switch_account.title', 'Byta konto')
 
     s('input.update_image.name', "Byt bild");
+    s('input.update_image.desc', "Bilden kommer att vara lika bred som sidan och max 300 pixlar hög.");
     s('competition', "Tävlingar");
     s('team', "Team");
     s("activity", "Aktiviteter");
