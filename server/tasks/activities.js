@@ -453,7 +453,7 @@ module.exports = async (app) => {
         ),
         async (inst, ctx) => {
             const q = {};
-            q.type = inst.response.shop_type;
+            q.type = inst.response.shop_type; //Note: Accidentally passing on {} object here. converting to .id in review step as we have live data atm
             q.name = inst.response.shop_name;
             q.desc = inst.response.shop_description;
             q.size = inst.response.shop_size;
@@ -634,6 +634,7 @@ module.exports = async (app) => {
             const q = inst.data.application;
             const shop = app.uuid();
             q.shop = shop;
+            q.type = q.type.id;
             q.name = inst.response.name;
             q.desc = inst.response.desc;
             q.size = inst.response.size;
@@ -667,6 +668,7 @@ module.exports = async (app) => {
             const q = inst.data.application;
             const shop = app.uuid();
             q.shop = shop;
+            q.type = q.type.id;
             q.event_id = inst.data.start_data.event_id || (await app.userApi.getActiveEvent(ctx)).id;
             q.shopRole = `manager.${shop}`;
             await app.roleApi.addRole(inst.origin, `manager.${q.event_id}`, 1500);
