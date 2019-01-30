@@ -486,7 +486,7 @@ module.exports = (app) => {
     s('list.my_competition.title', 'Dina tävlingsarrangemang')
     
     s('list.auto.header.my_team', "!Tjohej!\nHär kan du se ditt (eller dina!) team! ^_^");
-    s('list.auto.group.my_team', "!{w.name}\nuniform: {{w.uniform}}, medlemmar: {q}/{w.size}, Du leder teamet: {{is_leader}}\n[Maila teamet,email_team.{{{event}}},team:{{{w.id}}},enabled:{leader}]\n[Lägg till medlem,add_team_member.{{{event}}},team:{w.id},enabled:{is_leader}]\n[Uppdatera teamprofil,update_team_desc.{{{event}}},team:{w.id},update_name:{w.name},update_desc:{w.desc},enabled:{is_leader}]\n[Uppdatera teambild,update_team_image.{{{event}}},team:{w.id},enabled:{is_leader}]\n{|w.app_desc}");
+    s('list.auto.group.my_team', "!{w.name}\nuniform: {{w.uniform}}, medlemmar: {q}/{w.size}, Du leder teamet: {{is_leader}}\n[Maila teamet,email_team.{{{event}}},team:{{{w.id}}},enabled:{leader}]\n[Lägg till medlem,add_team_member.{{{event}}},team:{w.id},enabled:{is_leader}]\n[Uppdatera teamprofil,update_team_desc.{{{event}}},team:{w.id},update_name:{w.name},update_desc:{w.desc},update_app_desc:{w.app_desc},enabled:{is_leader}]\n[Uppdatera teambild,update_team_image.{{{event}}},team:{w.id},enabled:{is_leader}]\n{|w.app_desc}");
     s('list.auto.row.my_team', "\"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nStorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Teamledare: {{leader}}\n{|m.description}\n[Ta bort medlem,remove_team_member.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{deletable_leader}]\n[Gör till teamledare,promote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{is_leader},disabled:{leader}]\n[Ta bort teamledare,demote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{deletable_leader}]");
 
     s('task.switch_account.title', 'Byta konto')
@@ -521,6 +521,8 @@ module.exports = (app) => {
     s("input.update_name.desc", "Här fyller du i ditt gruppnamn!");
     s("input.update_desc.name", "Gruppbeskrivning");
     s("input.update_desc.desc", "Här kan du uppdatera din gruppbeskrivning. Tänk på att den ska vara riktad främst mot besökare på evenemanget!");
+    s("input.update_app_desc.name", "Team/Ansökningsbeskrivning");
+    s("input.update_app_desc.desc", "Här uppdaterar du din interna teambeskrivning. Den syns på ansökningssidan och högst upp på ditt teams privata sida.");
     s('task.update_team_desc.desc', 'Här har du möjlighet att uppdatera ditt teams beskrivning ^_^')
     s('task.update_team_desc.title', 'Uppdatera team')
     

@@ -323,14 +323,16 @@ module.exports = async (app) => {
             {event_task: true, hide:true},
             {field: "update_name", type: "text"},
             {field: "update_desc", type: "editor"},
+            {field: "update_app_desc", type: "editor"},
         ),
         async (inst, ctx) => {
             const q = {};
             q.team = inst.data.start_data.team;
             q.name = inst.response.update_name;
             q.desc = inst.response.update_desc;
+            q.app_desc = inst.response.update_app_desc;
             q.user = inst.origin;
-            await app.cypher("MATCH (s:WorkGroup {id:{team}})-[:MANAGED_BY]-(:Role)-[:HAS_ROLE]-(u:User {id:{user}}) SET s.name = {name}, s.desc = {desc}", q);
+            await app.cypher("MATCH (s:WorkGroup {id:{team}})-[:MANAGED_BY]-(:Role)-[:HAS_ROLE]-(u:User {id:{user}}) SET s.name = {name}, s.desc = {desc}, s.app_desc = {app_desc}", q);
             return "OK";
         }, async (inst) => "OK"
     );
