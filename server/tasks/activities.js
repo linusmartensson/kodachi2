@@ -236,6 +236,12 @@ module.exports = async (app) => {
     app.taskApi.create_task(
         "activity", "review_team_application", [], [], app.taskApi.yesno().concat({event_task: true}),
         async (inst, ctx) => {
+
+            const team = await app.cypher("MATCH (u:User {id:{user}})-[:TEAM_MEMBER]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: inst.origin, team: inst.data.application.team.id});
+            if (team.records && team.records.length > 0) {
+                inst.error = "{tasks.activities.alreadyAMember}";
+                return "FAIL";
+            }
             if (inst.response.no) {
                 app.userApi.emailUser(inst.origin, "{email.app_denied.subject}", "{email.app_denied.text}", "{email.app_denied.text.html}");
                 return "OK";
@@ -247,6 +253,7 @@ module.exports = async (app) => {
             const q = inst.data.application;
             q.id = inst.origin;
             q.team = q.team.id;
+
             await app.roleApi.addAchievement(q.id, "joined_a_team", 1, app.userApi.getActiveEvent(ctx), 1, 10);
 
             await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}, description:{app_description}}]->(t)", q);
@@ -273,6 +280,11 @@ module.exports = async (app) => {
             inst.error = "{tasks.account.noSuchUser}"
             return 'RETRY';
         }
+        const team = await app.cypher("MATCH (u:User {id:{user}})-[:TEAM_MEMBER]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: user.id, team: inst.data.start_data.team});
+        if (team.records && team.records.length > 0) {
+            inst.error = "{tasks.activities.alreadyAMember}";
+            return "FAIL";
+        }
 
         await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}}]->(t) SET t.booked = (case exists(t.booked) and toInt(t.booked)>0 when true then (toInt(t.booked)-1) else toInt(t.booked) end)", q);
         await app.roleApi.addRole(inst.origin, `team_member.${inst.data.start_data.event_id}`, 3000);
@@ -293,6 +305,12 @@ module.exports = async (app) => {
         const q = inst.response;
         q.id = inst.origin;
         q.team = inst.data.application.team || inst.data.application.activity || inst.data.application.shop;
+        
+        const team = await app.cypher("MATCH (u:User {id:{user}})-[:TEAM_MEMBER]-(w:WorkGroup {id:{team}}) RETURN w,u", {user: inst.origin, team: q.team});
+        if (team.records && team.records.length > 0) {
+            inst.error = "{tasks.activities.alreadyAMember}";
+            return "FAIL";
+        }
 
         await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}}]->(t)", q);
         await app.roleApi.addRole(inst.origin, `team_member.${inst.data.start_data.event_id}`, 3000);
