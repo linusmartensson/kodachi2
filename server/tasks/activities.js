@@ -264,7 +264,7 @@ module.exports = async (app) => {
     ].concat(app.taskApi.okcancel()), async (inst, ctx) => {
         if(inst.response.cancel) return "OK";
         
-        const user = await app.userApi.findAccount({any: inst.rseponse.email_or_ssn});
+        const user = await app.userApi.findAccount({any: inst.response.email_or_ssn});
         const q = inst.response;
         q.id = user.id;
         q.team = inst.data.start_data.team;
