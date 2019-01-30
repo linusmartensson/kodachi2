@@ -136,3 +136,11 @@ p.PanelText{
     position:relative;
     float:left;
 }
+
+.Caption + .Image:last-child{
+    max-height:300px !important;
+    display:block;
+    margin:1.85em auto 0 auto;
+    float:none;
+    object-fit:cover;
+}
