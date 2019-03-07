@@ -29,7 +29,7 @@ module.exports = (app) => {
     s("input.act_participants.desc", "Bestäm dig för hur många som kommer att kunna delta i er aktivitet! Det här är en av de viktigaste sakerna vi måste fundera på när vi bestämmer oss för om en aktivitet passar hos oss eller inte, och om vi har råd att lägga pengarna på det, så fundera noga!");
     s("input.act_participants.name", "Hur många har möjlighet att delta?");
     s("input.act_size.desc", "Här fyller du i hur många som ska vara med och jobba med din aktivitet, inklusive dig själv såklart! Kortare och mindre aktiviteter har ofta färre i personal, storslagna tävlingar kan ibland vara lite fler, men det finns undantag åt båda hållen såklart!");
-    s("input.act_size.name", "Hur många ska jobba i aktivietetn? (inklusive dig själv!)");
+    s("input.act_size.name", "Hur många ska jobba i aktivieteten? (inklusive dig själv!)");
     s("input.app_description.desc", "Här berättar du för oss varför vi ska välja just dig till teamet!");
     s("input.app_description.name", "Din ansökan!");
     s("input.budget_type.desc", "", true);
