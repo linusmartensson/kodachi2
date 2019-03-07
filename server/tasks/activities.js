@@ -527,6 +527,7 @@ module.exports = async (app) => {
             {field:'name', type:"text"}, 
             {field:'desc', type:'editor'},
             {field:'app_desc', type:'editor'},
+            {field:'requirements', type:'editor'},
             {field:'size', type:'number'},
             {field:'booked', type:'number'},
             {field:'budget', type:'text'},
@@ -547,6 +548,7 @@ module.exports = async (app) => {
             q.app_desc = inst.response.app_desc;
             q.size = inst.response.size;
             q.booked = inst.response.booked;
+            q.requirements = inst.response.requirements;
             q.budget = inst.response.budget;
             q.uniform = inst.response.uniform;
             q.activity = activity;

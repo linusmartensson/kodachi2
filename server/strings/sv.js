@@ -388,6 +388,67 @@ module.exports = (app) => {
     s("task.review_team_application.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nGrupp: {application.team.label}\nStädar söndag: {{application.can_cleanup_sunday}}\nTillgänglig onsdag: {{application.can_work_wednesday}}\nSover på eventet: {{application.sleep_at_event}}\n{|application.app_description}\n");
 
     s("task.review_receipt.desc", "Tjohej! Det har kommit in ett kvitto du behöver ta ställning till! \n@({receipt.image})\nSumma:{receipt.total}\nMottagare:{user.nickname}\nBudgetpost:{receipt.group}\nInköp:{receipt.purchase}");
+
+
+
+    s("input.team_app_description.name", "Ansökningsbeskrivning");
+    s("input.team_app_description.desc", "Här kan du beskriva för någon som ansöker till ditt team hur teamet fungerar och vad du vill att de som jobbar i teamet ska vara beredda på! Denna texten kommer också synas på din teamsida!");
+    s("input.act_app_description.name", "Ansökningsbeskrivning");
+    s("input.act_app_description.desc", "Här kan du beskriva för någon som ansöker till ditt team hur teamet fungerar och vad du vill att de som jobbar i teamet ska vara beredda på! Denna texten kommer också synas på din teamsida!");
+    s("input.act_requirements.desc", "Här fyller du i vad din aktivitet behöver för utrustning och hjälp av oss för att kunna fungera!");
+    s("input.act_requirements.name", "Kravbeskrivning");
+    s('list.all_members.title', 'Alla medlemmar');
+
+s('task.edit_profile.desc', '')
+s('task.edit_profile.title', 'Redigera profil')
+s('task.edit_profile.title.active', 'Redigera profil')
+s('task.add_team_member.desc', '')
+s('task.add_team_member.title', 'Lägg till teammedlem')
+s('task.add_team_member.title.active', 'Lägg till teammedlem')
+s('task.update_team_image.desc', '')
+s('task.update_team_image.title', 'Uppdatera teambild')
+s('task.update_team_image.title.active', 'Uppdatera teambild')
+s('input.desc.desc', '')
+s('input.desc.name', 'Beskrivning')
+s('input.app_desc.desc', 'Detta är texten som visas för de som ansöker till teamet, och på teamsidan')
+s('input.app_desc.name', 'Ansökningsbeskrivning')
+s('input.requirements.desc', 'Detta är kraven som aktiviteten behöver hjälp med för att fungera')
+s('input.requirements.name', 'Kravställning')
+s('input.budget.desc', '')
+s('input.budget.name', 'Budget')
+s('input.uniform.desc', '')
+s('input.uniform.name', 'Uniform')
+s('input.name.desc', '')
+s('input.name.name', 'Namn')
+s('input.desc.desc', '')
+s('input.desc.name', 'Beskrivning')
+s('input.size.desc', '')
+s('input.size.name', 'Storlek')
+s('input.booked.desc', '')
+s('input.booked.name', 'Förbokade')
+s('input.target.desc', '')
+s('input.target.name', 'Mål')
+s('task.crew_checkin_select.desc', '')
+s('task.crew_checkin.desc', '')
+s('task.crew_checkin_select.title', 'Crewincheckning')
+s('task.crew_checkin_select.title.active', 'Crewincheckning')
+s('task.crew_checkin.title', 'Crewincheckning')
+s('task.crew_checkin.title.active', 'Crewincheckning')
+s('task.crew_checkin_verify.title', 'Crewincheckning')
+s('task.crew_checkin_verify.title.active', 'Crewincheckning')
+
+s('input.target.desc', '')
+s('input.target.name', 'Mål')
+
+s('task.checkin_select.desc', 'Incheckning!')
+s('task.checkin_select.title', 'Checka in')
+s('task.checkin_select.title.active', 'Checka in')
+
+
+    s('list.badge_generator.title', 'Badgegenerator')
+    s('list.email_all_staff.title', 'Maila crew')
+
+
     s("input.role.desc", "");
     s("input.role.name", "Rollnamn");
     s("input.forgotpassword.name", "Maila inloggningslänk");
