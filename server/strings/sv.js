@@ -510,6 +510,7 @@ s('task.checkin_select.title.active', 'Checka in')
     s('achievement.let_them_buy_cake', 'Jag säljer på Kodachicon!')
     s('role.base_activity_admin', 'Aktivitetsfisk')
     s('role.base_crew_admin', 'Crewdruid')
+    s('role.base_ka', "Crewmästare");
 
     s('list.auto.header.admin_teams', "");
     s('list.auto.header.list_team_leaders', "!Tjohej!\nHär kan du se alla teamledare!");
