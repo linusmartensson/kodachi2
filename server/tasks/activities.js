@@ -411,6 +411,7 @@ module.exports = async (app) => {
             {field: "act_booked", type: "number"},
             {field: "act_image", type: "image"},
             {field: "act_budget", type: "text"},
+            {field: "act_participants", type: "number"}
         ),
         async (inst, ctx) => {
             const q = {};
@@ -424,6 +425,7 @@ module.exports = async (app) => {
             q.image = inst.response.act_image;
             q.image = await app.utils.upload(q.image);
             q.budget = inst.response.act_budget;
+            q.participants = inst.response.act_participants;
             q.uniform = false;
             inst.data.name = q.name;
             inst.data.desc = q.desc;
@@ -431,6 +433,7 @@ module.exports = async (app) => {
             inst.data.size = q.size;
             inst.data.booked = q.booked;
             inst.data.budget = q.budget;
+            inst.data.participants = q.participants;
             await app.roleApi.addAchievement(inst.origin, "i_made_the_best_application", 1, app.userApi.getActiveEvent(ctx), 1, 10);
             inst.data.application = q;
             inst.next_tasks.push("review_activity");
@@ -565,7 +568,7 @@ module.exports = async (app) => {
                 await app.roleApi.addAchievement(inst.origin, "my_activity_best_activity", 1, app.userApi.getActiveEvent(ctx), 1, 100);
 
             }
-            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{activity}, name:{name}, type:{type}, desc:{desc}, app_desc:{app_desc}, requirements:{requirements}, size:{size}, image:{image}, budget:{budget}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
+            await app.cypher("MATCH (r:Role {type:{activityRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{activity}, name:{name}, type:{type}, desc:{desc}, app_desc:{app_desc}, requirements:{requirements}, size:{size}, image:{image}, budget:{budget}, participants:{participants}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
 
 
             inst.next_tasks.push("accept_application");
@@ -703,10 +706,11 @@ module.exports = async (app) => {
         app.taskApi.okcancel().concat(
             {event_task: true, autocancel: true},
             {field: "which_activity", type: "dropdown", prepare: async (v, ctx, task) => {
-                const w = (await app.cypher("MATCH (:Event {id:{event}})--(w:WorkGroup {type:\"competition\"}), (u:User {id:{id}}) WITH w,u,SIZE((w)<-[:COMPETING_IN]-(:User)) as competitors WHERE NOT (w)<-[:COMPETING_IN]-(u) AND toInt(competitors) < toInt(w.participants) RETURN w,competitors", {event: task.data.start_data.event_id, id: await app.userApi.userId(ctx)})).records;
+                const w = (await app.cypher("MATCH (:Event {id:{event}})--(w:WorkGroup {type:\"competition\"}), (u:User {id:{id}}) WITH w,u,SIZE((w)<-[:COMPETING_IN]-(:User)) as competitors WHERE NOT (w)<-[:COMPETING_IN]-(u) AND (toInt(competitors) < toInt(w.participants) OR w.participants IS NULL) RETURN w,competitors", {event: task.data.start_data.event_id, id: await app.userApi.userId(ctx)})).records;
                 v.values = [];
                 for (const r of w) {
                     const team = r.get("w").properties;
+                    if(!team.participants) team.participants = "infinity!"
                     v.values.push({label: `${team.name} (${r.get("competitors")}/${team.participants})`, id: team.id});
                 }
             }},
