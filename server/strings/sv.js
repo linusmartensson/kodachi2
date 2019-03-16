@@ -219,7 +219,7 @@ module.exports = (app) => {
     s("stafftest.answer_friends", "Mina vänner!");
     s("stafftest.answer_he", "Han");
     s("stafftest.answer_leave", "Lämna platsen");
-    s("stafftest.answer_linus", "Linus!");
+    s("stafftest.answer_linus", "Mia!");
     s("stafftest.answer_phone", "Ringa 112 när jag är i säkerhet utomhus");
     s("stafftest.answer_put_out", "Släcka elden om det känns säkert!");
     s("stafftest.answer_save", "Hjälpa personer i akut fara, men utan att utsätta mig för risk!");

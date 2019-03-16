@@ -205,7 +205,7 @@ module.exports = async (app) => {
                 for (const r of w) {
                     const team = r.get("a").properties;
                     const mc = r.get("count");
-                    v.values.push({label: app.stringApi.get_string(team.type, await app.userApi.getLanguage(ctx)) +" - "+team.name+"("+(team.size - (team.booked>0?team.booked:0) - mc)+"/"+team.size+" platser)", id: team.id, desc: team.app_desc});
+                    v.values.push({label: app.stringApi.get_string(team.type, await app.userApi.getLanguage(ctx)) +" - "+team.name+"("+(team.size - (team.booked>0?team.booked:0) - mc)+" av "+team.size+" platser är lediga)", id: team.id, desc: team.app_desc});
                 }
                 v.values.sort((a,b)=>{return a.label<b.label})
             }},
