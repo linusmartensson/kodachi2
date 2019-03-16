@@ -26,7 +26,7 @@ module.exports = (app) => {
     s("input.act_name.name", "Vad heter din aktivitet?");
     s("input.act_needs_uniform.desc", "Ställ dig en viktig fråga! Behöver er aktivitet uniformer? För de flesta så kommer svaret att vara nej. Anordnar du exempelvis en föreläsning eller en tävling så tycker vi att det är bättre att du är klädd så att det passar vad du håller på med, men det finns såklart undantag!");
     s("input.act_needs_uniform.name", "Behöver ni kodachicon-tröjor?");
-    s("input.act_participants.desc", "Bestäm dig för hur många som kommer att kunna delta i er aktivitet! Det här är en av de viktigaste sakerna vi måste fundera på när vi bestämmer oss för om en aktivitet passar hos oss eller inte, och om vi har råd att lägga pengarna på det, så fundera noga!");
+    s("input.act_participants.desc", "Bestäm dig för hur många som kommer att kunna delta i er aktivitet! För en tävling så avgör detta hur många som kan anmäla sig!");
     s("input.act_participants.name", "Hur många har möjlighet att delta?");
     s("input.act_size.desc", "Här fyller du i hur många som ska vara med och jobba med din aktivitet, inklusive dig själv såklart! Kortare och mindre aktiviteter har ofta färre i personal, storslagna tävlingar kan ibland vara lite fler, men det finns undantag åt båda hållen såklart!");
     s("input.act_size.name", "Hur många ska jobba i aktivieteten? (inklusive dig själv!)");
@@ -381,7 +381,7 @@ module.exports = (app) => {
     s("true", "Ja");
     s("false", "Nej");
 
-    s("task.review_activity.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nAktivitet: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n|\nDetta är de behov som aktiviteten har:\n{|application.requirements}");
+    s("task.review_activity.desc", "Tjohej! Det har kommit in en ansökan från `{user.nickname}` {user.lastName} ({user.email}, {user.phone}) som du behöver ta ställning till!\nAktivitet: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nMaxdeltagare:{application.participants}\nUniform:{{application.uniform}}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n|\nDetta är de behov som aktiviteten har:\n{|application.requirements}");
     s("task.review_team.desc", "Tjohej! Det har kommit in en ansökan från {user.nickname} som du behöver ta ställning till!\nTeamnamn: {application.name}\nTyp:{application.type}\nBudget:{application.budget}\nTeamstorlek:{application.size}\nUniform:{{application.uniform}}\n#{application.name}\n@({application.image})\n_\n{|application.desc}\n");
 
 
