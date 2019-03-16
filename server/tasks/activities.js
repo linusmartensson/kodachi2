@@ -430,6 +430,7 @@ module.exports = async (app) => {
             inst.data.name = q.name;
             inst.data.desc = q.desc;
             inst.data.app_desc = q.app_desc;
+            inst.data.requirements = q.requirements;
             inst.data.size = q.size;
             inst.data.booked = q.booked;
             inst.data.budget = q.budget;
