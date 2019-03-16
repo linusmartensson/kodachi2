@@ -189,6 +189,8 @@ module.exports = (app) => {
     s("list.purchases.ticketText", "Detta är dina evenemangsbiljetter! En biljett används upp när du checkar in. Glöm inte att flytta över alla extra biljetter till de som ska ha dem!");
     s("list.show_activities.times", "Öppetdagar");
     s("list.list_activities.title", "Aktiviteter!");
+    s("list.list_shops.title", "Butiker!");
+    s("list.list_teams.title", "Team!");
     s("list.admin_budget.title", "Visa kvitton");
     s("list.show_team.title", "Mitt team!");
     s("list.tasks.title", "TEST-lista TA BORT");
@@ -560,9 +562,18 @@ s('task.checkin_select.title.active', 'Checka in')
     s("activity", "Aktiviteter");
     s("vendor", "Försäljare");
     s("artist_alley", "Konstnärer");
+    
     s('list.auto.header.list_activities', "Oooh! Nyfiken på vad som händer på Kodachicon? Det ser du här!");
     s('list.auto.group.list_activities', "!{{w.type}}");
     s('list.auto.row.list_activities', "!{w.name}\n@({w.image})\n_\n{|w.desc}");
+    
+    s('list.auto.header.list_shops', "Shoppingdags! Här är alla butiker som hänger på Kodachicon iår!");
+    s('list.auto.group.list_shops', "!{{w.type}}");
+    s('list.auto.row.list_shops', "!{w.name}\n@({w.image})\n_\n{|w.desc}");
+    
+    s('list.auto.header.list_teams', "Här ser du alla coola team som gör Kodachicon möjligt!");
+    s('list.auto.group.list_teams', "!{{w.type}}");
+    s('list.auto.row.list_teams', "!{w.name}\n@({w.image})\n_\n{|w.desc}");
 
     s('list.tshirts.title', 'Tshirtbeställningar')
     s('list.auto.header.tshirts', "!Tshirtbeställningar");

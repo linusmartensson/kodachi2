@@ -11,6 +11,7 @@ module.exports = (app) => {
         ["q", "u", "m", "w"], 
         {event:'inst.start_data.event_id', user_id:app.listApi.remap(app.userApi.userId)}, 
         {event_list: true, group_by: 'w.id'});
+
     app.listApi.build_list("activities", "admin_compos", ["admin", "team_admin.", "admin.", "crew_admin."], 
         "MATCH (u:User)-[m:COMPETING_IN]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w,SIZE(()-[:COMPETING_IN]-(w)) as q order by w.name, u.nickname", ["u", "m", "w", "q"], {event:'inst.start_data.event_id'}, {event_list: true, group_by: 'w.id'});
 
@@ -41,7 +42,11 @@ module.exports = (app) => {
             return q;
         }});
 
-    app.listApi.build_list("activities", "list_activities", ["anonymous", "user"],
-        "MATCH (w:WorkGroup)--(:Event {id:{event}}) RETURN w order by w.type", ["w"], {event:'inst.start_data.event_id'}, {event_list: true, group_by:"w.type"});
     
+    app.listApi.build_list("activities", "list_shops", ["anonymous", "user"],
+        "MATCH (w:WorkGroup)--(:Event {id:{event}}) WHERE w.type='artist_alley' OR w.type='vendor' RETURN w order by w.type, w.name", ["w"], {event:'inst.start_data.event_id'}, {event_list: true, group_by:"w.type"});
+    app.listApi.build_list("activities", "list_activities", ["anonymous", "user"],
+        "MATCH (w:WorkGroup)--(:Event {id:{event}}) WHERE w.type='activity' OR w.type='competition' RETURN w order by w.name", ["w"], {event:'inst.start_data.event_id'}, {event_list: true});
+    app.listApi.build_list("activities", "list_teams", ["anonymous", "user"],
+        "MATCH (w:WorkGroup)--(:Event {id:{event}}) WHERE w.type='team' RETURN w order by w.type, w.name", ["w"], {event:'inst.start_data.event_id'}, {event_list: true});
 };
