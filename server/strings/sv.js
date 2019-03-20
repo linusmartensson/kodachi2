@@ -591,6 +591,11 @@ s('task.checkin_select.title.active', 'Checka in')
     s('list.admin_teams.title', 'Administrera team')
     s('list.my_team.title', 'Mitt team')
 
+    s("input.resize_team.name", "Vilket team ska ändra storlek?")
+    s("input.new_size.name", "Ny storlek");
+    s("task.resize_team.title", "Ändra teamstorlek");
+
+
     s("input.update_name.name", "Gruppnamn");
     s("input.update_name.desc", "Här fyller du i ditt gruppnamn!");
     s("input.update_desc.name", "Gruppbeskrivning");
@@ -600,6 +605,7 @@ s('task.checkin_select.title.active', 'Checka in')
     s('task.update_team_desc.desc', 'Här har du möjlighet att uppdatera ditt teams beskrivning ^_^')
     s('task.update_team_desc.title', 'Uppdatera team')
     
+
     
     s('tasks.account.differentEmails', 'Dina emailadresser måste vara likadana!');
     s('tasks.account.verifyPassword', 'Ett av lösenorden har nog blivit fel, skriv om dem för säkerhets skull!');

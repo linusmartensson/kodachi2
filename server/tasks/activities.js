@@ -1,6 +1,22 @@
 
 module.exports = async (app) => {
     app.taskApi.create_task(
+        "activity", "resize_team", ["admin."], [],
+        app.taskApi.okcancel().concat({event_task: true}, 
+            {field: "resize_team", type: "dropdown", prepare: async (v, ctx, task) => {
+                const w = (await app.cypher("MATCH (:Event {id:{eventId}})--(a:WorkGroup) RETURN a", {eventId: task.data.start_data.event_id})).records;
+                v.values = [];
+                for (const r of w) {
+                    const team = r.get("a").properties;
+                    v.values.push({label: app.stringApi.get_string(team.type, await app.userApi.getLanguage(ctx)) +" - "+team.name, id: team.id});
+                }
+                v.values.sort((a,b)=>{return a.label<b.label})
+            }},{field: "new_size", type: "number"}),
+        async (inst, ctx) => {
+            await app.cypher("MATCH (w:WorkGroup {id:{id}}) SET w.size={size}", {id:inst.response.resize_team.id, size:inst.response.new_size})
+            return "OK"
+        })
+    app.taskApi.create_task(
         "activity", "remove_team_member", ["manager."], [],
         app.taskApi.okcancel().concat({event_task: true, hide: true}),
         async (inst, ctx) => {
