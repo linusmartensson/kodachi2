@@ -16,7 +16,7 @@ module.exports = async (app) => {
                 v.values = [];
                 for (const q of r.records) {
                     const w = q.get("r").properties;
-                    if(w instanceof string && w.type.indexOf('.') == -1)
+                    if(w.type !== undefined && w.type.indexOf('.') == -1)
                         v.values.push(w.type);
                 }
             }},
