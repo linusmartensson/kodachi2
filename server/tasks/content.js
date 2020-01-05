@@ -16,7 +16,8 @@ module.exports = async (app) => {
                 v.values = [];
                 for (const q of r.records) {
                     const w = q.get("r").properties;
-                    v.values.push(w.type);
+                    if(!w.type.includes("."))
+                        v.values.push(w.type);
                 }
             }},
             {field: "content", type: "editor"}
