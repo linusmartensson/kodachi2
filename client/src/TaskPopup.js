@@ -29,6 +29,9 @@ class TaskPopup extends Component{
         this.innerRef = node;
     }
 
+    componentDidUpdate(prevProps) {
+        window.scrollTo(0, 0)
+    }
 
     componentDidMount() {
         //document.addEventListener('mousedown', this.handleClickOutside);
