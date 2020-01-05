@@ -39,7 +39,7 @@ store.dispatch(actions.app.server.start());
 class Workspace extends Component {
     render() {
 
-        var backgroundConfig = {"backgroundImage":"url('/img/bg2019.png')"};
+        var backgroundConfig = {"backgroundImage":"url('/img/bg.png')"};
         var headerImage = "/img/kodachicon_new.png";
 
 
@@ -65,7 +65,7 @@ class Workspace extends Component {
 var Redir = (props) => {
 
    if(props.location.pathname==="/"){
-       return <Redirect to="/book/kodachicon2019" />
+       return <Redirect to="/book/kodachicon" />
     
    }
    return null;

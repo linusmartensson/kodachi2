@@ -8,9 +8,9 @@ module.exports = (app) => {
 
         const e = await app.userApi.getActiveEvent(ctx);
 
-        if (e) {
+/*        if (e) {
             state.books.push({group: 1, id: e.id, path: e.id, title: e.name, content: app.stringApi.bookParser(e.description, e.id)});
-        }
+        }*/
 
         for (const v of content.records) {
             const w = v.get("c").properties;
