@@ -106,7 +106,7 @@ var SurfaceRouteBase = (props) => {
 
 
     if(matches)
-        return <Surface id={id} pages={matches} />;
+        return <Surface id={id} rootSurface="true" pages={matches} />;
     else
         return null;
 }

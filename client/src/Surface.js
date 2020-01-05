@@ -2,8 +2,18 @@ import React, { Component } from 'react';
 import Page from './Page'
 
 class Surface extends Component {
+
+  constructor(props) {
+      super(props)
+  }
+
   componentDidUpdate(prevProps) {
-    window.scrollTo(0, 0)
+    if(this.props.rootSurface && this.props.id != prevProps.id)
+        window.scrollTo(0, 0)
+  }
+  componentDidMount() {
+    if(this.props.rootSurface)
+        window.scrollTo(0,0)
   }
   render() {
     const pages = this.props.pages.map((page) =>

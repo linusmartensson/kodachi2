@@ -30,11 +30,13 @@ class TaskPopup extends Component{
     }
 
     componentDidUpdate(prevProps) {
-        window.scrollTo(0, 0)
+        if(this.props.task != prevProps.task)
+            window.scrollTo(0, 0)
     }
 
     componentDidMount() {
         //document.addEventListener('mousedown', this.handleClickOutside);
+        window.scrollTo(0, 0)
     }
 
     componentWillUnmount() {
