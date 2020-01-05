@@ -12,7 +12,7 @@ module.exports = async (app) => {
             {field: "event", type: "bool"},
             {field: "lang", type: "dropdown", translate: true, values: ["sv", "eng", "all"]},
             {field: "access", type: "select", prepare: async (v, ctx) => {
-                const r = await app.cypher("MATCH (r:Role) RETURN r");
+                const r = await app.cypher("MATCH (r:Role) RETURN r ORDER BY r.type");
                 v.values = [];
                 for (const q of r.records) {
                     const w = q.get("r").properties;

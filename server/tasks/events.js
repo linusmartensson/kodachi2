@@ -37,7 +37,7 @@ module.exports = async (app) => {
         "event", "add_event_manager", ["admin", "admin."], [], app.taskApi.okcancel().concat(
             {autocancel: true, event_task: true},
             {field: "user", type: "select", prepare: async (v, ctx) => {
-                const u = await app.cypher("MATCH (u:User) RETURN u");
+                const u = await app.cypher("MATCH (u:User) RETURN u ORDER BY u.email");
                 v.values = [];
                 for (const q of u.records) {
                     const w = q.get("u").properties;
