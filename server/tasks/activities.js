@@ -1,7 +1,7 @@
 
 module.exports = async (app) => {
     app.taskApi.create_task(
-        "activity", "resize_team", ["admin."], [],
+        "activity", "resize_team", ["admin.", "ka.", "team_admin."], [],
         app.taskApi.okcancel().concat({event_task: true}, 
             {field: "resize_team", type: "dropdown", prepare: async (v, ctx, task) => {
                 const w = (await app.cypher("MATCH (:Event {id:{eventId}})--(a:WorkGroup) RETURN a ORDER BY a.name", {eventId: task.data.start_data.event_id})).records;
@@ -528,6 +528,7 @@ module.exports = async (app) => {
 
             await app.roleApi.addRole(inst.origin, `manager.${q.event_id}`, 4500);
             await app.roleApi.addRole(inst.origin, "team_leader", 5500);
+            await app.roleApi.addRole(inst.origin, `event_team_leader.${q.event_id}`, 3000);
             await app.roleApi.addRole(inst.origin, q.teamRole);
             await app.roleApi.addRole(inst.origin, `receipt_submitter.${q.event_id}`);
             await app.cypher("MATCH (r:Role {type:{teamRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{team}, type:{type} ,name:{name}, desc:{desc}, app_desc:{app_desc}, size:{size}, image:{image}, budget:{budget}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
@@ -575,6 +576,7 @@ module.exports = async (app) => {
             q.activityRole = `manager.${activity}`;
             await app.roleApi.addRole(inst.origin, `manager.${q.event_id}`, 3500);
             await app.roleApi.addRole(inst.origin, "activiteer", 5500);
+            await app.roleApi.addRole(inst.origin, `event_activity_leader.${q.event_id}`, 2000);
 
             await app.roleApi.addRole(inst.origin, q.activityRole);
             await app.roleApi.addRole(inst.origin, `receipt_submitter.${q.event_id}`);
@@ -665,6 +667,7 @@ module.exports = async (app) => {
             q.shopRole = `manager.${shop}`;
             await app.roleApi.addRole(inst.origin, `manager.${q.event_id}`, 1500);
             await app.roleApi.addRole(inst.origin, "vendor", 5500);
+            await app.roleApi.addRole(inst.origin, `event_vendor_leader.${q.event_id}`, 500);
             await app.roleApi.addRole(inst.origin, q.shopRole);
             await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, app_desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, tables:{tables}, type:{type}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);
             await app.roleApi.addAchievement(inst.origin, "let_them_buy_cake", 1, app.userApi.getActiveEvent(ctx), 1, 100);
@@ -695,6 +698,7 @@ module.exports = async (app) => {
             q.shopRole = `manager.${shop}`;
             await app.roleApi.addRole(inst.origin, `manager.${q.event_id}`, 1500);
             await app.roleApi.addRole(inst.origin, "artist", 5500);
+            await app.roleApi.addRole(inst.origin, `event_artist_leader.${q.event_id}`, 500);
 
             await app.roleApi.addRole(inst.origin, q.shopRole);
             await app.cypher("MATCH (r:Role {type:{shopRole}}), (e:Event {id:{event_id}}) MERGE (r)<-[:MANAGED_BY]-(s:WorkGroup {id:{shop}, name:{name}, desc:{desc}, app_desc:{desc}, size:{size}, image:{image}, schedule:{schedule}, type:{type}, uniform:{uniform}, booked:{booked}})-[:PART_OF]->(e)", q);

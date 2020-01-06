@@ -24,9 +24,9 @@ module.exports = (app) => {
     app.listApi.build_list("activities", "badge_generator", ["admin", "team_admin.", "admin.", "crew_admin."], 
         "MATCH (u:User) where (u)-[:TEAM_MEMBER]-(:WorkGroup)--(:Event {id:{event}}) RETURN u order by u.nickname", ["u"], {event:'inst.start_data.event_id'}, {event_list: true});
 
-    app.listApi.build_list("activities", "list_team_leaders", ["admin", "team_admin.", "ka.", "admin.", "crew_admin."], 
+    app.listApi.build_list("activities", "list_team_leaders", ["admin", "team_admin.", "ka.", "admin.", "crew_admin.", "manager."], 
         "MATCH (u:User)--(:Role)-[:MANAGED_BY]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,w order by w.name, u.nickname", ["u", "w"], {event:'inst.start_data.event_id'}, {event_list: true});
-    app.listApi.build_list("activities", "admin_teams", ["admin", "team_admin.", "ka.", "admin.", "crew_admin."], 
+    app.listApi.build_list("activities", "admin_teams", ["admin", "team_admin.", "ka.", "admin.", "crew_admin.", "event_team_leader."], 
         "MATCH (u:User)-[m:TEAM_MEMBER]-(w:WorkGroup)--(:Event {id:{event}}) RETURN u,m,w,SIZE(()-[:TEAM_MEMBER]-(w)) as q,SIZE((u)--(:Role)-[:MANAGED_BY]-(w))>0 as leader order by w.name, u.nickname", ["u", "m", "w", "q", "leader"], {event:'inst.start_data.event_id'}, {event_list: true, group_by: 'w.id'});
     //------------
     app.listApi.build_list("activities", "email_all_staff", ["admin", "team_admin.", "admin.", "crew_admin."], 
