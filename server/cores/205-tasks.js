@@ -413,6 +413,7 @@ module.exports = async (app) => {
         if (!start_data) {
             start_data = {};
         }
+        start_data._start_time = String(Date.now())
         if (task.start_data) {
             Object.assign(start_data, task.start_data);
         }
@@ -505,6 +506,7 @@ module.exports = async (app) => {
     async function nextTask (ctx, inst, task) {
         if (inst.next_tasks && inst.next_tasks.length > 0) {
             // Handle all child tasks.
+            inst.data._update_time = String(Date.now())
             inst.childIds = [];
             const cinsts = [];
             for (let n = 0; n < inst.next_tasks.length; ++n) {
