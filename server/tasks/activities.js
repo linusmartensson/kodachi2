@@ -141,7 +141,7 @@ module.exports = async (app) => {
 
 
     app.taskApi.create_task(
-        "activity", "staff_test", ["user", "!done_staff_test"], [],
+        "activity", "staff_test", [], [],
         [{event_task: true, unique: true, field: "stafftest_q1", type: "dropdown", values:
             ["{stafftest.answer_them}", "{stafftest.answer_he}", "{stafftest.answer_she}", "{stafftest.answer_the_person}"]},
         {field: "stafftest_q2", type: "dropdown", values:
@@ -178,7 +178,7 @@ module.exports = async (app) => {
 
     app.taskApi.create_task(
         "activity", "join_staff",
-        ["done_staff_test"], [],
+        ["user", "done_staff_test"], [],
         app.taskApi.okcancel().concat({autocancel: true, event_task: true}, [{translate: true, field: "work_type", type: "dropdown", values: ["work", "create_activity", "create_shop", "create_team"]}]),
         async (inst, ctx) => {
             inst.data.user = await app.userApi.getUser(await app.userApi.userId(ctx));
