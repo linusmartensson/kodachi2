@@ -39,6 +39,8 @@ module.exports = async (app) => {
         if (user.records.length > 0) {
             user = user.records[0].get("u").properties;
             delete user.verifyCode;
+            delete user.password;
+            delete user.logincode;
             return user;
         }
         return null;
