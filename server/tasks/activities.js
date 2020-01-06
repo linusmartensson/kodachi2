@@ -269,10 +269,11 @@ module.exports = async (app) => {
             const q = inst.data.application;
             q.id = inst.origin;
             q.team = q.team.id;
+            q.join_time = String(Date.now())
 
             await app.roleApi.addAchievement(q.id, "joined_a_team", 1, app.userApi.getActiveEvent(ctx), 1, 10);
 
-            await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}, description:{app_description}}]->(t)", q);
+            await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}, description:{app_description}, join_time:{join_time}}]->(t)", q);
             return "OK";
         }, async (inst) => "OK"
     );
@@ -301,8 +302,10 @@ module.exports = async (app) => {
             inst.error = "{tasks.activities.alreadyAMember}";
             return "FAIL";
         }
+            
+        q.join_time = String(Date.now())
 
-        await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}}]->(t) SET t.booked = (case exists(t.booked) and toInt(t.booked)>0 when true then (toInt(t.booked)-1) else toInt(t.booked) end)", q);
+        await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}, join_time:{join_time}}]->(t) SET t.booked = (case exists(t.booked) and toInt(t.booked)>0 when true then (toInt(t.booked)-1) else toInt(t.booked) end)", q);
         await app.roleApi.addRole(inst.origin, `team_member.${inst.data.start_data.event_id}`, 3000);
         await app.roleApi.addRole(inst.origin, `team_member.${q.team}`);
         await app.roleApi.addAchievement(q.id, "joined_a_team", 1, app.userApi.getActiveEvent(ctx), 1, 10);
@@ -328,7 +331,8 @@ module.exports = async (app) => {
             return "FAIL";
         }
 
-        await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}}]->(t)", q);
+        q.join_time = String(Date.now())
+        await app.cypher("MATCH (u:User {id:{id}}), (t:WorkGroup {id:{team}}) CREATE (u)-[:TEAM_MEMBER {sleep:{sleep_at_event}, wednesday:{can_work_wednesday}, sunday:{can_cleanup_sunday}, tshirt:{tshirt}, join_time:{join_time}}]->(t)", q);
         await app.roleApi.addRole(inst.origin, `team_member.${inst.data.start_data.event_id}`, 3000);
         await app.roleApi.addRole(inst.origin, `team_member.${q.team}`);
         await app.roleApi.addAchievement(q.id, "joined_a_team", 1, app.userApi.getActiveEvent(ctx), 1, 10);

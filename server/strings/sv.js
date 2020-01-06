@@ -75,6 +75,7 @@ module.exports = (app) => {
     s("input.no.name", "Nej :(");
     s("input.ok.desc", "", true);
     s("input.ok.name", "Ok!");
+    s("input.unknown", "Okänt");
     s("input.password.desc", "Skriv in ditt helt egna jättecoola lösenord!");
     s("input.password.name", "Ditt lösenord!");
     s("input.password_verify.desc", "Skriv in ditt lösenord en gång till, så att det säkert blev rätt!");
@@ -551,7 +552,7 @@ s('task.checkin_select.title.active', 'Checka in')
     
     s('list.auto.header.my_team', "!Tjohej!\nHär kan du se ditt (eller dina!) team! ^_^");
     s('list.auto.group.my_team', "!{w.name}\nuniform: {{w.uniform}}, medlemmar: {q}/{w.size}, Du leder teamet: {{is_leader}}\n[Maila teamet,email_team.{{{event}}},team:{{{w.id}}},enabled:{leader}]\n[Lägg till medlem,add_team_member.{{{event}}},team:{w.id},enabled:{is_leader}]\n[Uppdatera teamprofil,update_team_desc.{{{event}}},team:{w.id},update_name:{w.name},update_desc:{w.desc},update_app_desc:{w.app_desc},enabled:{is_leader}]\n[Uppdatera teambild,update_team_image.{{{event}}},team:{w.id},enabled:{is_leader}]\n{|w.app_desc}");
-    s('list.auto.row.my_team', "\"{u.nickname}\" {u.lastName} / {u.email} / {u.phone}\nStorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Teamledare: {{leader}}\n{|m.description}\n[Ta bort medlem,remove_team_member.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{is_leader},disabled:{leader}]\n[Gör till teamledare,promote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{is_leader},disabled:{leader}]\n[Ta bort teamledare,demote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{deletable_leader}]");
+    s('list.auto.row.my_team', "\"{u.nickname}\" {u.lastName} / {u.email} / {u.phone} / Gick med: {m.join_time}\nStorlek: {m.tshirt}, Bygger på Onsdag: {{m.wednesday}}, Städar på Söndag: {{m.sunday}}, Sover på plats: {{m.sleep}}, Teamledare: {{leader}}\n{|m.description}\n[Ta bort medlem,remove_team_member.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{is_leader},disabled:{leader}]\n[Gör till teamledare,promote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{is_leader},disabled:{leader}]\n[Ta bort teamledare,demote_manager.{{{event}}},team:{{{w.id}}},user:{{{u.id}}},enabled:{deletable_leader}]");
 
     s('task.switch_account.title', 'Byta konto')
 

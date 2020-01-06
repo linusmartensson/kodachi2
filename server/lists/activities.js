@@ -38,6 +38,8 @@ module.exports = (app) => {
         "MATCH (me:User {id:{user_id}})-[:TEAM_MEMBER]-(w:WorkGroup) WHERE (w)--(:Event {id:{event}}) WITH me, w MATCH (u:User)-[m:TEAM_MEMBER]-(w) WITH me, w, SIZE((me)--(:Role)-[:MANAGED_BY]-(w))>0 as is_leader,u,m, SIZE((u)--(:Role)-[:MANAGED_BY]-(w))>0 as leader, SIZE((:User)--(:Role)-[:MANAGED_BY]-(w)) as leader_count RETURN leader, is_leader, (leader_count>1 and is_leader and leader) as deletable_leader, u,m,w,SIZE(()-[:TEAM_MEMBER]-(w)) as q order by w.name, u.nickname", ["deletable_leader", "is_leader", "leader", "q", "u", "m", "w"], {event:'inst.start_data.event_id', user_id:app.listApi.remap(app.userApi.userId)}, {event_list: true, group_by: 'w.id', prepare: (q)=>{
             for(var v in q){
                 if(!q[v].is_leader || !q[v].m.description) q[v].m.description="";
+                if(q[v].m.join_time) q[v].m.join_time = new Date(parseInt(q[v].m.join_time)).toDateString()
+                else q[v].m.join_time = '{input.unknown}'
             }
             return q;
         }});
