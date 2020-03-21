@@ -151,7 +151,7 @@ module.exports = async (app) => {
     app.taskApi.create_task(
         "purchases", "buy_tickets",
         ["user"], [],
-        app.taskApi.okcancel().concat({event_task: true, autocancel: true, field: "tickets", type: "amount"}, {field: "sleep", type: "amount"}),
+        app.taskApi.okcancel().concat({hide: true, event_task: true, autocancel: true, field: "tickets", type: "amount"}, {field: "sleep", type: "amount"}),
         async (inst, ctx) => {
             if (inst.response.cancel) {
                 return "OK";
