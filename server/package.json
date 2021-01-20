@@ -58,7 +58,7 @@
     "react": "15.5.4",
     "react-dom": "15.5.4",
     "s3-upload-stream": "1.0.7",
-    "socket.io": "2.1.1",
+    "socket.io": "2.4.0",
     "socket.io-client": "2.1.1",
     "socketio-jwt": "4.5.0",
     "transform-runtime": "0.0.0",
