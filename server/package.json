@@ -48,7 +48,7 @@
     "koa-sslify": "2.1.2",
     "koa-static": "4.0.2",
     "koa-static-cache": "5.1.2",
-    "lodash": "4.17.11",
+    "lodash": "4.17.21",
     "neo4j": "2.0.0-RC2",
     "neo4j-driver": "1.5.3",
     "node-http-proxy": "0.2.3",
