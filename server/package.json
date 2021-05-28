@@ -63,6 +63,6 @@
     "socketio-jwt": "4.5.0",
     "transform-runtime": "0.0.0",
     "uuid": "3.1.0",
-    "ws": "6.1.0"
+    "ws": "7.4.5"
   }
 }
